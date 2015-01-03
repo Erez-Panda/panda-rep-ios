@@ -7,12 +7,50 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		BA1AA7991A4BF82D00BCE29D /* CallOfferViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA1AA7981A4BF82D00BCE29D /* CallOfferViewController.swift */; };
+		BA1AA79B1A4C2AA100BCE29D /* StorageUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA1AA79A1A4C2AA100BCE29D /* StorageUtils.swift */; };
+		BA1AA79D1A5006D000BCE29D /* TestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA1AA79C1A5006D000BCE29D /* TestViewController.swift */; };
+		BA1AA79F1A5014B500BCE29D /* TrainingCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA1AA79E1A5014B500BCE29D /* TrainingCellView.swift */; };
+		BA1AA7A11A5159B500BCE29D /* PostCallViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA1AA7A01A5159B500BCE29D /* PostCallViewController.swift */; };
+		BA1AA7D31A516DA900BCE29D /* FloatRatingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA1AA7D21A516DA900BCE29D /* FloatRatingView.swift */; };
 		BA226D501A404D9D00059267 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA226D4F1A404D9D00059267 /* AppDelegate.swift */; };
-		BA226D521A404D9D00059267 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA226D511A404D9D00059267 /* ViewController.swift */; };
 		BA226D551A404D9D00059267 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BA226D531A404D9D00059267 /* Main.storyboard */; };
 		BA226D571A404D9D00059267 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BA226D561A404D9D00059267 /* Images.xcassets */; };
 		BA226D5A1A404D9D00059267 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = BA226D581A404D9D00059267 /* LaunchScreen.xib */; };
 		BA226D661A404D9D00059267 /* Panda4repTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA226D651A404D9D00059267 /* Panda4repTests.swift */; };
+		BA226D811A404EC800059267 /* OpenTok.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BA226D801A404EC800059267 /* OpenTok.framework */; };
+		BA226D831A404EFA00059267 /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = BA226D821A404EFA00059267 /* libsqlite3.dylib */; };
+		BA226D851A404F0400059267 /* CoreTelephony.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BA226D841A404F0400059267 /* CoreTelephony.framework */; };
+		BA226D871A404F1100059267 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BA226D861A404F1100059267 /* SystemConfiguration.framework */; };
+		BA226D891A404F1E00059267 /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BA226D881A404F1E00059267 /* OpenGLES.framework */; };
+		BA226D8B1A404F2B00059267 /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BA226D8A1A404F2B00059267 /* CoreVideo.framework */; };
+		BA226D8D1A404F3300059267 /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BA226D8C1A404F3300059267 /* CoreMedia.framework */; };
+		BA226D8F1A404F3D00059267 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BA226D8E1A404F3D00059267 /* CoreGraphics.framework */; };
+		BA226D911A404F4800059267 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BA226D901A404F4800059267 /* AudioToolbox.framework */; };
+		BA226D931A404F5200059267 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BA226D921A404F5200059267 /* AVFoundation.framework */; };
+		BA226D951A404F5A00059267 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BA226D941A404F5A00059267 /* QuartzCore.framework */; };
+		BA226D971A404F6300059267 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BA226D961A404F6300059267 /* UIKit.framework */; };
+		BA226D991A404F7200059267 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BA226D981A404F7200059267 /* Foundation.framework */; };
+		BA226D9B1A404F7F00059267 /* libstdc++.6.0.9.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = BA226D9A1A404F7F00059267 /* libstdc++.6.0.9.dylib */; };
+		BA226D9D1A404F8A00059267 /* libpthread.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = BA226D9C1A404F8A00059267 /* libpthread.dylib */; };
+		BA226D9F1A404F9200059267 /* libxml2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = BA226D9E1A404F9200059267 /* libxml2.dylib */; };
+		BA226DA71A41767A00059267 /* PageContentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA226DA61A41767A00059267 /* PageContentViewController.swift */; };
+		BA226DA91A4177EC00059267 /* WelcomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA226DA81A4177EC00059267 /* WelcomeViewController.swift */; };
+		BA226DAB1A41785500059267 /* ServerAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA226DAA1A41785500059267 /* ServerAPI.swift */; };
+		BA226DAD1A418BE000059267 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA226DAC1A418BE000059267 /* LoginViewController.swift */; };
+		BA226DAF1A418F7B00059267 /* RegisterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA226DAE1A418F7B00059267 /* RegisterViewController.swift */; };
+		BA226DB11A41928300059267 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA226DB01A41928300059267 /* MainViewController.swift */; };
+		BA226DB31A4192F100059267 /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA226DB21A4192F100059267 /* ProfileViewController.swift */; };
+		BA226DB51A41932F00059267 /* CallViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA226DB41A41932F00059267 /* CallViewController.swift */; };
+		BAAA5D2D1A43FA470058CAA9 /* TrainingDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAAA5D2C1A43FA470058CAA9 /* TrainingDetailViewController.swift */; };
+		BAAA5D2F1A448FCB0058CAA9 /* WebResourceViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAAA5D2E1A448FCB0058CAA9 /* WebResourceViewController.swift */; };
+		BAAA5D311A486FF40058CAA9 /* PreCallViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAAA5D301A486FF40058CAA9 /* PreCallViewController.swift */; };
+		BAB102541A41B680006075D2 /* UINavigationControllerWithOrientation.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAB102531A41B680006075D2 /* UINavigationControllerWithOrientation.swift */; };
+		BAB102561A41E467006075D2 /* TrainingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAB102551A41E467006075D2 /* TrainingViewController.swift */; };
+		BAB1025A1A42BCC7006075D2 /* UIAlertViewWithData.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAB102591A42BCC7006075D2 /* UIAlertViewWithData.swift */; };
+		BAB1025E1A42FD5F006075D2 /* TimeUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAB1025D1A42FD5F006075D2 /* TimeUtils.swift */; };
+		BAF09B3F1A5536B4009F00F8 /* LoginUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAF09B3E1A5536B4009F00F8 /* LoginUtils.swift */; };
+		BAF09B411A55410D009F00F8 /* NotApprovedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAF09B401A55410D009F00F8 /* NotApprovedViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -25,17 +63,69 @@
 		};
 /* End PBXContainerItemProxy section */
 
+/* Begin PBXCopyFilesBuildPhase section */
+		BA1AA7CA1A516AF000BCE29D /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
+		BA1AA7981A4BF82D00BCE29D /* CallOfferViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CallOfferViewController.swift; sourceTree = "<group>"; };
+		BA1AA79A1A4C2AA100BCE29D /* StorageUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StorageUtils.swift; sourceTree = "<group>"; };
+		BA1AA79C1A5006D000BCE29D /* TestViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestViewController.swift; sourceTree = "<group>"; };
+		BA1AA79E1A5014B500BCE29D /* TrainingCellView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TrainingCellView.swift; sourceTree = "<group>"; };
+		BA1AA7A01A5159B500BCE29D /* PostCallViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PostCallViewController.swift; sourceTree = "<group>"; };
+		BA1AA7D21A516DA900BCE29D /* FloatRatingView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FloatRatingView.swift; path = components/FloatRatingView.swift; sourceTree = "<group>"; };
 		BA226D4A1A404D9D00059267 /* Panda4rep.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Panda4rep.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		BA226D4E1A404D9D00059267 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		BA226D4F1A404D9D00059267 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		BA226D511A404D9D00059267 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		BA226D541A404D9D00059267 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		BA226D561A404D9D00059267 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		BA226D591A404D9D00059267 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
 		BA226D5F1A404D9D00059267 /* Panda4repTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = Panda4repTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		BA226D641A404D9D00059267 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		BA226D651A404D9D00059267 /* Panda4repTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Panda4repTests.swift; sourceTree = "<group>"; };
+		BA226D801A404EC800059267 /* OpenTok.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenTok.framework; path = Panda4rep/OpenTok.framework; sourceTree = "<group>"; };
+		BA226D821A404EFA00059267 /* libsqlite3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.dylib; path = usr/lib/libsqlite3.dylib; sourceTree = SDKROOT; };
+		BA226D841A404F0400059267 /* CoreTelephony.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreTelephony.framework; path = System/Library/Frameworks/CoreTelephony.framework; sourceTree = SDKROOT; };
+		BA226D861A404F1100059267 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
+		BA226D881A404F1E00059267 /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
+		BA226D8A1A404F2B00059267 /* CoreVideo.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreVideo.framework; path = System/Library/Frameworks/CoreVideo.framework; sourceTree = SDKROOT; };
+		BA226D8C1A404F3300059267 /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
+		BA226D8E1A404F3D00059267 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		BA226D901A404F4800059267 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
+		BA226D921A404F5200059267 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
+		BA226D941A404F5A00059267 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+		BA226D961A404F6300059267 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		BA226D981A404F7200059267 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		BA226D9A1A404F7F00059267 /* libstdc++.6.0.9.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libstdc++.6.0.9.dylib"; path = "usr/lib/libstdc++.6.0.9.dylib"; sourceTree = SDKROOT; };
+		BA226D9C1A404F8A00059267 /* libpthread.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libpthread.dylib; path = usr/lib/libpthread.dylib; sourceTree = SDKROOT; };
+		BA226D9E1A404F9200059267 /* libxml2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libxml2.dylib; path = usr/lib/libxml2.dylib; sourceTree = SDKROOT; };
+		BA226DA31A40552200059267 /* Panda4rep-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Panda4rep-Bridging-Header.h"; sourceTree = "<group>"; };
+		BA226DA61A41767A00059267 /* PageContentViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PageContentViewController.swift; sourceTree = "<group>"; };
+		BA226DA81A4177EC00059267 /* WelcomeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WelcomeViewController.swift; sourceTree = "<group>"; };
+		BA226DAA1A41785500059267 /* ServerAPI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ServerAPI.swift; sourceTree = "<group>"; };
+		BA226DAC1A418BE000059267 /* LoginViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
+		BA226DAE1A418F7B00059267 /* RegisterViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RegisterViewController.swift; sourceTree = "<group>"; };
+		BA226DB01A41928300059267 /* MainViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
+		BA226DB21A4192F100059267 /* ProfileViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProfileViewController.swift; sourceTree = "<group>"; };
+		BA226DB41A41932F00059267 /* CallViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CallViewController.swift; sourceTree = "<group>"; };
+		BAAA5D2C1A43FA470058CAA9 /* TrainingDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TrainingDetailViewController.swift; sourceTree = "<group>"; };
+		BAAA5D2E1A448FCB0058CAA9 /* WebResourceViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WebResourceViewController.swift; sourceTree = "<group>"; };
+		BAAA5D301A486FF40058CAA9 /* PreCallViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PreCallViewController.swift; sourceTree = "<group>"; };
+		BAB102531A41B680006075D2 /* UINavigationControllerWithOrientation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UINavigationControllerWithOrientation.swift; sourceTree = "<group>"; };
+		BAB102551A41E467006075D2 /* TrainingViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TrainingViewController.swift; sourceTree = "<group>"; };
+		BAB102591A42BCC7006075D2 /* UIAlertViewWithData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIAlertViewWithData.swift; sourceTree = "<group>"; };
+		BAB1025D1A42FD5F006075D2 /* TimeUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TimeUtils.swift; sourceTree = "<group>"; };
+		BAF09B3E1A5536B4009F00F8 /* LoginUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginUtils.swift; sourceTree = "<group>"; };
+		BAF09B401A55410D009F00F8 /* NotApprovedViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NotApprovedViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -43,6 +133,22 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BA226D9F1A404F9200059267 /* libxml2.dylib in Frameworks */,
+				BA226D9D1A404F8A00059267 /* libpthread.dylib in Frameworks */,
+				BA226D9B1A404F7F00059267 /* libstdc++.6.0.9.dylib in Frameworks */,
+				BA226D991A404F7200059267 /* Foundation.framework in Frameworks */,
+				BA226D971A404F6300059267 /* UIKit.framework in Frameworks */,
+				BA226D951A404F5A00059267 /* QuartzCore.framework in Frameworks */,
+				BA226D931A404F5200059267 /* AVFoundation.framework in Frameworks */,
+				BA226D911A404F4800059267 /* AudioToolbox.framework in Frameworks */,
+				BA226D8F1A404F3D00059267 /* CoreGraphics.framework in Frameworks */,
+				BA226D8D1A404F3300059267 /* CoreMedia.framework in Frameworks */,
+				BA226D8B1A404F2B00059267 /* CoreVideo.framework in Frameworks */,
+				BA226D891A404F1E00059267 /* OpenGLES.framework in Frameworks */,
+				BA226D871A404F1100059267 /* SystemConfiguration.framework in Frameworks */,
+				BA226D851A404F0400059267 /* CoreTelephony.framework in Frameworks */,
+				BA226D831A404EFA00059267 /* libsqlite3.dylib in Frameworks */,
+				BA226D811A404EC800059267 /* OpenTok.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -56,9 +162,33 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		BA1AA7D41A516DB900BCE29D /* components */ = {
+			isa = PBXGroup;
+			children = (
+				BA1AA7D21A516DA900BCE29D /* FloatRatingView.swift */,
+			);
+			name = components;
+			sourceTree = "<group>";
+		};
 		BA226D411A404D9D00059267 = {
 			isa = PBXGroup;
 			children = (
+				BA226D9E1A404F9200059267 /* libxml2.dylib */,
+				BA226D9C1A404F8A00059267 /* libpthread.dylib */,
+				BA226D9A1A404F7F00059267 /* libstdc++.6.0.9.dylib */,
+				BA226D981A404F7200059267 /* Foundation.framework */,
+				BA226D961A404F6300059267 /* UIKit.framework */,
+				BA226D941A404F5A00059267 /* QuartzCore.framework */,
+				BA226D921A404F5200059267 /* AVFoundation.framework */,
+				BA226D901A404F4800059267 /* AudioToolbox.framework */,
+				BA226D8E1A404F3D00059267 /* CoreGraphics.framework */,
+				BA226D8C1A404F3300059267 /* CoreMedia.framework */,
+				BA226D8A1A404F2B00059267 /* CoreVideo.framework */,
+				BA226D881A404F1E00059267 /* OpenGLES.framework */,
+				BA226D861A404F1100059267 /* SystemConfiguration.framework */,
+				BA226D841A404F0400059267 /* CoreTelephony.framework */,
+				BA226D821A404EFA00059267 /* libsqlite3.dylib */,
+				BA226D801A404EC800059267 /* OpenTok.framework */,
 				BA226D4C1A404D9D00059267 /* Panda4rep */,
 				BA226D621A404D9D00059267 /* Panda4repTests */,
 				BA226D4B1A404D9D00059267 /* Products */,
@@ -77,8 +207,11 @@
 		BA226D4C1A404D9D00059267 /* Panda4rep */ = {
 			isa = PBXGroup;
 			children = (
+				BA1AA7D41A516DB900BCE29D /* components */,
 				BA226D4F1A404D9D00059267 /* AppDelegate.swift */,
-				BA226D511A404D9D00059267 /* ViewController.swift */,
+				BAF09B3D1A55369C009F00F8 /* Utils */,
+				BAB1025B1A42D292006075D2 /* UIExtentions */,
+				BAB1025C1A42D2C4006075D2 /* ViewControllers */,
 				BA226D531A404D9D00059267 /* Main.storyboard */,
 				BA226D561A404D9D00059267 /* Images.xcassets */,
 				BA226D581A404D9D00059267 /* LaunchScreen.xib */,
@@ -90,6 +223,7 @@
 		BA226D4D1A404D9D00059267 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				BA226DA31A40552200059267 /* Panda4rep-Bridging-Header.h */,
 				BA226D4E1A404D9D00059267 /* Info.plist */,
 			);
 			name = "Supporting Files";
@@ -112,6 +246,49 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
+		BAB1025B1A42D292006075D2 /* UIExtentions */ = {
+			isa = PBXGroup;
+			children = (
+				BA1AA79E1A5014B500BCE29D /* TrainingCellView.swift */,
+				BAB102531A41B680006075D2 /* UINavigationControllerWithOrientation.swift */,
+				BAB102591A42BCC7006075D2 /* UIAlertViewWithData.swift */,
+			);
+			name = UIExtentions;
+			sourceTree = "<group>";
+		};
+		BAB1025C1A42D2C4006075D2 /* ViewControllers */ = {
+			isa = PBXGroup;
+			children = (
+				BA226DB01A41928300059267 /* MainViewController.swift */,
+				BAB102551A41E467006075D2 /* TrainingViewController.swift */,
+				BAAA5D2C1A43FA470058CAA9 /* TrainingDetailViewController.swift */,
+				BA226DB21A4192F100059267 /* ProfileViewController.swift */,
+				BA226DB41A41932F00059267 /* CallViewController.swift */,
+				BAAA5D301A486FF40058CAA9 /* PreCallViewController.swift */,
+				BA1AA7A01A5159B500BCE29D /* PostCallViewController.swift */,
+				BA226DAC1A418BE000059267 /* LoginViewController.swift */,
+				BA226DAE1A418F7B00059267 /* RegisterViewController.swift */,
+				BA226DA81A4177EC00059267 /* WelcomeViewController.swift */,
+				BA226DA61A41767A00059267 /* PageContentViewController.swift */,
+				BAAA5D2E1A448FCB0058CAA9 /* WebResourceViewController.swift */,
+				BA1AA7981A4BF82D00BCE29D /* CallOfferViewController.swift */,
+				BA1AA79C1A5006D000BCE29D /* TestViewController.swift */,
+				BAF09B401A55410D009F00F8 /* NotApprovedViewController.swift */,
+			);
+			name = ViewControllers;
+			sourceTree = "<group>";
+		};
+		BAF09B3D1A55369C009F00F8 /* Utils */ = {
+			isa = PBXGroup;
+			children = (
+				BA226DAA1A41785500059267 /* ServerAPI.swift */,
+				BAB1025D1A42FD5F006075D2 /* TimeUtils.swift */,
+				BA1AA79A1A4C2AA100BCE29D /* StorageUtils.swift */,
+				BAF09B3E1A5536B4009F00F8 /* LoginUtils.swift */,
+			);
+			name = Utils;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -122,6 +299,7 @@
 				BA226D461A404D9D00059267 /* Sources */,
 				BA226D471A404D9D00059267 /* Frameworks */,
 				BA226D481A404D9D00059267 /* Resources */,
+				BA1AA7CA1A516AF000BCE29D /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -161,6 +339,7 @@
 				TargetAttributes = {
 					BA226D491A404D9D00059267 = {
 						CreatedOnToolsVersion = 6.1.1;
+						DevelopmentTeam = 3QCZR49TV4;
 					};
 					BA226D5E1A404D9D00059267 = {
 						CreatedOnToolsVersion = 6.1.1;
@@ -212,8 +391,30 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				BA226D521A404D9D00059267 /* ViewController.swift in Sources */,
+				BA226DAD1A418BE000059267 /* LoginViewController.swift in Sources */,
+				BA1AA79D1A5006D000BCE29D /* TestViewController.swift in Sources */,
+				BA1AA7991A4BF82D00BCE29D /* CallOfferViewController.swift in Sources */,
+				BAAA5D2D1A43FA470058CAA9 /* TrainingDetailViewController.swift in Sources */,
+				BAF09B3F1A5536B4009F00F8 /* LoginUtils.swift in Sources */,
+				BA1AA79B1A4C2AA100BCE29D /* StorageUtils.swift in Sources */,
+				BA226DA71A41767A00059267 /* PageContentViewController.swift in Sources */,
+				BA1AA7A11A5159B500BCE29D /* PostCallViewController.swift in Sources */,
+				BAAA5D2F1A448FCB0058CAA9 /* WebResourceViewController.swift in Sources */,
+				BA226DAF1A418F7B00059267 /* RegisterViewController.swift in Sources */,
+				BA226DA91A4177EC00059267 /* WelcomeViewController.swift in Sources */,
+				BAF09B411A55410D009F00F8 /* NotApprovedViewController.swift in Sources */,
+				BA226DAB1A41785500059267 /* ServerAPI.swift in Sources */,
+				BAB1025E1A42FD5F006075D2 /* TimeUtils.swift in Sources */,
+				BA1AA79F1A5014B500BCE29D /* TrainingCellView.swift in Sources */,
+				BAAA5D311A486FF40058CAA9 /* PreCallViewController.swift in Sources */,
+				BA226DB31A4192F100059267 /* ProfileViewController.swift in Sources */,
 				BA226D501A404D9D00059267 /* AppDelegate.swift in Sources */,
+				BAB102541A41B680006075D2 /* UINavigationControllerWithOrientation.swift in Sources */,
+				BAB1025A1A42BCC7006075D2 /* UIAlertViewWithData.swift in Sources */,
+				BA1AA7D31A516DA900BCE29D /* FloatRatingView.swift in Sources */,
+				BA226DB51A41932F00059267 /* CallViewController.swift in Sources */,
+				BAB102561A41E467006075D2 /* TrainingViewController.swift in Sources */,
+				BA226DB11A41928300059267 /* MainViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -338,9 +539,22 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Panda4rep",
+				);
 				INFOPLIST_FILE = Panda4rep/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				ONLY_ACTIVE_ARCH = NO;
+				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
+				SWIFT_OBJC_BRIDGING_HEADER = "Panda4rep-Bridging-Header.h";
+				TARGETED_DEVICE_FAMILY = 1;
+				VALID_ARCHS = "armv7 armv7s";
 			};
 			name = Debug;
 		};
@@ -348,9 +562,22 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Panda4rep",
+				);
 				INFOPLIST_FILE = Panda4rep/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				ONLY_ACTIVE_ARCH = NO;
+				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
+				SWIFT_OBJC_BRIDGING_HEADER = "Panda4rep-Bridging-Header.h";
+				TARGETED_DEVICE_FAMILY = 1;
+				VALID_ARCHS = "armv7 armv7s";
 			};
 			name = Release;
 		};
@@ -407,6 +634,7 @@
 				BA226D6B1A404D9D00059267 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		BA226D6C1A404D9D00059267 /* Build configuration list for PBXNativeTarget "Panda4repTests" */ = {
 			isa = XCConfigurationList;
@@ -415,6 +643,7 @@
 				BA226D6E1A404D9D00059267 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

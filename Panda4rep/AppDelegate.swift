@@ -8,14 +8,43 @@
 
 import UIKit
 
+
 @UIApplicationMain
-class AppDelegate: UIResponder, UIApplicationDelegate {
+class AppDelegate: UIResponder, UIApplicationDelegate, LoginDelegate, UIAlertViewDelegate {
 
     var window: UIWindow?
+    var token: String?
+
 
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         // Override point for customization after application launch.
+        var pageControl = UIPageControl.appearance()
+        pageControl.pageIndicatorTintColor = UIColor.lightGrayColor()
+        pageControl.currentPageIndicatorTintColor = UIColor.blackColor()
+        pageControl.backgroundColor = UIColor.whiteColor()
+        
+        // Register for Push Notitications, if running iOS 8
+        if application.respondsToSelector("registerUserNotificationSettings:") {
+            
+            let types:UIUserNotificationType = (.Alert | .Badge | .Sound)
+            let settings:UIUserNotificationSettings = UIUserNotificationSettings(forTypes: types, categories: nil)
+            
+            application.registerUserNotificationSettings(settings)
+            application.registerForRemoteNotifications()
+            
+        } else {
+            // Register for Push Notifications before iOS 8
+            application.registerForRemoteNotificationTypes(.Alert | .Badge | .Sound)
+        }
+        if let launchOpts = launchOptions {
+            var notificationPayload: NSDictionary = launchOpts[UIApplicationLaunchOptionsRemoteNotificationKey] as NSDictionary
+            dispatch_async(dispatch_get_main_queue()){
+                self.showAcceprCallAlert(notificationPayload)
+            }
+        }
+       
+        //showAcceprCallAlert(["product": "koko", "start":"2014-22-12 22:00:00", "ofer_id": 100])
         return true
     }
 
@@ -35,10 +64,75 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func applicationDidBecomeActive(application: UIApplication) {
         // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
+        let app = UIApplication.sharedApplication()
+        app.applicationIconBadgeNumber = 0
+        app.cancelAllLocalNotifications()
     }
 
     func applicationWillTerminate(application: UIApplication) {
         // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
+    }
+    
+    func application(application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: NSData) {
+        let tokenChars = UnsafePointer<CChar>(deviceToken.bytes)
+        var tokenString = ""
+        
+        for var i = 0; i < deviceToken.length; i++ {
+            tokenString += String(format: "%02.2hhx", arguments: [tokenChars[i]])
+        }
+        self.token = tokenString
+        ServerAPI.delegate = self
+    }
+    
+
+    
+    
+    func application(application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: NSError) {
+        print(error)
+    }
+    
+    func loginComplete() {
+        ServerAPI.sendDeviceToken(self.token!)
+    }
+    
+    func application(application: UIApplication, didReceiveRemoteNotification userInfo: [NSObject : AnyObject]) {
+        print(userInfo)
+        showAcceprCallAlert(userInfo)
+    }
+    
+    func alertView(alertView: UIAlertViewWithData, didDismissWithButtonIndex buttonIndex: Int) {
+        println(buttonIndex)
+        if (buttonIndex == 0){ //Accept
+            if let offerId: AnyObject = alertView.data?["offer_id"] {
+                ServerAPI.acceptCallOffer(offerId as NSNumber, completion: {result -> Void in
+                    //
+                })
+            }
+        }
+    }
+    
+    func showAcceprCallAlert(userInfo: AnyObject){
+        let product = userInfo["product"] as String
+        let start = userInfo["start"] as String
+        let offerId = userInfo["offer_id"] as NSNumber
+        
+
+        let date = TimeUtils.serverDateTimeStrToDate(start)
+        var readableTime = TimeUtils.dateToReadableStr(date)
+        var acceptCallAlert = UIAlertViewWithData()
+        
+        acceptCallAlert.title = "New Call Offer"
+        acceptCallAlert.message = "Call about \(product) will take place on \(readableTime), Would you like to accept it?"
+        acceptCallAlert.addButtonWithTitle("Accept")
+        acceptCallAlert.addButtonWithTitle("Cancel")
+        acceptCallAlert.delegate = self
+        acceptCallAlert.data = ["offer_id": offerId]
+        acceptCallAlert.show()
+        
+        //        var rootViewController = self.window!.rootViewController
+        //        let alert = UIAlertController(title: "Title", message: "Message", preferredStyle: UIAlertControllerStyle.Alert)
+        //        alert.addAction(UIAlertAction(title: "Button", style: UIAlertActionStyle.Default, handler: nil))
+        //        rootViewController?.presentViewController(alert, animated: true, completion: nil)
     }
 
 
