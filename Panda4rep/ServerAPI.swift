@@ -6,6 +6,9 @@
 //  Copyright (c) 2014 Erez. All rights reserved.
 //
 
+var SERVER_URL = "http://panda-env-pvjmmhntm4.elasticbeanstalk.com"
+//var SERVER_URL = "http://192.168.10.71:8000"
+
 @objc protocol LoginDelegate{
     optional func loginComplete()
 }
@@ -176,9 +179,7 @@ struct ServerAPI {
     }
     
     static func post(url: String, message: Dictionary<String, AnyObject>, completion: (result: AnyObject) -> Void) -> Void{
-        //var request = NSMutableURLRequest(URL: NSURL(string: "http://panda-env-pvjmmhntm4.elasticbeanstalk.com\(url)")!)
-        var request = NSMutableURLRequest(URL: NSURL(string: "http://192.168.10.71:8000\(url)")!)
-        //var request = NSMutableURLRequest(URL: NSURL(string: "http://10.0.0.5:8000\(url)")!)
+        var request = NSMutableURLRequest(URL: NSURL(string: SERVER_URL + url)!)
         var session = NSURLSession.sharedSession()
         request.HTTPMethod = "POST"
         
@@ -229,9 +230,7 @@ struct ServerAPI {
         })
     }
     static func get(url: String, isJson: Bool, completion: (result: AnyObject) -> Void) -> Void{
-        //var request = NSMutableURLRequest(URL: NSURL(string: "http://panda-env-pvjmmhntm4.elasticbeanstalk.com\(url)")!)
-        var request = NSMutableURLRequest(URL: NSURL(string: "http://192.168.10.71:8000\(url)")!)
-        //var request = NSMutableURLRequest(URL: NSURL(string: "http://10.0.0.5:8000\(url)")!)
+        var request = NSMutableURLRequest(URL: NSURL(string: SERVER_URL + url)!)
         var session = NSURLSession.sharedSession()
         request.HTTPMethod = "GET"
         

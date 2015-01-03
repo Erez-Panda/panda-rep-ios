@@ -20,7 +20,7 @@ let ApiKey = "45118952"
 // Change to YES to subscribe to your own stream.
 let SubscribeToSelf = false
 
-class CallViewController:UIViewController , OTSessionDelegate, OTSubscriberKitDelegate, OTPublisherDelegate, UITextFieldDelegate{
+class CallViewController:UIViewController , OTSessionDelegate, OTSubscriberKitDelegate, OTPublisherDelegate, UITextFieldDelegate, UIGestureRecognizerDelegate{
     
     @IBOutlet weak var presentationImg: UIImageView!
     
@@ -31,6 +31,7 @@ class CallViewController:UIViewController , OTSessionDelegate, OTSubscriberKitDe
     @IBOutlet weak var sendButton: UIButton!
     
     var activeChatView: UITextView!
+    var isDragging: Bool = false
     
     var session : OTSession?
     var publisher : OTPublisher?
@@ -72,6 +73,43 @@ class CallViewController:UIViewController , OTSessionDelegate, OTSubscriberKitDe
             loadImage(dispRes["id"] as NSNumber)
         }
         
+    }
+    
+    override func touchesBegan(touches: NSSet, withEvent event: UIEvent) {
+        super.touchesBegan(touches, withEvent: event)
+        let touch: UITouch = touches.anyObject() as UITouch
+        ((touch.gestureRecognizers as NSArray)[0] as UIGestureRecognizer).cancelsTouchesInView = false
+        let touchLocation = touch.locationInView(self.view) as CGPoint
+        
+        
+        
+        if let subscriberRect = self.subscriber?.view.frame {
+            if (CGRectContainsPoint(subscriberRect, touchLocation)){
+                self.isDragging = true
+            }
+        }
+        
+        
+    }
+    
+    override func touchesEnded(touches: NSSet, withEvent event: UIEvent) {
+        self.isDragging = false
+    }
+    override func touchesCancelled(touches: NSSet!, withEvent event: UIEvent!) {
+        println("CANCEL")
+    }
+    override func touchesMoved(touches: NSSet, withEvent event: UIEvent) {
+        let touch: UITouch = touches.anyObject() as UITouch
+        let touchLocation = touch.locationInView(self.view) as CGPoint
+        if (self.isDragging){
+            if let subscriber = self.subscriber?.view {
+                UIView.animateWithDuration(0.0,
+                    delay: 0.0,
+                    options: (UIViewAnimationOptions.BeginFromCurrentState|UIViewAnimationOptions.CurveEaseInOut),
+                    animations:  {subscriber.center = touchLocation},
+                    completion: nil)
+            }
+        }
     }
     
     func registerForKeyboardNotifications() {
