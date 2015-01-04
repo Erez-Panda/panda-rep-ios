@@ -39,8 +39,8 @@ class CallViewController:UIViewController , OTSessionDelegate, OTSubscriberKitDe
     var user: NSDictionary!
     var currentCall: NSDictionary!
     var resources: NSArray?
-    var selectedRes: NSDictionary?
-    var displayRescources: NSArray?
+    var selectedResIndex = 0
+    var displayResources: NSArray?
     var currentImageIndex = 0
     var callStartTime: NSDate?
     var sessionNumber: NSNumber?
@@ -60,16 +60,13 @@ class CallViewController:UIViewController , OTSessionDelegate, OTSubscriberKitDe
         // Step 1: As the view is loaded initialize a new instance of OTSession
         if (self.currentCall != nil){
             session = OTSession(apiKey: ApiKey, sessionId: self.currentCall["session"] as String, delegate: self)
+            self.doConnect()
+            self.activeChatView.text = (self.activeChatView.text + "Waiting for remote side to connect...\n")
         }
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "rotated", name: UIDeviceOrientationDidChangeNotification, object: nil)
         registerForKeyboardNotifications()
-        var swipeRight = UISwipeGestureRecognizer(target: self, action: "next:")
-        swipeRight.direction = UISwipeGestureRecognizerDirection.Right
-        self.view.addGestureRecognizer(swipeRight)
-        var swipeLeft = UISwipeGestureRecognizer(target: self, action: "prev:")
-        swipeRight.direction = UISwipeGestureRecognizerDirection.Left
-        self.view.addGestureRecognizer(swipeLeft)
-        if let dispRes = displayRescources?[0] as? NSDictionary{
+        UIEventRegister.gestureRecognizer(self, rightAction:"prev:", leftAction: "next:", upAction: "up:", downAction: "down:")
+        if let dispRes = displayResources?[0] as? NSDictionary{
             loadImage(dispRes["id"] as NSNumber)
         }
         
@@ -233,11 +230,11 @@ class CallViewController:UIViewController , OTSessionDelegate, OTSubscriberKitDe
     
 
     func next(sender: UISwipeGestureRecognizer) {
-        if (currentImageIndex+1 == self.displayRescources?.count){
+        if (currentImageIndex+1 == self.displayResources?.count){
             return
         }
         currentImageIndex++
-        if let dispRes = displayRescources?[currentImageIndex] as? NSDictionary{
+        if let dispRes = displayResources?[currentImageIndex] as? NSDictionary{
             if let imgFile = dispRes["id"] as? NSNumber{
                 loadImage(imgFile)
                 
@@ -249,14 +246,42 @@ class CallViewController:UIViewController , OTSessionDelegate, OTSubscriberKitDe
             return
         }
         currentImageIndex--
-        if let dispRes = displayRescources?[currentImageIndex] as? NSDictionary{
+        if let dispRes = displayResources?[currentImageIndex] as? NSDictionary{
             if let imgFile = dispRes["id"] as? NSNumber{
                 loadImage(imgFile)
             }
         }
     }
     
+    func up(sender: UISwipeGestureRecognizer) {
+        if (selectedResIndex+1 >= self.resources?.count){
+            selectedResIndex = -1
+        }
+        selectedResIndex++
+        changeDisplayResource(selectedResIndex)
+    }
+    func down(sender: UISwipeGestureRecognizer) {
+        if selectedResIndex <= 0{
+            selectedResIndex = self.resources!.count
+        }
+        selectedResIndex--
+        changeDisplayResource(selectedResIndex)
+    }
     
+    
+    func changeDisplayResource(index: Int) {
+        if let resource = self.resources?[index] as? NSDictionary{
+            if let resourceId = resource["id"] as? NSNumber{
+                ServerAPI.getResourceDisplay(resourceId, completion: { (result) -> Void in
+                    self.displayResources = result
+                    if let dispRes = self.displayResources?[0] as? NSDictionary{
+                        self.loadImage(dispRes["id"] as NSNumber)
+                    }
+  
+                })
+            }
+        }
+    }
     // MARK: - OpenTok Methods
     
     /**
@@ -343,7 +368,6 @@ class CallViewController:UIViewController , OTSessionDelegate, OTSubscriberKitDe
     
     func sessionDidConnect(session: OTSession) {
         NSLog("sessionDidConnect (\(session.sessionId))")
-        
         // Step 2: We have successfully connected, now instantiate a publisher and
         // begin pushing A/V streams into OpenTok.
         doPublish()
@@ -358,6 +382,7 @@ class CallViewController:UIViewController , OTSessionDelegate, OTSubscriberKitDe
         // Step 3a: (if NO == subscribeToSelf): Begin subscribing to a stream we
         // have seen on the OpenTok session.
         if subscriber == nil && !SubscribeToSelf {
+            self.activeChatView.text = (self.activeChatView.text + "Remote side sent video stream\n")
             doSubscribe(stream)
         }
     }
@@ -367,16 +392,21 @@ class CallViewController:UIViewController , OTSessionDelegate, OTSubscriberKitDe
         self.navigationController?.navigationBarHidden = false
         
         if subscriber?.stream.streamId == stream.streamId {
+            self.activeChatView.text = (self.activeChatView.text + "Remote side stopped video stream\n")
             doUnsubscribe()
         }
     }
     
     func session(session: OTSession, connectionCreated connection : OTConnection) {
         NSLog("session connectionCreated (\(connection.connectionId))")
+        if connection.connectionId != self.session?.connection.connectionId {
+            self.activeChatView.text = (self.activeChatView.text + "Remote side connected to session\n")
+        }
     }
     
     func session(session: OTSession, connectionDestroyed connection : OTConnection) {
         NSLog("session connectionDestroyed (\(connection.connectionId))")
+        self.activeChatView.text = (self.activeChatView.text + "Remote side disconnected from session\n")
     }
     
     func session(session: OTSession, didFailWithError error: OTError) {

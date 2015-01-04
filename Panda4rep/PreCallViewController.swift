@@ -22,13 +22,14 @@ class PreCallViewController: UIViewController,UIPickerViewDelegate, UIPickerView
     var resources: NSArray?
     var user: NSDictionary!
     var selectedRes: NSDictionary?
-    var displayRescources: NSArray?
+    var displayResources: NSArray?
     var currentCall: NSDictionary?
     var sessionNumber: NSNumber?
+    var selectedResIndex = 0
     
     func replaceTextValues(lastCall: NSDictionary, productName: String, doctorName: String){
-        if (lastCall["details"] != nil) {
-            self.summaryTextView.text = lastCall["details"] as String
+        if let details = lastCall["details"] as? String{
+            self.summaryTextView.text = details
             let date = TimeUtils.serverDateTimeStrToDate(lastCall["start"] as String)
             var readableTime = TimeUtils.dateToReadableStr(date)
             self.detailsTextView.text = self.detailsTextView.text.stringByReplacingOccurrencesOfString("START_DATE", withString: readableTime)
@@ -118,6 +119,7 @@ class PreCallViewController: UIViewController,UIPickerViewDelegate, UIPickerView
     func pickerView(pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
         let resource = self.resources![row] as NSDictionary
         self.selectedRes = resource
+        self.selectedResIndex = row
     }
     
     func pickerView(pickerView: UIPickerView, attributedTitleForRow row: Int, forComponent component: Int) -> NSAttributedString? {
@@ -130,7 +132,7 @@ class PreCallViewController: UIViewController,UIPickerViewDelegate, UIPickerView
     @IBAction func loadResource(sender: UIButton) {
         if let resourceId = self.selectedRes?["id"] as? NSNumber{
             ServerAPI.getResourceDisplay(resourceId, completion: { (result) -> Void in
-                self.displayRescources = result
+                self.displayResources = result
                 dispatch_async(dispatch_get_main_queue()){
                     self.performSegueWithIdentifier("showCallSegue", sender: AnyObject?())
                 }
@@ -145,8 +147,9 @@ class PreCallViewController: UIViewController,UIPickerViewDelegate, UIPickerView
         if (segue.identifier == "showCallSegue"){
             var svc = segue.destinationViewController as CallViewController
             svc.user = self.user
-            svc.selectedRes = self.selectedRes
-            svc.displayRescources = self.displayRescources
+            svc.selectedResIndex = self.selectedResIndex
+            svc.resources = self.resources
+            svc.displayResources = self.displayResources
             svc.currentCall = self.currentCall
             svc.sessionNumber = self.sessionNumber
         }

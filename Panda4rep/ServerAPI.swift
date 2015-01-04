@@ -6,8 +6,8 @@
 //  Copyright (c) 2014 Erez. All rights reserved.
 //
 
-var SERVER_URL = "http://panda-env-pvjmmhntm4.elasticbeanstalk.com"
-//var SERVER_URL = "http://192.168.10.71:8000"
+//var SERVER_URL = "http://panda-env-pvjmmhntm4.elasticbeanstalk.com"
+var SERVER_URL = "http://192.168.10.71:8000"
 
 @objc protocol LoginDelegate{
     optional func loginComplete()

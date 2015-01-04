@@ -42,6 +42,7 @@
 		BA226DB11A41928300059267 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA226DB01A41928300059267 /* MainViewController.swift */; };
 		BA226DB31A4192F100059267 /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA226DB21A4192F100059267 /* ProfileViewController.swift */; };
 		BA226DB51A41932F00059267 /* CallViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA226DB41A41932F00059267 /* CallViewController.swift */; };
+		BA99E1C21A598C6A00D0F022 /* UIEventRegister.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA99E1C11A598C6A00D0F022 /* UIEventRegister.swift */; };
 		BAAA5D2D1A43FA470058CAA9 /* TrainingDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAAA5D2C1A43FA470058CAA9 /* TrainingDetailViewController.swift */; };
 		BAAA5D2F1A448FCB0058CAA9 /* WebResourceViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAAA5D2E1A448FCB0058CAA9 /* WebResourceViewController.swift */; };
 		BAAA5D311A486FF40058CAA9 /* PreCallViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAAA5D301A486FF40058CAA9 /* PreCallViewController.swift */; };
@@ -117,6 +118,7 @@
 		BA226DB01A41928300059267 /* MainViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
 		BA226DB21A4192F100059267 /* ProfileViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProfileViewController.swift; sourceTree = "<group>"; };
 		BA226DB41A41932F00059267 /* CallViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CallViewController.swift; sourceTree = "<group>"; };
+		BA99E1C11A598C6A00D0F022 /* UIEventRegister.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIEventRegister.swift; sourceTree = "<group>"; };
 		BAAA5D2C1A43FA470058CAA9 /* TrainingDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TrainingDetailViewController.swift; sourceTree = "<group>"; };
 		BAAA5D2E1A448FCB0058CAA9 /* WebResourceViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WebResourceViewController.swift; sourceTree = "<group>"; };
 		BAAA5D301A486FF40058CAA9 /* PreCallViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PreCallViewController.swift; sourceTree = "<group>"; };
@@ -285,6 +287,7 @@
 				BAB1025D1A42FD5F006075D2 /* TimeUtils.swift */,
 				BA1AA79A1A4C2AA100BCE29D /* StorageUtils.swift */,
 				BAF09B3E1A5536B4009F00F8 /* LoginUtils.swift */,
+				BA99E1C11A598C6A00D0F022 /* UIEventRegister.swift */,
 			);
 			name = Utils;
 			sourceTree = "<group>";
@@ -412,6 +415,7 @@
 				BAB102541A41B680006075D2 /* UINavigationControllerWithOrientation.swift in Sources */,
 				BAB1025A1A42BCC7006075D2 /* UIAlertViewWithData.swift in Sources */,
 				BA1AA7D31A516DA900BCE29D /* FloatRatingView.swift in Sources */,
+				BA99E1C21A598C6A00D0F022 /* UIEventRegister.swift in Sources */,
 				BA226DB51A41932F00059267 /* CallViewController.swift in Sources */,
 				BAB102561A41E467006075D2 /* TrainingViewController.swift in Sources */,
 				BA226DB11A41928300059267 /* MainViewController.swift in Sources */,
