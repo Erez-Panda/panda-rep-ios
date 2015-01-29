@@ -8,19 +8,17 @@
 
 import UIKit
 
+
 let videoWidth : CGFloat = 264/1.5
 let videoHeight : CGFloat = 198/1.5
 
-// *** Fill the following variables using your own Project info  ***
-// ***          https://dashboard.tokbox.com/projects            ***
-// Replace with your OpenTok API key
-let ApiKey = "45118952"
+
 
 
 // Change to YES to subscribe to your own stream.
 let SubscribeToSelf = false
 
-class CallViewController:UIViewController , OTSessionDelegate, OTSubscriberKitDelegate, OTPublisherDelegate, UITextFieldDelegate, UIGestureRecognizerDelegate{
+class CallViewController:UIViewController ,UITextFieldDelegate, UIGestureRecognizerDelegate, OTSessionDelegate, OTSubscriberKitDelegate, OTPublisherDelegate{
     
     @IBOutlet weak var presentationImg: UIImageView!
     
@@ -33,9 +31,7 @@ class CallViewController:UIViewController , OTSessionDelegate, OTSubscriberKitDe
     var activeChatView: UITextView!
     var isDragging: Bool = false
     
-    var session : OTSession?
-    var publisher : OTPublisher?
-    var subscriber : OTSubscriber?
+
     var user: NSDictionary!
     var currentCall: NSDictionary!
     var resources: NSArray?
@@ -48,7 +44,7 @@ class CallViewController:UIViewController , OTSessionDelegate, OTSubscriberKitDe
     @IBAction func sendMessage(sender: UIButton) {
         
         var maybeError : OTError?
-        session?.signalWithType("chat_text", string: self.chatMessage.text, connection: nil, error: &maybeError)
+        CallUtils.session?.signalWithType("chat_text", string: self.chatMessage.text, connection: nil, error: &maybeError)
         self.activeChatView.text = (self.activeChatView.text + "me: " + self.chatMessage.text + "\n")
         self.chatMessage.text = ""
     }
@@ -59,17 +55,29 @@ class CallViewController:UIViewController , OTSessionDelegate, OTSubscriberKitDe
         activeChatView = chatView
         // Step 1: As the view is loaded initialize a new instance of OTSession
         if (self.currentCall != nil){
-            session = OTSession(apiKey: ApiKey, sessionId: self.currentCall["session"] as String, delegate: self)
-            self.doConnect()
+            CallUtils.initCall(self.currentCall["session"] as String, token: self.currentCall["token"] as String, delegate: self)
+
             self.activeChatView.text = (self.activeChatView.text + "Waiting for remote side to connect...\n")
         }
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "rotated", name: UIDeviceOrientationDidChangeNotification, object: nil)
         registerForKeyboardNotifications()
         UIEventRegister.gestureRecognizer(self, rightAction:"prev:", leftAction: "next:", upAction: "up:", downAction: "down:")
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "viewDidEnterBackground", name: UIApplicationDidEnterBackgroundNotification, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "viewDidBecomeActive", name: UIApplicationDidBecomeActiveNotification, object: nil)
+        
+        
         if let dispRes = displayResources?[0] as? NSDictionary{
             loadImage(dispRes["id"] as NSNumber)
         }
         
+    }
+    
+    func viewDidEnterBackground(){
+        CallUtils.pauseCall()
+    }
+    
+    func viewDidBecomeActive(){
+        CallUtils.resumeCall()
     }
     
     override func touchesBegan(touches: NSSet, withEvent event: UIEvent) {
@@ -80,7 +88,7 @@ class CallViewController:UIViewController , OTSessionDelegate, OTSubscriberKitDe
         
         
         
-        if let subscriberRect = self.subscriber?.view.frame {
+        if let subscriberRect = CallUtils.subscriber?.view.frame {
             if (CGRectContainsPoint(subscriberRect, touchLocation)){
                 self.isDragging = true
             }
@@ -99,7 +107,7 @@ class CallViewController:UIViewController , OTSessionDelegate, OTSubscriberKitDe
         let touch: UITouch = touches.anyObject() as UITouch
         let touchLocation = touch.locationInView(self.view) as CGPoint
         if (self.isDragging){
-            if let subscriber = self.subscriber?.view {
+            if let subscriber = CallUtils.subscriber?.view {
                 UIView.animateWithDuration(0.0,
                     delay: 0.0,
                     options: (UIViewAnimationOptions.BeginFromCurrentState|UIViewAnimationOptions.CurveEaseInOut),
@@ -165,7 +173,7 @@ class CallViewController:UIViewController , OTSessionDelegate, OTSubscriberKitDe
             let screenSize: CGRect = UIScreen.mainScreen().bounds
             self.presentationImg.frame = CGRect(x: 0.0, y: 0.0, width: screenSize.width, height: screenSize.height)
             //self.presentationImg.frame = CGRect(x: 0.0, y: 0.0, width: screenSize.height, height: screenSize.width)
-            self.subscriber?.view.frame = CGRect(x: screenSize.width-videoWidth, y: 0.0, width: videoWidth, height: videoHeight)
+            CallUtils.subscriber?.view.frame = CGRect(x: screenSize.width-videoWidth, y: 0.0, width: videoWidth, height: videoHeight)
             self.activeChatView.hidden = true
             self.chatMessage.hidden = true
             self.sendButton.hidden = true
@@ -176,7 +184,7 @@ class CallViewController:UIViewController , OTSessionDelegate, OTSubscriberKitDe
             let screenSize: CGRect = UIScreen.mainScreen().bounds
             self.presentationImg.frame.rectByUnion(CGRect(x: 0.0, y: 0.0, width: screenSize.width, height: screenSize.height*0.6))
             let imageHeight = self.presentationImg.frame.size.height
-            self.subscriber?.view.frame = CGRect(x: screenSize.width-videoWidth , y: imageHeight+10, width: videoWidth, height: videoHeight)
+            CallUtils.subscriber?.view.frame = CGRect(x: screenSize.width-videoWidth , y: imageHeight+10, width: videoWidth, height: videoHeight)
             println("portraight")
             self.activeChatView.hidden = false
             self.chatMessage.hidden = false
@@ -187,8 +195,7 @@ class CallViewController:UIViewController , OTSessionDelegate, OTSubscriberKitDe
     
     @IBAction func endCall(sender: AnyObject) {
         self.navigationController?.navigationBarHidden = false
-        doUnsubscribe()
-        doUnpublish()
+        CallUtils.stopCall()
         self.performSegueWithIdentifier("showPostCallSegue", sender: AnyObject?())
     }
     
@@ -205,7 +212,7 @@ class CallViewController:UIViewController , OTSessionDelegate, OTSubscriberKitDe
     
     override func viewWillAppear(animated: Bool) {
         // Step 2: As the view comes into the foreground, begin the connection process.
-        doConnect()
+        CallUtils.doConnect()
     }
     
     override func prefersStatusBarHidden() -> Bool {
@@ -222,7 +229,7 @@ class CallViewController:UIViewController , OTSessionDelegate, OTSubscriberKitDe
                 }
             }
             var maybeError : OTError?
-            self.session?.signalWithType("load_res", string: result, connection: nil, error: &maybeError)
+            CallUtils.session?.signalWithType("load_res", string: result, connection: nil, error: &maybeError)
         })
 
     }
@@ -230,6 +237,7 @@ class CallViewController:UIViewController , OTSessionDelegate, OTSubscriberKitDe
     
 
     func next(sender: UISwipeGestureRecognizer) {
+        if self.isDragging {return}
         if (currentImageIndex+1 == self.displayResources?.count){
             return
         }
@@ -242,6 +250,7 @@ class CallViewController:UIViewController , OTSessionDelegate, OTSubscriberKitDe
         }
     }
     func prev(sender: UISwipeGestureRecognizer) {
+        if self.isDragging {return}
         if currentImageIndex <= 0{
             return
         }
@@ -254,6 +263,7 @@ class CallViewController:UIViewController , OTSessionDelegate, OTSubscriberKitDe
     }
     
     func up(sender: UISwipeGestureRecognizer) {
+        if self.isDragging {return}
         if (selectedResIndex+1 >= self.resources?.count){
             selectedResIndex = -1
         }
@@ -261,6 +271,7 @@ class CallViewController:UIViewController , OTSessionDelegate, OTSubscriberKitDe
         changeDisplayResource(selectedResIndex)
     }
     func down(sender: UISwipeGestureRecognizer) {
+        if self.isDragging {return}
         if selectedResIndex <= 0{
             selectedResIndex = self.resources!.count
         }
@@ -282,87 +293,7 @@ class CallViewController:UIViewController , OTSessionDelegate, OTSubscriberKitDe
             }
         }
     }
-    // MARK: - OpenTok Methods
-    
-    /**
-    * Asynchronously begins the session connect process. Some time later, we will
-    * expect a delegate method to call us back with the results of this action.
-    */
-    func doConnect() {
-        if let session = self.session {
-            var maybeError : OTError?
-            session.connectWithToken(self.currentCall["token"] as String, error: &maybeError)
-            if let error = maybeError {
-                showAlert(error.localizedDescription)
-            }
-        }
-    }
-    
-    /**
-    * Sets up an instance of OTPublisher to use with this session. OTPubilsher
-    * binds to the device camera and microphone, and will provide A/V streams
-    * to the OpenTok session.
-    */
-    func doPublish() {
-        publisher = OTPublisher(delegate: self)
-        
-        var maybeError : OTError?
-        session?.publish(publisher, error: &maybeError)
-        
-        if let error = maybeError {
-            showAlert(error.localizedDescription)
-        }
-        
-        //view.addSubview(publisher!.view)
-        //publisher!.view.frame = CGRect(x: 0.0, y: 40, width: videoWidth, height: videoHeight)
-    }
-    
-    /**
-    * Instantiates a subscriber for the given stream and asynchronously begins the
-    * process to begin receiving A/V content for this stream. Unlike doPublish,
-    * this method does not add the subscriber to the view hierarchy. Instead, we
-    * add the subscriber only after it has connected and begins receiving data.
-    */
-    func doSubscribe(stream : OTStream) {
-        if let session = self.session {
-            subscriber = OTSubscriber(stream: stream, delegate: self)
-            
-            var maybeError : OTError?
-            session.subscribe(subscriber, error: &maybeError)
-            if let error = maybeError {
-                showAlert(error.localizedDescription)
-            }
-        }
-    }
-    
-    /**
-    * Cleans the subscriber from the view hierarchy, if any.
-    */
-    func doUnsubscribe() {
-        if let subscriber = self.subscriber {
-            var maybeError : OTError?
-            session?.unsubscribe(subscriber, error: &maybeError)
-            if let error = maybeError {
-                showAlert(error.localizedDescription)
-            }
-            
-            subscriber.view.removeFromSuperview()
-            self.subscriber = nil
-        }
-    }
-    
-    func doUnpublish() {
-        if let publisher = self.publisher {
-            var maybeError : OTError?
-            session?.unpublish(publisher, error: &maybeError)
-            if let error = maybeError {
-                showAlert(error.localizedDescription)
-            }
-            
-            publisher.view.removeFromSuperview()
-            self.publisher = nil
-        }
-    }
+
     
     // MARK: - OTSession delegate callbacks
     
@@ -370,7 +301,7 @@ class CallViewController:UIViewController , OTSessionDelegate, OTSubscriberKitDe
         NSLog("sessionDidConnect (\(session.sessionId))")
         // Step 2: We have successfully connected, now instantiate a publisher and
         // begin pushing A/V streams into OpenTok.
-        doPublish()
+        CallUtils.doPublish()
     }
     
     func sessionDidDisconnect(session : OTSession) {
@@ -379,11 +310,13 @@ class CallViewController:UIViewController , OTSessionDelegate, OTSubscriberKitDe
     
     func session(session: OTSession, streamCreated stream: OTStream) {
         NSLog("session streamCreated (\(stream.streamId))")
+        CallUtils.stream = stream
         // Step 3a: (if NO == subscribeToSelf): Begin subscribing to a stream we
         // have seen on the OpenTok session.
-        if subscriber == nil && !SubscribeToSelf {
-            self.activeChatView.text = (self.activeChatView.text + "Remote side sent video stream\n")
-            doSubscribe(stream)
+        if CallUtils.subscriber == nil && !SubscribeToSelf {
+            //self.activeChatView.text = (self.activeChatView.text + "Remote side sent video stream\n")
+            self.activeChatView.text = ""
+            CallUtils.doSubscribe(stream)
         }
     }
     
@@ -391,15 +324,15 @@ class CallViewController:UIViewController , OTSessionDelegate, OTSubscriberKitDe
         NSLog("session streamCreated (\(stream.streamId))")
         self.navigationController?.navigationBarHidden = false
         
-        if subscriber?.stream.streamId == stream.streamId {
+        if CallUtils.subscriber?.stream.streamId == stream.streamId {
             self.activeChatView.text = (self.activeChatView.text + "Remote side stopped video stream\n")
-            doUnsubscribe()
+            CallUtils.doUnsubscribe()
         }
     }
     
     func session(session: OTSession, connectionCreated connection : OTConnection) {
         NSLog("session connectionCreated (\(connection.connectionId))")
-        if connection.connectionId != self.session?.connection.connectionId {
+        if connection.connectionId != CallUtils.session?.connection.connectionId {
             self.activeChatView.text = (self.activeChatView.text + "Remote side connected to session\n")
         }
     }
@@ -414,7 +347,7 @@ class CallViewController:UIViewController , OTSessionDelegate, OTSubscriberKitDe
     }
     
     func session(session: OTSession!, receivedSignalType type: String!, fromConnection connection: OTConnection!, withString string: String!) {
-        if connection.connectionId != self.session?.connection.connectionId {
+        if connection.connectionId != CallUtils.session?.connection.connectionId {
             if(type == "chat_text"){
                 self.activeChatView.text = (self.activeChatView.text + string + "\n")
             }
@@ -427,7 +360,7 @@ class CallViewController:UIViewController , OTSessionDelegate, OTSubscriberKitDe
         NSLog("subscriberDidConnectToStream (\(subscriberKit))")
         self.navigationController?.navigationBarHidden = true
         self.endCallButton.hidden = false
-        if let view = subscriber?.view {
+        if let view = CallUtils.subscriber?.view {
             let imageHeight = self.presentationImg.frame.size.height
             let screenSize: CGRect = UIScreen.mainScreen().bounds
             view.frame = CGRect(x: screenSize.width-videoWidth , y: imageHeight+10, width: videoWidth, height: videoHeight)
@@ -454,16 +387,16 @@ class CallViewController:UIViewController , OTSessionDelegate, OTSubscriberKitDe
         // all participants in the OpenTok session. We will attempt to subscribe to
         // our own stream. Expect to see a slight delay in the subscriber video and
         // an echo of the audio coming from the device microphone.
-        if subscriber == nil && SubscribeToSelf {
-            doSubscribe(stream)
+        if CallUtils.subscriber == nil && SubscribeToSelf {
+            CallUtils.doSubscribe(stream)
         }
     }
     
     func publisher(publisher: OTPublisherKit, streamDestroyed stream: OTStream) {
         NSLog("publisher streamDestroyed %@", stream)
         
-        if subscriber?.stream.streamId == stream.streamId {
-            doUnsubscribe()
+        if CallUtils.subscriber?.stream.streamId == stream.streamId {
+            CallUtils.doUnsubscribe()
         }
     }
     
@@ -471,14 +404,7 @@ class CallViewController:UIViewController , OTSessionDelegate, OTSubscriberKitDe
         NSLog("publisher didFailWithError %@", error)
     }
     
-    // MARK: - Helpers
-    
-    func showAlert(message: String) {
-        // show alertview on main UI
-        dispatch_async(dispatch_get_main_queue()) {
-            let al = UIAlertView(title: "OTError", message: message, delegate: nil, cancelButtonTitle: "OK")
-        }
-    }
+
     
     
 }

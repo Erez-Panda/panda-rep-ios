@@ -12,7 +12,6 @@ class MainViewController: UIViewController{
     
     var user:NSDictionary!
     var products: NSArray!
-    var assignedTraining: NSArray?
     
     @IBOutlet weak var welcomeLabel: UILabel!
     
@@ -20,9 +19,6 @@ class MainViewController: UIViewController{
         if (segue.identifier == "showProfileSegue"){
             var svc = segue.destinationViewController as ProfileViewController
             svc.user = self.user
-        } else if (segue.identifier == "showTrainingSegue"){
-            var svc = segue.destinationViewController as TrainingViewController
-            svc.assignedTraining = self.assignedTraining
         } else if (segue.identifier == "showPreCallSegue"){
             var svc = segue.destinationViewController as PreCallViewController
             svc.user = self.user
@@ -60,11 +56,6 @@ class MainViewController: UIViewController{
         
         ServerAPI.getProducts({result -> Void in
             self.products = result
-        })
-        
-        
-        ServerAPI.getAssignedTraining({ (result) -> Void in
-            self.assignedTraining = result
         })
         
         

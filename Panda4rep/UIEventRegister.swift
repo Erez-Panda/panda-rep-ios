@@ -31,9 +31,5 @@ struct UIEventRegister {
         }
 
     }
-    
-    static func cleanUserData() -> Void{
-
-    }
 }
 

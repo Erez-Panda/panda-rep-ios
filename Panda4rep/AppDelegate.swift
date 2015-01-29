@@ -39,8 +39,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate, LoginDelegate, UIAlertVie
         }
         if let launchOpts = launchOptions {
             var notificationPayload: NSDictionary = launchOpts[UIApplicationLaunchOptionsRemoteNotificationKey] as NSDictionary
-            dispatch_async(dispatch_get_main_queue()){
-                self.showAcceprCallAlert(notificationPayload)
+            if ((notificationPayload["offer_id"]) != nil){
+                dispatch_async(dispatch_get_main_queue()){
+                    self.showAcceprCallAlert(notificationPayload)
+                }
             }
         }
        
@@ -51,6 +53,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, LoginDelegate, UIAlertVie
     func applicationWillResignActive(application: UIApplication) {
         // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
         // Use this method to pause ongoing tasks, disable timers, and throttle down OpenGL ES frame rates. Games should use this method to pause the game.
+        CallUtils.pauseCall()
+        
     }
 
     func applicationDidEnterBackground(application: UIApplication) {
@@ -67,6 +71,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, LoginDelegate, UIAlertVie
         let app = UIApplication.sharedApplication()
         app.applicationIconBadgeNumber = 0
         app.cancelAllLocalNotifications()
+        CallUtils.resumeCall()
     }
 
     func applicationWillTerminate(application: UIApplication) {
@@ -96,8 +101,21 @@ class AppDelegate: UIResponder, UIApplicationDelegate, LoginDelegate, UIAlertVie
     }
     
     func application(application: UIApplication, didReceiveRemoteNotification userInfo: [NSObject : AnyObject]) {
-        print(userInfo)
-        showAcceprCallAlert(userInfo)
+        if ((userInfo["offer_id"]) != nil){
+            dispatch_async(dispatch_get_main_queue()){
+                self.showAcceprCallAlert(userInfo)
+            }
+        }
+        if ((userInfo["type"]) as String == "new_training"){
+            var rootViewController = self.window!.rootViewController
+            let tvc = rootViewController?.storyboard?.instantiateViewControllerWithIdentifier("TrainingViewController") as TrainingViewController
+            let a = rootViewController?.presentedViewController
+            if let nvc = a as? UINavigationController{
+                dispatch_async(dispatch_get_main_queue()){
+                    nvc.pushViewController(tvc, animated: true)
+                }
+            }
+        }
     }
     
     func alertView(alertView: UIAlertViewWithData, didDismissWithButtonIndex buttonIndex: Int) {

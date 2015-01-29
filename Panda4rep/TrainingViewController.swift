@@ -13,6 +13,7 @@ class TrainingViewController: UITableViewController {
     var assignedTraining: NSArray?
     var selectedTraining: NSDictionary?
     var trainingResources: NSArray?
+    @IBOutlet var trainingTable: UITableView!
     
     required init(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
@@ -52,4 +53,14 @@ class TrainingViewController: UITableViewController {
         }
     }
     
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        assignedTraining = []
+        ServerAPI.getAssignedTraining({ (result) -> Void in
+            self.assignedTraining = result
+            dispatch_async(dispatch_get_main_queue()){
+                self.trainingTable.reloadData()
+            }
+        })
+    }
 }
