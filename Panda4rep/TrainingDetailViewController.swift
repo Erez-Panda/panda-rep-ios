@@ -17,7 +17,7 @@ class TrainingDetailViewController: UITableViewController {
     
     
     func startTest(sender: UIButton!) {
-        let resource = self.resources?[sender.tag] as NSDictionary
+        let resource = self.resources?[sender.tag] as! NSDictionary
         self.resourceId = resource["id"] as? NSNumber
         self.performSegueWithIdentifier("showTestSegue", sender: AnyObject?())
     }
@@ -33,9 +33,9 @@ class TrainingDetailViewController: UITableViewController {
         return self.resources!.count
     }
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> TrainingCellView {
-        let cell = tableView.dequeueReusableCellWithIdentifier("resourceCell") as TrainingCellView
-        let resource = self.resources?[indexPath.row] as NSDictionary
-        let name = resource["name"] as String
+        let cell = tableView.dequeueReusableCellWithIdentifier("resourceCell") as! TrainingCellView
+        let resource = self.resources?[indexPath.row] as! NSDictionary
+        let name = resource["name"] as! String
         cell.startTestButton.tag = indexPath.row
         cell.startTestButton.addTarget(self, action: "startTest:", forControlEvents: UIControlEvents.TouchUpInside)
         cell.textLabel?.text = name
@@ -43,7 +43,7 @@ class TrainingDetailViewController: UITableViewController {
     }
     
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        let resource = self.resources?[indexPath.row] as NSDictionary
+        let resource = self.resources?[indexPath.row] as! NSDictionary
         self.resourceFile = resource["file"] as? NSNumber
         self.performSegueWithIdentifier("showResSegue", sender: AnyObject?())
     }
@@ -51,10 +51,10 @@ class TrainingDetailViewController: UITableViewController {
 
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         if (segue.identifier == "showResSegue"){
-            var svc = segue.destinationViewController as WebResourceViewController
+            var svc = segue.destinationViewController as! WebResourceViewController
             svc.resourceFile = self.resourceFile
         } else if (segue.identifier == "showTestSegue"){
-            var svc = segue.destinationViewController as TestViewController
+            var svc = segue.destinationViewController as! TestViewController
             svc.resourceId = self.resourceId
         }
     }

@@ -26,18 +26,18 @@ class TrainingViewController: UITableViewController {
         return assignedTraining!.count
     }
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("trainingCell") as UITableViewCell
-        let at = self.assignedTraining?[indexPath.row] as NSDictionary
-        let t = at["training"] as NSDictionary
-        let name = t["name"] as String
+        let cell = tableView.dequeueReusableCellWithIdentifier("trainingCell") as! UITableViewCell
+        let at = self.assignedTraining?[indexPath.row] as! NSDictionary
+        let t = at["training"] as! NSDictionary
+        let name = t["name"] as! String
         cell.textLabel?.text = name
         return cell
     }
     
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        let at = self.assignedTraining?[indexPath.row] as NSDictionary
+        let at = self.assignedTraining?[indexPath.row] as! NSDictionary
         self.selectedTraining = at["training"] as? NSDictionary
-        ServerAPI.getTrainingResources(self.selectedTraining?["id"] as NSNumber, completion: { (result) -> Void in
+        ServerAPI.getTrainingResources(self.selectedTraining?["id"] as! NSNumber, completion: { (result) -> Void in
             self.trainingResources = result
             dispatch_async(dispatch_get_main_queue()){
                 self.performSegueWithIdentifier("trainingDetailSegue", sender: AnyObject?())
@@ -47,7 +47,7 @@ class TrainingViewController: UITableViewController {
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         if (segue.identifier == "trainingDetailSegue"){
-            var svc = segue.destinationViewController as TrainingDetailViewController
+            var svc = segue.destinationViewController as! TrainingDetailViewController
             svc.training = self.selectedTraining
             svc.resources = self.trainingResources
         }

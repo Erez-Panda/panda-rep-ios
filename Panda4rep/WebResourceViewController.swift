@@ -22,7 +22,7 @@ class WebResourceViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         ServerAPI.getFileUrl(self.resourceFile!, completion: { (result) -> Void in
-            self.showRemotePDF(result)
+            self.showRemotePDF(result as String)
         })
         
     }

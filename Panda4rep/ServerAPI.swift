@@ -40,9 +40,9 @@ struct ServerAPI {
             "password":password
         ]
         self.post("/api-token-auth/", message: message, completion: {result -> Void in
-            let res = result as NSDictionary
+            let res = result as! NSDictionary
             if (nil != res["token"]){
-                self.token = res["token"] as NSString
+                self.token = res["token"] as! String
                 self.delegate?.loginComplete!()
                 completion(result: true)
             } else {
@@ -132,7 +132,7 @@ struct ServerAPI {
     
     static func getFileUrl(file: NSNumber, completion: (result: NSString) -> Void) -> Void{
         self.get("/resources/files/?file=\(file)", isJson: false, completion: {result -> Void in
-            completion(result: result as NSString)
+            completion(result: result as! NSString)
         })
     }
     

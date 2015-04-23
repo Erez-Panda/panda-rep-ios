@@ -28,7 +28,7 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
         return self.userKeys.count
     }
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("profileCell") as UITableViewCell
+        let cell = tableView.dequeueReusableCellWithIdentifier("profileCell") as! UITableViewCell
         let key = self.userKeys[indexPath.row] as String
         cell.detailTextLabel?.text = self.user[key] as? String
         cell.textLabel?.text = key
@@ -51,7 +51,7 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
     
     func loadImage(imageFile: NSNumber){
         ServerAPI.getFileUrl(imageFile, completion: { (result) -> Void in
-            let url = NSURL(string: result)
+            let url = NSURL(string: result as String)
             if let data = NSData(contentsOfURL: url!){
                 dispatch_async(dispatch_get_main_queue()){
                     self.profileImage.image = UIImage(data: data)

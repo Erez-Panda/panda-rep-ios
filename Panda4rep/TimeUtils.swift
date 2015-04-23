@@ -11,7 +11,7 @@ struct TimeUtils {
     static func serverDateTimeStrToDate(dateTime: String) -> NSDate{
         var dateFormatter = NSDateFormatter()
         dateFormatter.timeZone = NSTimeZone(abbreviation: "UTC");
-        dateFormatter.dateFormat = NSDateFormatter.dateFormatFromTemplate("yyyy-MM-dd'T'HH:mm:ss", options: 0, locale: nil)
+        dateFormatter.dateFormat = NSDateFormatter.dateFormatFromTemplate("yyyy-MM-dd'T'HH:mm:ss", options: 0, locale: NSLocale.new())
         var date = dateFormatter.dateFromString(dateTime)
         if date == nil {
             var str = dateTime.stringByReplacingOccurrencesOfString("T", withString: " ")
@@ -34,7 +34,7 @@ struct TimeUtils {
     static func dateToServerString(date:NSDate) -> String{
         var dateFormatter = NSDateFormatter()
         dateFormatter.timeZone = NSTimeZone(abbreviation: "UTC");
-        dateFormatter.dateFormat = NSDateFormatter.dateFormatFromTemplate("yyyy-MM-dd'T'HH:mm:ss", options: 0, locale: nil)
+        dateFormatter.dateFormat = NSDateFormatter.dateFormatFromTemplate("yyyy-MM-dd'T'HH:mm:ss", options: 0, locale: NSLocale.new())
         let stringDate = dateFormatter.stringFromDate(date)
         return stringDate
     }

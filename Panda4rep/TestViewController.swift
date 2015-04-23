@@ -28,8 +28,8 @@ class TestViewController: UIViewController, UITableViewDataSource, UITableViewDe
     
     func loadQuestionData(index: Int){
         if let currQuestion = self.questions?[index] as? NSDictionary{
-            self.questionLabel.text = currQuestion["question"] as NSString
-            ServerAPI.getQuestionAnswers(currQuestion["id"] as NSNumber, completion: { (result) -> Void in
+            self.questionLabel.text = currQuestion["question"] as! NSString as String
+            ServerAPI.getQuestionAnswers(currQuestion["id"] as! NSNumber, completion: { (result) -> Void in
                 self.answers = result
                 dispatch_async(dispatch_get_main_queue()){
                     self.answersTable.reloadData()
@@ -53,7 +53,7 @@ class TestViewController: UIViewController, UITableViewDataSource, UITableViewDe
     }
     
     @IBAction func answer(sender: AnyObject) {
-        if self.selectedAnswer?["correct"] as Bool{
+        if self.selectedAnswer?["correct"] as! Bool{
             self.score = self.score.integerValue + 1
         }
         self.currQuestionIndex++
@@ -82,9 +82,9 @@ class TestViewController: UIViewController, UITableViewDataSource, UITableViewDe
         return self.answers!.count
     }
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("answerCell") as UITableViewCell
-        let answer = self.answers?[indexPath.row] as NSDictionary
-        let answerTest = answer["answer"] as String
+        let cell = tableView.dequeueReusableCellWithIdentifier("answerCell") as! UITableViewCell
+        let answer = self.answers?[indexPath.row] as! NSDictionary
+        let answerTest = answer["answer"] as! String
         cell.textLabel?.text = answerTest
         return cell
     }

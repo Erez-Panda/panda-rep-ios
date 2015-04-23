@@ -33,12 +33,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate, LoginDelegate, UIAlertVie
             application.registerUserNotificationSettings(settings)
             application.registerForRemoteNotifications()
             
-        } else {
-            // Register for Push Notifications before iOS 8
-            application.registerForRemoteNotificationTypes(.Alert | .Badge | .Sound)
-        }
+        } 
         if let launchOpts = launchOptions {
-            var notificationPayload: NSDictionary = launchOpts[UIApplicationLaunchOptionsRemoteNotificationKey] as NSDictionary
+            var notificationPayload: NSDictionary = launchOpts[UIApplicationLaunchOptionsRemoteNotificationKey] as! NSDictionary
             if ((notificationPayload["offer_id"]) != nil){
                 dispatch_async(dispatch_get_main_queue()){
                     self.showAcceprCallAlert(notificationPayload)
@@ -106,9 +103,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate, LoginDelegate, UIAlertVie
                 self.showAcceprCallAlert(userInfo)
             }
         }
-        if ((userInfo["type"]) as String == "new_training"){
+        if ((userInfo["type"]) as! String == "new_training"){
             var rootViewController = self.window!.rootViewController
-            let tvc = rootViewController?.storyboard?.instantiateViewControllerWithIdentifier("TrainingViewController") as TrainingViewController
+            let tvc = rootViewController?.storyboard?.instantiateViewControllerWithIdentifier("TrainingViewController") as! TrainingViewController
             let a = rootViewController?.presentedViewController
             if let nvc = a as? UINavigationController{
                 dispatch_async(dispatch_get_main_queue()){
@@ -118,11 +115,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate, LoginDelegate, UIAlertVie
         }
     }
     
-    func alertView(alertView: UIAlertViewWithData, didDismissWithButtonIndex buttonIndex: Int) {
+    func alertView(alertView: UIAlertView, didDismissWithButtonIndex buttonIndex: Int) {
         println(buttonIndex)
         if (buttonIndex == 0){ //Accept
-            if let offerId: AnyObject = alertView.data?["offer_id"] {
-                ServerAPI.acceptCallOffer(offerId as NSNumber, completion: {result -> Void in
+            if let offerId: AnyObject = (alertView as! UIAlertViewWithData).data?["offer_id"] {
+                ServerAPI.acceptCallOffer(offerId as! NSNumber, completion: {result -> Void in
                     //
                 })
             }
@@ -130,9 +127,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate, LoginDelegate, UIAlertVie
     }
     
     func showAcceprCallAlert(userInfo: AnyObject){
-        let product = userInfo["product"] as String
-        let start = userInfo["start"] as String
-        let offerId = userInfo["offer_id"] as NSNumber
+        let product = userInfo["product"] as! String
+        let start = userInfo["start"] as! String
+        let offerId = userInfo["offer_id"] as! NSNumber
         
 
         let date = TimeUtils.serverDateTimeStrToDate(start)

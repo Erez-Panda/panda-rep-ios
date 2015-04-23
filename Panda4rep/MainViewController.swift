@@ -17,10 +17,10 @@ class MainViewController: UIViewController{
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         if (segue.identifier == "showProfileSegue"){
-            var svc = segue.destinationViewController as ProfileViewController
+            var svc = segue.destinationViewController as! ProfileViewController
             svc.user = self.user
         } else if (segue.identifier == "showPreCallSegue"){
-            var svc = segue.destinationViewController as PreCallViewController
+            var svc = segue.destinationViewController as! PreCallViewController
             svc.user = self.user
         }
         
@@ -44,7 +44,7 @@ class MainViewController: UIViewController{
         super.init(coder: aDecoder)
         let defaultUser = NSUserDefaults.standardUserDefaults()
         if let userData : AnyObject = defaultUser.objectForKey("userData") {
-            self.user = userData as NSDictionary
+            self.user = userData as! NSDictionary
         }
     }
     
@@ -64,7 +64,7 @@ class MainViewController: UIViewController{
     @IBAction func logout(sender: AnyObject) {
         ServerAPI.loginout({result -> Void in
             StorageUtils.cleanUserData()
-            let vc = self.storyboard?.instantiateViewControllerWithIdentifier("WelcomeViewController") as WelcomeViewController
+            let vc = self.storyboard?.instantiateViewControllerWithIdentifier("WelcomeViewController") as! WelcomeViewController
             self.navigationController?.pushViewController(vc, animated: true)
         })
     }

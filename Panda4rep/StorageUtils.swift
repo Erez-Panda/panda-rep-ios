@@ -10,7 +10,7 @@ struct StorageUtils {
     
     static func saveUserData(userData: NSDictionary) -> Void{
         NSUserDefaults.standardUserDefaults().setObject(userData["user"], forKey: "userData")
-        var userInfo = userData as Dictionary<String, AnyObject>
+        var userInfo = userData as! Dictionary<String, AnyObject>
         userInfo["user"] = ""
         userInfo["medrepprofile"] = ""
         userInfo["doctorprofile"] = ""

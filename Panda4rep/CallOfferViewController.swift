@@ -31,24 +31,24 @@ class CallOfferViewController: UITableViewController, UITableViewDelegate, UITab
         
     }
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("callOfferCell") as UITableViewCell
-        let callOffer = self.callOffers[indexPath.row] as NSDictionary
-        let request = callOffer["call_request"] as NSDictionary
-        let startTime = request["start"] as NSString
-        let date = TimeUtils.serverDateTimeStrToDate(startTime)
+        let cell = tableView.dequeueReusableCellWithIdentifier("callOfferCell") as! UITableViewCell
+        let callOffer = self.callOffers[indexPath.row] as! NSDictionary
+        let request = callOffer["call_request"] as! NSDictionary
+        let startTime = request["start"] as! NSString
+        let date = TimeUtils.serverDateTimeStrToDate(startTime as String)
         var readableTime = TimeUtils.dateToReadableStr(date)
         cell.textLabel?.text = readableTime
         return cell
     }
     
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        let callOffer = self.callOffers[indexPath.row] as NSDictionary
-        let request = callOffer["call_request"] as NSDictionary
+        let callOffer = self.callOffers[indexPath.row] as! NSDictionary
+        let request = callOffer["call_request"] as! NSDictionary
         //let product = request["product"] as NSDictionary
         let pName = "product"//product["name"] as NSString
-        let startTime = request["start"] as NSString
+        let startTime = request["start"] as! NSString
         
-        showAcceprCallAlert(["product": pName, "start":startTime, "offer_id": callOffer["id"] as NSNumber])
+        showAcceprCallAlert(["product": pName, "start":startTime, "offer_id": callOffer["id"] as! NSNumber])
     }
 
     
@@ -64,11 +64,14 @@ class CallOfferViewController: UITableViewController, UITableViewDelegate, UITab
         self.callOffers = []
     }
     
-    func alertView(alertView: UIAlertViewWithData, didDismissWithButtonIndex buttonIndex: Int) {
+    
+
+    
+    func alertView(alertView: UIAlertView, didDismissWithButtonIndex buttonIndex: Int) {
         println(buttonIndex)
         if (buttonIndex == 0){ //Accept
-            if let offerId: AnyObject = alertView.data?["offer_id"] {
-                ServerAPI.acceptCallOffer(offerId as NSNumber, completion: {result -> Void in
+            if let offerId: AnyObject = (alertView as! UIAlertViewWithData).data?["offer_id"] {
+                ServerAPI.acceptCallOffer(offerId as! NSNumber, completion: {result -> Void in
                     
                 })
                 self.navigationController?.popToRootViewControllerAnimated(true)
@@ -77,9 +80,9 @@ class CallOfferViewController: UITableViewController, UITableViewDelegate, UITab
     }
     
     func showAcceprCallAlert(userInfo: AnyObject){
-        let product = userInfo["product"] as String
-        let start = userInfo["start"] as String
-        let offerId = userInfo["offer_id"] as NSNumber
+        let product = userInfo["product"] as! String
+        let start = userInfo["start"] as! String
+        let offerId = userInfo["offer_id"] as! NSNumber
         
         
         let date = TimeUtils.serverDateTimeStrToDate(start)

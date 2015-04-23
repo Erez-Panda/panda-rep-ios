@@ -55,7 +55,7 @@ class CallViewController:UIViewController ,UITextFieldDelegate, UIGestureRecogni
         activeChatView = chatView
         // Step 1: As the view is loaded initialize a new instance of OTSession
         if (self.currentCall != nil){
-            CallUtils.initCall(self.currentCall["session"] as String, token: self.currentCall["token"] as String, delegate: self)
+            CallUtils.initCall(self.currentCall["session"] as! String, token: self.currentCall["token"] as! String, delegate: self)
 
             self.activeChatView.text = (self.activeChatView.text + "Waiting for remote side to connect...\n")
         }
@@ -67,7 +67,7 @@ class CallViewController:UIViewController ,UITextFieldDelegate, UIGestureRecogni
         
         
         if let dispRes = displayResources?[0] as? NSDictionary{
-            loadImage(dispRes["id"] as NSNumber)
+            loadImage(dispRes["id"] as! NSNumber)
         }
         
     }
@@ -80,40 +80,42 @@ class CallViewController:UIViewController ,UITextFieldDelegate, UIGestureRecogni
         CallUtils.resumeCall()
     }
     
-    override func touchesBegan(touches: NSSet, withEvent event: UIEvent) {
+    override func touchesBegan(touches: Set<NSObject>, withEvent event: UIEvent) {
         super.touchesBegan(touches, withEvent: event)
-        let touch: UITouch = touches.anyObject() as UITouch
-        ((touch.gestureRecognizers as NSArray)[0] as UIGestureRecognizer).cancelsTouchesInView = false
-        let touchLocation = touch.locationInView(self.view) as CGPoint
-        
-        
-        
-        if let subscriberRect = CallUtils.subscriber?.view.frame {
-            if (CGRectContainsPoint(subscriberRect, touchLocation)){
-                self.isDragging = true
+        if let touch: UITouch = touches.first as? UITouch{
+            ((touch.gestureRecognizers as NSArray)[0] as! UIGestureRecognizer).cancelsTouchesInView = false
+            let touchLocation = touch.locationInView(self.view) as CGPoint
+            
+            
+            
+            if let subscriberRect = CallUtils.subscriber?.view.frame {
+                if (CGRectContainsPoint(subscriberRect, touchLocation)){
+                    self.isDragging = true
+                }
             }
         }
         
         
     }
     
-    override func touchesEnded(touches: NSSet, withEvent event: UIEvent) {
+    override func touchesEnded(touches: Set<NSObject>, withEvent event: UIEvent) {
         self.isDragging = false
     }
-    override func touchesCancelled(touches: NSSet!, withEvent event: UIEvent!) {
+    override func touchesCancelled(touches: Set<NSObject>, withEvent event: UIEvent!) {
         println("CANCEL")
     }
-    override func touchesMoved(touches: NSSet, withEvent event: UIEvent) {
-        let touch: UITouch = touches.anyObject() as UITouch
-        let touchLocation = touch.locationInView(self.view) as CGPoint
-        if (self.isDragging){
-            if let subscriber = CallUtils.subscriber?.view {
-                UIView.animateWithDuration(0.0,
-                    delay: 0.0,
-                    options: (UIViewAnimationOptions.BeginFromCurrentState|UIViewAnimationOptions.CurveEaseInOut),
-                    animations:  {subscriber.center = touchLocation},
-                    completion: nil)
-            }
+    override func touchesMoved(touches: Set<NSObject>, withEvent event: UIEvent) {
+        if let touch: UITouch = touches.first as? UITouch{
+            let touchLocation = touch.locationInView(self.view) as CGPoint
+            if (self.isDragging){
+                if let subscriber = CallUtils.subscriber?.view {
+                    UIView.animateWithDuration(0.0,
+                        delay: 0.0,
+                        options: (UIViewAnimationOptions.BeginFromCurrentState|UIViewAnimationOptions.CurveEaseInOut),
+                        animations:  {subscriber.center = touchLocation},
+                        completion: nil)
+                }
+        }
         }
     }
     
@@ -138,7 +140,7 @@ class CallViewController:UIViewController ,UITextFieldDelegate, UIGestureRecogni
             return
         }
         let info: NSDictionary = sender.userInfo!
-        let value: NSValue = info.valueForKey(UIKeyboardFrameBeginUserInfoKey) as NSValue
+        let value: NSValue = info.valueForKey(UIKeyboardFrameBeginUserInfoKey) as! NSValue
         let keyboardSize: CGSize = value.CGRectValue().size
         
         UIView.animateWithDuration(0.1, animations: { () -> Void in
@@ -150,7 +152,7 @@ class CallViewController:UIViewController ,UITextFieldDelegate, UIGestureRecogni
             return
         }
         let info: NSDictionary = sender.userInfo!
-        let value: NSValue = info.valueForKey(UIKeyboardFrameBeginUserInfoKey) as NSValue
+        let value: NSValue = info.valueForKey(UIKeyboardFrameBeginUserInfoKey) as! NSValue
         let keyboardSize: CGSize = value.CGRectValue().size
         UIView.animateWithDuration(0.1, animations: { () -> Void in
             self.view.frame.origin.y  += keyboardSize.height
@@ -201,8 +203,8 @@ class CallViewController:UIViewController ,UITextFieldDelegate, UIGestureRecogni
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         if (segue.identifier == "showPostCallSegue"){
-            var svc = segue.destinationViewController as PostCallViewController
-            let callData = ["callId": self.currentCall["id"] as NSNumber,
+            var svc = segue.destinationViewController as! PostCallViewController
+            let callData = ["callId": self.currentCall["id"] as! NSNumber,
                             "start" : self.callStartTime!,
                             "sessionNumber": self.sessionNumber!] as Dictionary<String, AnyObject>
             svc.callData = callData
@@ -222,14 +224,14 @@ class CallViewController:UIViewController ,UITextFieldDelegate, UIGestureRecogni
     
     func loadImage(imageFile: NSNumber){
         ServerAPI.getFileUrl(imageFile, completion: { (result) -> Void in
-            let url = NSURL(string: result)
+            let url = NSURL(string: result as String)
             if let data = NSData(contentsOfURL: url!){
                 dispatch_async(dispatch_get_main_queue()){
                     self.presentationImg.image = UIImage(data: data)
                 }
             }
             var maybeError : OTError?
-            CallUtils.session?.signalWithType("load_res", string: result, connection: nil, error: &maybeError)
+            CallUtils.session?.signalWithType("load_res", string: result as String, connection: nil, error: &maybeError)
         })
 
     }
@@ -286,7 +288,7 @@ class CallViewController:UIViewController ,UITextFieldDelegate, UIGestureRecogni
                 ServerAPI.getResourceDisplay(resourceId, completion: { (result) -> Void in
                     self.displayResources = result
                     if let dispRes = self.displayResources?[0] as? NSDictionary{
-                        self.loadImage(dispRes["id"] as NSNumber)
+                        self.loadImage(dispRes["id"] as! NSNumber)
                     }
   
                 })

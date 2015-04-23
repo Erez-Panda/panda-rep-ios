@@ -30,13 +30,13 @@ class PreCallViewController: UIViewController,UIPickerViewDelegate, UIPickerView
     func replaceTextValues(lastCall: NSDictionary, productName: String, doctorName: String){
         if let details = lastCall["details"] as? String{
             self.summaryTextView.text = details
-            let date = TimeUtils.serverDateTimeStrToDate(lastCall["start"] as String)
+            let date = TimeUtils.serverDateTimeStrToDate(lastCall["start"] as! String)
             var readableTime = TimeUtils.dateToReadableStr(date)
             self.detailsTextView.text = self.detailsTextView.text.stringByReplacingOccurrencesOfString("START_DATE", withString: readableTime)
-            var callLength = lastCall["callLength"] as NSNumber
+            var callLength = lastCall["callLength"] as! NSNumber
             callLength = callLength.integerValue/(1000*60)
             self.detailsTextView.text = self.detailsTextView.text.stringByReplacingOccurrencesOfString("CALL_LENGTH", withString:callLength.stringValue )
-            let sessionNumber = lastCall["sessionNumber"] as NSNumber
+            let sessionNumber = lastCall["sessionNumber"] as! NSNumber
             self.detailsTextView.text = self.detailsTextView.text.stringByReplacingOccurrencesOfString("SESSION_NUMBER", withString: sessionNumber.stringValue)
             self.detailsTextView.text = self.detailsTextView.text.stringByReplacingOccurrencesOfString("PRODUCT_NAME", withString: productName)
         } else {
@@ -57,11 +57,11 @@ class PreCallViewController: UIViewController,UIPickerViewDelegate, UIPickerView
         ServerAPI.getCurrentCall( {result -> Void in
             self.currentCall = result
             if let product = self.currentCall?["product"] as? NSDictionary {
-                ServerAPI.getLatestPostCall(product["id"] as NSNumber) { result -> Void in
+                ServerAPI.getLatestPostCall(product["id"] as! NSNumber) { result -> Void in
                     var doctor = self.currentCall?["callee"] as? NSDictionary
                     doctor = doctor?["user"] as? NSDictionary
-                    let productName = product["name"] as String
-                    let doctorName = doctor!["last_name"] as String
+                    let productName = product["name"] as! String
+                    let doctorName = doctor!["last_name"] as! String
                     dispatch_async(dispatch_get_main_queue()){
                         self.replaceTextValues(result, productName: productName, doctorName: doctorName)
                     }
@@ -111,20 +111,20 @@ class PreCallViewController: UIViewController,UIPickerViewDelegate, UIPickerView
     }
     
     func pickerView(pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String! {
-        let resource = self.resources![row] as NSDictionary
-        return resource["name"] as String
+        let resource = self.resources![row] as! NSDictionary
+        return resource["name"] as! String
     }
     
     
     func pickerView(pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-        let resource = self.resources![row] as NSDictionary
+        let resource = self.resources![row] as! NSDictionary
         self.selectedRes = resource
         self.selectedResIndex = row
     }
     
     func pickerView(pickerView: UIPickerView, attributedTitleForRow row: Int, forComponent component: Int) -> NSAttributedString? {
-        let resource = self.resources![row] as NSDictionary
-        let titleData = resource["name"] as String
+        let resource = self.resources![row] as! NSDictionary
+        let titleData = resource["name"] as! String
         var myTitle = NSAttributedString(string: titleData, attributes:[NSFontAttributeName:UIFont(name: "Georgia", size: 15.0 )!, NSForegroundColorAttributeName: UIColor.blueColor()])
         return myTitle
     }
@@ -145,7 +145,7 @@ class PreCallViewController: UIViewController,UIPickerViewDelegate, UIPickerView
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         if (segue.identifier == "showCallSegue"){
-            var svc = segue.destinationViewController as CallViewController
+            var svc = segue.destinationViewController as! CallViewController
             svc.user = self.user
             svc.selectedResIndex = self.selectedResIndex
             svc.resources = self.resources

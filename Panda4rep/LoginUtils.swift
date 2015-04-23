@@ -25,7 +25,7 @@ struct LoginUtils {
         ServerAPI.login(username, password: password, completion: {result -> Void in
             if (result) {
                 ServerAPI.getUser({result -> Void in
-                    if result["type"] as String == "MEDREP" {
+                    if result["type"] as! String == "MEDREP" {
                         if result["status"] as? String == "approved" {
                             StorageUtils.saveUserData(result)
                             dispatch_async(dispatch_get_main_queue()){

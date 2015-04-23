@@ -64,13 +64,13 @@ class PostCallViewController: UIViewController, FloatRatingViewDelegate, UITextV
     }
     
     @IBAction func send(sender: UIButton) {
-        let callLength = (NSDate().timeIntervalSince1970 - (callData["start"] as NSDate).timeIntervalSince1970) * 1000 //to milisec
-        let sessionNumber = (callData["sessionNumber"] as Int) + 1
-        let data = ["call": callData["callId"] as NSNumber,
+        let callLength = (NSDate().timeIntervalSince1970 - (callData["start"] as! NSDate).timeIntervalSince1970) * 1000 //to milisec
+        let sessionNumber = (callData["sessionNumber"] as! Int) + 1
+        let data = ["call": callData["callId"] as! NSNumber,
                     "rating": self.floatRatingView.rating,
                     "details": self.callSummary.text,
                     "callLength": callLength,
-                    "start": TimeUtils.dateToServerString(callData["start"] as NSDate),
+                    "start": TimeUtils.dateToServerString(callData["start"] as! NSDate),
                     "sessionNumber" : sessionNumber ] as Dictionary<String, AnyObject>
         ServerAPI.newPostCall(data, completion: { (result) -> Void in
             //

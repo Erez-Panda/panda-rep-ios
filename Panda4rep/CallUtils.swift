@@ -9,7 +9,7 @@
 // *** Fill the following variables using your own Project info  ***
 // ***          https://dashboard.tokbox.com/projects            ***
 // Replace with your OpenTok API key
-let ApiKey = "45118952"
+let ApiKey = "45145512"
 
 struct CallUtils{
     static var session : OTSession?
