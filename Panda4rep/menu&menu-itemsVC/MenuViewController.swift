@@ -1,0 +1,311 @@
+//
+//  MenuViewController.swift
+//  Panda4doctor
+//
+//  Created by Erez on 1/28/15.
+//  Copyright (c) 2015 Erez. All rights reserved.
+//
+
+import UIKit
+
+class MenuViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UIGestureRecognizerDelegate {
+    
+    var previousViewController: UIViewController!
+    var grayView : UIView?
+    var isDragging = false
+    var startPoint: CGPoint?
+    @IBOutlet weak var containerView: UIView!
+    @IBOutlet weak var userNameLabel: UILabel!
+    var user: NSDictionary = ["first_name": "Koko", "last_name": "Riko"]
+    var menuItems = ["Home", "Profile", "Settings", "Support", "About", "Logout"]
+    //var subMenuItems = ["Video Calls", "Articles", "Promotional Materials", "Medical Inquiries"]
+    //var subMenuImages = ["menu_icon_video_call", "menu_icon_articles", "menu_icon_promotional", "menu_icon_medical_letters"]
+    var menuIcons = ["home_icon", "profile_icon", "settings_icon", "support_icon" ,"about_icon","logout_icon",]
+    var menuOpen = false
+    var tableCellNumber = 0
+    var selectedIndex: Int?
+    var closing = false
+
+    @IBOutlet weak var closeButton: UIButton!
+    @IBOutlet weak var tableView: UITableView!
+    @IBOutlet weak var bg_image: UIImageView!
+    @IBOutlet weak var profileImage: UIImageView!
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        ViewUtils.getProfileImage { (result) -> Void in
+            self.profileImage.image = result
+        }
+        user = StorageUtils.getUserData(StorageUtils.DataType.User)
+        tableCellNumber = self.menuItems.count
+        ViewUtils.roundView(profileImage, borderWidth: 2.0, borderColor: ColorUtils.buttonColor())
+        let firstName = user["first_name"] as! String
+        let lastName = user["last_name"] as! String
+        userNameLabel.text = firstName + " " + lastName
+        tableView.tableFooterView = UIView(frame: CGRectZero)
+        if iOS8 {
+            tableView.layoutMargins = UIEdgeInsetsZero
+        }
+        tableView.separatorInset = UIEdgeInsetsZero
+        /*
+        // Add Border
+        var leftBorder = CALayer()
+        leftBorder.frame = CGRectMake(self.bg_image.frame.size.width+36, 0.0, 1.0, self.view.frame.size.height);
+        leftBorder.backgroundColor = ColorUtils.buttonColor().CGColor
+        self.view.layer.addSublayer(leftBorder)
+        */
+        // Do any additional setup after loading the view.
+
+    }
+    
+    
+
+    override func didReceiveMemoryWarning() {
+        super.didReceiveMemoryWarning()
+        // Dispose of any resources that can be recreated.
+    }
+    
+
+
+    func numberOfSectionsInTableView(tableView: UITableView) -> Int{
+        return 1
+    }
+    
+    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return tableCellNumber
+    }
+    
+    /*
+    func loadExpendedTable(tableView: UITableView, index: Int)-> UITableViewCell{
+        var i = index
+        if (index > 0 && index <= self.subMenuItems.count){
+            let cell = tableView.dequeueReusableCellWithIdentifier("subMenuCell") as! MenuTableViewCell
+            cell.rightButton.hidden = true
+            var iconName = self.subMenuImages[index-1]
+            cell.leftIconView.image = UIImage(named: iconName)
+            cell.label.text = self.subMenuItems[index-1]
+            cell.label.textColor = ColorUtils.buttonColor()
+            if iOS8 {cell.layoutMargins = UIEdgeInsetsZero}
+            cell.selectionStyle = UITableViewCellSelectionStyle.None
+            return cell
+        }
+        let cell = tableView.dequeueReusableCellWithIdentifier("menuCell") as! MenuTableViewCell
+        if (index != 0){
+            cell.rightButton.hidden = true
+            i = index - self.subMenuItems.count
+        }
+        var iconName = self.menuIcons[i]
+        cell.leftIconView.image = UIImage(named: iconName)
+        cell.label.text = self.menuItems[i]
+        if iOS8 {cell.layoutMargins = UIEdgeInsetsZero}
+        cell.selectionStyle = UITableViewCellSelectionStyle.None
+        return cell
+    }
+*/
+    
+    func loadCollapseTable(tableView: UITableView, index: Int)-> UITableViewCell{
+        let cell = tableView.dequeueReusableCellWithIdentifier("menuCell") as! MenuTableViewCell
+        var iconName = self.menuIcons[index]
+        cell.leftIconView.image = UIImage(named: iconName)
+        cell.leftIconView.hidden = false
+        cell.label.text = self.menuItems[index]
+        cell.label.textColor = UIColor.blackColor()
+        cell.rightButton.hidden = true;
+/*
+        if (index != 0){
+            cell.rightButton.hidden = true;
+        } else {
+            cell.rightButton.tag = index
+            cell.rightButton.addTarget(self, action: "toggleMenu:", forControlEvents: UIControlEvents.TouchUpInside)
+        }
+*/
+        if iOS8 {cell.layoutMargins = UIEdgeInsetsZero}
+        return cell
+    }
+ /*
+    func toggleMenu(sender: UIButton!) {
+        //sender.tag
+        menuOpen = !menuOpen
+        if (menuOpen){
+            tableCellNumber = self.menuItems.count + self.subMenuItems.count
+        } else {
+            tableCellNumber = self.menuItems.count
+        }
+        tableView.reloadData()
+        
+        /* Maybe use:
+        [self.tableView beginUpdates];
+        [self.tableView insertRowsAtIndexPaths:(NSArray *) paths withRowAnimation:UITableViewRowAnimationNone];
+        [self.tableView endUpdates];
+        */
+    }
+ */
+    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+        return loadCollapseTable(tableView, index: indexPath.row)
+/*
+        if (menuOpen){
+            return loadExpendedTable(tableView, index: indexPath.row)
+        }else {
+            return loadCollapseTable(tableView, index: indexPath.row)
+        }
+*/
+    }
+    
+    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        var index = indexPath.row
+            openMenuItem(index)
+    }
+    
+    func openMenuItem(index: Int){
+        if (index == 1){
+            closeMenuAndShowViewController("ProfileUIViewController")
+        }
+        if (index == 2){
+            closeMenuAndShowViewController("SettingsViewController")
+        }
+        if (index == 3){
+            closeMenuAndShowViewController("SupportViewController")
+        }
+        if (index == 4){
+            let nsObject: AnyObject? = NSBundle.mainBundle().infoDictionary!["CFBundleShortVersionString"]
+            let version = nsObject as! String
+            var alert = UIAlertView()
+            alert.title = "LiveMed"
+            alert.message = "Version: \(version)"
+            alert.addButtonWithTitle("Ok")
+            alert.show()
+        }
+
+        if (index == 5){
+            ServerAPI.loginout({result -> Void in
+                StorageUtils.cleanUserData()
+                let vc = self.storyboard?.instantiateViewControllerWithIdentifier("LoginViewController") as! LoginViewController
+                self.presentViewController(vc, animated: true, completion: nil)
+            })
+        }
+    }
+    
+    @IBAction func closeSelf(sender: AnyObject) {
+        //close(true)
+    }
+    func close(withAnimation: Bool){
+        if (!closing){
+            if (withAnimation){
+                closing = true
+                UIView.animateWithDuration(0.5, animations: { () -> Void in
+                    self.view.frame.origin.x = -1 * self.view.frame.size.width
+                    self.view.alpha = 0.0
+                    },
+                    completion: {result -> Void in
+                        self.view.removeFromSuperview()
+                        self.removeFromParentViewController()
+                        self.closing = false
+                })
+            } else {
+                self.view.removeFromSuperview()
+                self.removeFromParentViewController()
+            }
+        }
+        grayView?.removeFromSuperview()
+
+    }
+    
+    func closeMenuAndShowViewController(identifier: String){
+        close(false)
+        let vc = self.storyboard?.instantiateViewControllerWithIdentifier(identifier) as! UIViewController
+        self.previousViewController.navigationController?.pushViewController(vc, animated: true)
+    }
+    
+    override func touchesBegan(touches: Set<NSObject>, withEvent event: UIEvent) {
+        if (closing){
+            return
+        }
+        super.touchesBegan(touches, withEvent: event)
+        if let touch: UITouch = touches.first as? UITouch{
+            startPoint = touch.locationInView(self.view) as CGPoint
+            ((touch.gestureRecognizers as NSArray)[0] as! UIGestureRecognizer).cancelsTouchesInView = false
+            let touchLocation = touch.locationInView(self.view) as CGPoint
+            
+            
+            
+            self.isDragging = true
+            
+            if let closeButtonFrame = self.closeButton?.frame {
+                var f = CGRectMake(self.view.frame.size.width-50, 0, 100, self.view.frame.height)
+                if (CGRectContainsPoint(f, touchLocation)){
+                    close(true)
+                }
+            }
+        }
+        
+        
+    }
+    
+    override func touchesEnded(touches: Set<NSObject>, withEvent event: UIEvent) {
+        if (closing){
+            return
+        }
+        self.isDragging = false
+        if (self.view.frame.origin.x < -1 * (self.view.frame.size.width/99)){
+            close(true)
+        }
+    }
+    override func touchesCancelled(touches: Set<NSObject>, withEvent event: UIEvent!) {
+        println("CANCEL")
+    }
+    override func touchesMoved(touches: Set<NSObject>, withEvent event: UIEvent) {
+        if (closing){
+            return
+        }
+        if let touch: UITouch = touches.first as? UITouch{
+            let touchLocation = touch.locationInView(self.view) as CGPoint
+            if (self.isDragging){
+                UIView.animateWithDuration(0.0,
+                    delay: 0.0,
+                    options: (UIViewAnimationOptions.BeginFromCurrentState|UIViewAnimationOptions.CurveEaseInOut),
+                    animations:  {
+                        self.view.frame.origin.x += (touchLocation.x-self.startPoint!.x)
+                        self.view.alpha = 0.92 + (self.view.frame.origin.x/self.view.frame.size.width)
+                        if (self.view.frame.origin.x > 0){
+                            self.view.frame.origin.x = 0
+                        }
+                    },
+                    completion: nil)
+                /*
+                if let subscriber = CallUtils.subscriber?.view {
+                    UIView.animateWithDuration(0.0,
+                        delay: 0.0,
+                        options: (UIViewAnimationOptions.BeginFromCurrentState|UIViewAnimationOptions.CurveEaseInOut),
+                        animations:  {subscriber.center = touchLocation},
+                        completion: nil)
+                }*/
+            }
+        }
+    }
+    
+
+
+    // MARK: - Navigation
+
+    // In a storyboard-based application, you will often want to do a little preparation before navigation
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        if (segue.identifier == "showFeatureFromMenu"){
+            let nav = segue.destinationViewController as! UINavigationController
+            //var svc = nav.viewControllers[0] as! FeatureViewController
+            //svc.startIndex = self.selectedIndex
+        }
+    }
+
+    override func shouldAutorotate() -> Bool {
+        return true
+    }
+    
+    override func supportedInterfaceOrientations() -> Int {
+        return Int(UIInterfaceOrientationMask.Portrait.rawValue)
+    }
+    
+    override func preferredInterfaceOrientationForPresentation() -> UIInterfaceOrientation {
+        return UIInterfaceOrientation.Portrait
+    }
+
+}
