@@ -8,7 +8,7 @@
 
 var SERVER_URL = "http://livemed.co"
 //var SERVER_URL = "http://127.0.0.1:8000"
-//var SERVER_URL = "http://192.168.1.10:8000"
+//var SERVER_URL = "http://10.1.10.17:8000"
 
 @objc protocol LoginDelegate{
     optional func loginComplete()
@@ -112,6 +112,12 @@ struct ServerAPI {
     
     static func newCall (callData: Dictionary<String, AnyObject>, fromSlot: NSNumber, completion: (result: NSDictionary) -> Void) -> Void{
         self.post("/calls/new/?from_slot=\(fromSlot)", message: callData, completion: {result -> Void in
+            completion(result: self.getDictionaryResult(result))
+        })
+    }
+    
+    static func newCall (callData: Dictionary<String, AnyObject>, completion: (result: NSDictionary) -> Void) -> Void{
+        self.post("/calls/new/", message: callData, completion: {result -> Void in
             completion(result: self.getDictionaryResult(result))
         })
     }
@@ -262,6 +268,12 @@ struct ServerAPI {
         })
     }
     
+    static func getAssignedProducts(completion: (result: NSArray) -> Void) -> Void{
+        self.get("/products/assigned/", completion: { (result) -> Void in
+            completion(result: self.getArrayResult(result))
+        })
+    }
+    
     static func getTrainingResources (trainingId: NSNumber, completion: (result: NSArray) -> Void) -> Void{
         self.get("/resources/training/?training_id=\(trainingId)", completion: {result -> Void in
             completion(result: self.getArrayResult(result))
@@ -303,8 +315,8 @@ struct ServerAPI {
         })
     }
     
-    static func getLatestPostCall(product: NSNumber,completion: (result: NSDictionary) -> Void) -> Void{
-        self.get("/calls/post_calls/latest/?product_id=\(product)", completion: {result -> Void in
+    static func getLatestPostCall(product: NSNumber, callee: NSNumber ,completion: (result: NSDictionary) -> Void) -> Void{
+        self.get("/calls/post_calls/latest/?product_id=\(product)&callee=\(callee)", completion: {result -> Void in
             completion(result: self.getDictionaryResult(result))
         })
     }
@@ -320,6 +332,52 @@ struct ServerAPI {
             })
         }
     }
+    
+    static func getRepDoctors(completion: (result: NSArray) -> Void) -> Void{
+        self.get("/users/rep_doctors/", completion: {result -> Void in
+            completion(result: self.getArrayResult(result))
+        })
+    }
+    
+    static func getUserCallsInTimeFrame(start: NSDate, end: NSDate, completion: (result: NSArray) -> Void) -> Void{
+        var startStr = TimeUtils.dateToServerString(start)
+        startStr = startStr.stringByAddingPercentEscapesUsingEncoding(NSStringEncoding())!
+        var endStr = TimeUtils.dateToServerString(end)
+        endStr = endStr.stringByAddingPercentEscapesUsingEncoding(NSStringEncoding())!
+        self.get("/calls/user/in_time_frame/?start=\(startStr)&end=\(endStr)", completion: {result -> Void in
+            completion(result: self.getArrayResult(result))
+        })
+    }
+    
+    static func getUserPostCallsInTimeFrame(start: NSDate, end: NSDate, completion: (result: NSArray) -> Void) -> Void{
+        var startStr = TimeUtils.dateToServerString(start)
+        startStr = startStr.stringByAddingPercentEscapesUsingEncoding(NSStringEncoding())!
+        var endStr = TimeUtils.dateToServerString(end)
+        endStr = endStr.stringByAddingPercentEscapesUsingEncoding(NSStringEncoding())!
+        self.get("/calls/user/post_calls/in_time_frame/?start=\(startStr)&end=\(endStr)", completion: {result -> Void in
+            completion(result: self.getArrayResult(result))
+        })
+    }
+    
+    static func getUserRetentionRate(completion: (result: NSDictionary) -> Void) -> Void{
+        self.get("/calls/user/retention_rate/", completion: {result -> Void in
+            completion(result: self.getDictionaryResult(result))
+        })
+    }
+    
+    static func getPostCall(call: NSNumber, completion: (result: NSDictionary) -> Void) -> Void{
+        self.get("/calls/post_calls/?call=\(call)", completion: {result -> Void in
+            completion(result: self.getDictionaryResult(result))
+        })
+    }
+    
+
+    static func sendFollowupEmail(data: Dictionary<String, AnyObject>, completion: (result: Bool) -> Void) -> Void{
+        self.post("/calls/post_calls/send_followup_email/", message: data, completion: {result -> Void in
+            completion(result: true)
+        })
+    }
+    
 
     
     static func post(url: String, message: Dictionary<String, AnyObject>, completion: (result: AnyObject) -> Void) -> Void{

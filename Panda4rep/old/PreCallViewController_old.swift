@@ -8,7 +8,7 @@
 
 import UIKit
 
-class PreCallViewController: UIViewController,UIPickerViewDelegate, UIPickerViewDataSource, UIAlertViewDelegate {
+class PreCallViewController_old: UIViewController,UIPickerViewDelegate, UIPickerViewDataSource, UIAlertViewDelegate {
     
     
     
@@ -57,18 +57,20 @@ class PreCallViewController: UIViewController,UIPickerViewDelegate, UIPickerView
         ServerAPI.getCurrentCall( {result -> Void in
             self.currentCall = result
             if let product = self.currentCall?["product"] as? NSDictionary {
-                ServerAPI.getLatestPostCall(product["id"] as! NSNumber) { result -> Void in
-                    var doctor = self.currentCall?["callee"] as? NSDictionary
-                    doctor = doctor?["user"] as? NSDictionary
-                    let productName = product["name"] as! String
-                    let doctorName = doctor!["last_name"] as! String
-                    dispatch_async(dispatch_get_main_queue()){
-                        self.replaceTextValues(result, productName: productName, doctorName: doctorName)
-                    }
-                    
-                    self.sessionNumber = result["sessionNumber"] as? NSNumber
-                    if (self.sessionNumber == nil){
-                        self.sessionNumber = 0
+                if let callee = self.currentCall?["callee"] as? NSDictionary {
+                    ServerAPI.getLatestPostCall(product["id"] as! NSNumber, callee: callee["id"] as! NSNumber) { result -> Void in
+                        var doctor = self.currentCall?["callee"] as? NSDictionary
+                        doctor = doctor?["user"] as? NSDictionary
+                        let productName = product["name"] as! String
+                        let doctorName = doctor!["last_name"] as! String
+                        dispatch_async(dispatch_get_main_queue()){
+                            self.replaceTextValues(result, productName: productName, doctorName: doctorName)
+                        }
+                        
+                        self.sessionNumber = result["sessionNumber"] as? NSNumber
+                        if (self.sessionNumber == nil){
+                            self.sessionNumber = 0
+                        }
                     }
                 }
             }

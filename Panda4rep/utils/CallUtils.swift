@@ -19,6 +19,7 @@ let ApiKey = "45145512"
 struct CallUtils{
     static var session : OTSession?
     static var publisher : OTPublisher?
+    static var screenPublisher : OTPublisher?
     static var subscriber : OTSubscriber?
     static var screenSubscriber : OTSubscriber?
     static var token : String?
@@ -49,11 +50,9 @@ struct CallUtils{
         remoteSideConnect = true
         self.delegate?.remoteSideConnected!()
     }
-/*
     static func getCallViewController() -> CallNewViewController?{
         return callViewController as? CallNewViewController
     }
-*/
     static func connectToCurrentCallSession(delegateViewController: UIViewController, completion: (result: NSDictionary) -> Void) -> Void{
         callViewController = delegateViewController
         ServerAPI.getCurrentCall( {result -> Void in
@@ -140,11 +139,23 @@ struct CallUtils{
         if let error = maybeError {
             showAlert(error.localizedDescription)
         }
-        
-        if (isFakeCall){
-            publisher?.publishVideo = true
-        }
 
+    }
+    
+    static func doScreenPublish(view: UIView) {
+        screenPublisher = OTPublisher(delegate: self.publisherDelegate)
+        screenPublisher?.videoType = OTPublisherKitVideoType.Screen
+        screenPublisher?.audioFallbackEnabled = false
+        
+        screenPublisher?.videoCapture = TBScreenCapture(view: view)
+        
+        var maybeError : OTError?
+        session?.publish(screenPublisher, error: &maybeError)
+        
+        if let error = maybeError {
+            showAlert(error.localizedDescription)
+        }
+        
     }
     
     static func doScreenSubscribe(stream : OTStream) {
@@ -213,6 +224,19 @@ struct CallUtils{
             
             publisher.view.removeFromSuperview()
             self.publisher = nil
+        }
+    }
+    
+    static func doScreenUnpublish() {
+        if let screenPublisher = self.screenPublisher {
+            var maybeError : OTError?
+            session?.unpublish(screenPublisher, error: &maybeError)
+            if let error = maybeError {
+                showAlert(error.localizedDescription)
+            }
+            
+            screenPublisher.view.removeFromSuperview()
+            self.screenPublisher = nil
         }
     }
     

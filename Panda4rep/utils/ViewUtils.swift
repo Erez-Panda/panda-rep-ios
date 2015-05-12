@@ -29,17 +29,28 @@ struct ViewUtils {
     static func borderView(view: UIView, borderWidth: CGFloat, borderColor: UIColor, borderRadius: CGFloat){
         view.layer.borderWidth = borderWidth
         view.layer.cornerRadius = borderRadius
-        view.layer.cornerRadius = borderRadius
         view.clipsToBounds = true
         view.layer.borderColor = borderColor.CGColor
     }
     
-    static func leftBorderView(view: UIView, borderWidth: CGFloat, borderColor: UIColor) -> CALayer {
+    static func cornerRadius(view: UIView, corners: UIRectCorner ,cornerRadius: CGFloat){
+        let maskPath = UIBezierPath(roundedRect: view.bounds, byRoundingCorners: corners, cornerRadii:CGSizeMake(cornerRadius, cornerRadius))
+        let maskLayer = CAShapeLayer()
+        maskLayer.path = maskPath.CGPath
+        view.layer.mask = maskLayer
+    }
+    
+    
+    static func leftBorderView(view: UIView, borderWidth: CGFloat, borderColor: UIColor, offset: CGFloat) -> CALayer {
         var leftBorder = CALayer()
-        leftBorder.frame = CGRectMake(0.0, 0.0, borderWidth, view.frame.size.height);
+        leftBorder.frame = CGRectMake(offset, 0.0 , borderWidth, view.frame.size.height);
         leftBorder.backgroundColor = borderColor.CGColor
         view.layer.addSublayer(leftBorder)
         return leftBorder
+    }
+    
+    static func leftBorderView(view: UIView, borderWidth: CGFloat, borderColor: UIColor) -> CALayer {
+        return self.leftBorderView(view, borderWidth: borderWidth, borderColor: borderColor, offset: 0)
     }
     
     static func rightBorderView(view: UIView, borderWidth: CGFloat, borderColor: UIColor) -> CALayer {
@@ -97,29 +108,60 @@ struct ViewUtils {
     }
     
     static func slideViewOutVertical(view: UIView){
+        slideViewOutVertical(view, offset: 0)
+    }
+    
+    static func slideViewOutVertical(view: UIView, offset: CGFloat){
         let screenSize: CGRect = UIScreen.mainScreen().bounds
         UIView.animateWithDuration(0.5, animations: { () -> Void in
-            view.frame.origin.y = screenSize.height
+            view.frame.origin.y = screenSize.height - offset
             
         })
     }
+    
     static func slideViewOutVertical(view: UIView, animate: Bool){
+        slideViewOutVertical(view, animate: animate, offset: 0)
+    }
+    
+    static func slideViewOutVertical(view: UIView, animate: Bool, offset: CGFloat){
         if (animate){
-            slideViewOutVertical(view)
+            slideViewOutVertical(view, offset: offset)
         } else {
             let screenSize: CGRect = UIScreen.mainScreen().bounds
-            view.frame.origin.y = screenSize.height
+            view.frame.origin.y = screenSize.height - offset
         }
-        
-
     }
     
     static func slideViewinVertical(view: UIView){
+        slideViewinVertical(view, offset: 0)
+    }
+    
+    static func slideViewinVertical(view: UIView, offset: CGFloat){
         let screenSize: CGRect = UIScreen.mainScreen().bounds
         UIView.animateWithDuration(0.5, animations: { () -> Void in
-            view.frame.origin.y = screenSize.height - view.frame.height
+            view.frame.origin.y = screenSize.height - view.frame.height - offset
             
         })
+    }
+    
+    static func slideViewInFromLeft(view: UIView, animate: Bool = true, offset: CGFloat = 0){
+        if (animate){
+            UIView.animateWithDuration(0.5, animations: { () -> Void in
+                view.frame.origin.x = 0 + offset
+            })
+        } else {
+            view.frame.origin.x = 0 + offset
+        }
+    }
+    
+    static func slideViewOutToLeft(view: UIView, animate: Bool = true, offset: CGFloat = 0){
+        if (animate){
+            UIView.animateWithDuration(0.5, animations: { () -> Void in
+                view.frame.origin.x = offset - view.frame.width
+            })
+        } else {
+            view.frame.origin.x = offset - view.frame.width
+        }
     }
     
  
@@ -360,6 +402,15 @@ struct ViewUtils {
             mainStoryboard = UIStoryboard(name: "NewUI", bundle: nil)
         }
         return mainStoryboard
+    }
+    
+    static func addDoneToolBarToKeyboard(textView: UITextView, vc: UIViewController){
+        var doneToolbar = UIToolbar(frame: CGRect(x: 0, y: 0, width: 320, height: 50))
+        doneToolbar.barStyle = UIBarStyle.Default
+        doneToolbar.items = [UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.FlexibleSpace, target: nil, action: nil),
+            UIBarButtonItem(title: "Done", style: UIBarButtonItemStyle.Done, target: vc, action: "doneButtonClickedDismissKeyboard")]
+        doneToolbar.sizeToFit()
+        textView.inputAccessoryView = doneToolbar;
     }
 }
 

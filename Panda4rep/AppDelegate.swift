@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Dropbox_iOS_SDK
 
 
 @UIApplicationMain
@@ -55,19 +56,39 @@ class AppDelegate: UIResponder, UIApplicationDelegate, LoginDelegate, UIAlertVie
         }
        
         //showAcceprCallAlert(["product": "koko", "start":"2014-22-12 22:00:00", "ofer_id": 100])
+        
+        //DROP_BOX
+        let dbSession = DBSession(appKey: "l6c99wtstnvvhuq", appSecret: "a4hgzua2blamg7u", root: kDBRootDropbox)
+        DBSession.setSharedSession(dbSession)
+        //DBSession.sharedSession().unlinkAll()
+        
+        
+        
         return true
+    }
+    
+    func application(application: UIApplication, openURL url: NSURL, sourceApplication: String?, annotation: AnyObject?) -> Bool {
+        if DBSession.sharedSession().handleOpenURL(url){
+            if DBSession.sharedSession().isLinked(){
+                println("App linked successfully!")
+            }
+            return true
+        }
+        return false
     }
 
     func applicationWillResignActive(application: UIApplication) {
         // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
         // Use this method to pause ongoing tasks, disable timers, and throttle down OpenGL ES frame rates. Games should use this method to pause the game.
-        CallUtils.pauseCall()
         
     }
 
     func applicationDidEnterBackground(application: UIApplication) {
         // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later.
         // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
+        if CallUtils.subscriber == nil {
+            CallUtils.stopCall() //meaning sidconnect from session
+        }
     }
 
     func applicationWillEnterForeground(application: UIApplication) {
@@ -79,7 +100,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, LoginDelegate, UIAlertVie
         let app = UIApplication.sharedApplication()
         app.applicationIconBadgeNumber = 0
         app.cancelAllLocalNotifications()
-        CallUtils.resumeCall()
     }
 
     func applicationWillTerminate(application: UIApplication) {
@@ -114,13 +134,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate, LoginDelegate, UIAlertVie
                 self.showAcceprCallAlert(userInfo)
             }
         }
-        if ((userInfo["type"]) as! String == "new_training"){
-            var rootViewController = self.window!.rootViewController
-            let tvc = rootViewController?.storyboard?.instantiateViewControllerWithIdentifier("TrainingViewController") as! TrainingViewController
-            let a = rootViewController?.presentedViewController
-            if let nvc = a as? UINavigationController{
-                dispatch_async(dispatch_get_main_queue()){
-                    nvc.pushViewController(tvc, animated: true)
+        if let type = userInfo["type"] as? String{
+            if type == "new_training"{
+                var rootViewController = self.window!.rootViewController
+                let tvc = rootViewController?.storyboard?.instantiateViewControllerWithIdentifier("TrainingViewController") as! TrainingViewController
+                let a = rootViewController?.presentedViewController
+                if let nvc = a as? UINavigationController{
+                    dispatch_async(dispatch_get_main_queue()){
+                        nvc.pushViewController(tvc, animated: true)
+                    }
                 }
             }
         }

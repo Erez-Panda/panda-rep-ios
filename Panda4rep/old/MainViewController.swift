@@ -16,6 +16,7 @@ class MainViewController: UIViewController{
     @IBOutlet weak var welcomeLabel: UILabel!
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        /*
         if (segue.identifier == "showProfileSegue"){
             var svc = segue.destinationViewController as! ProfileViewController
             svc.user = self.user
@@ -23,6 +24,7 @@ class MainViewController: UIViewController{
             var svc = segue.destinationViewController as! PreCallViewController
             svc.user = self.user
         }
+        */
         
         
     }

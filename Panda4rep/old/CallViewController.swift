@@ -226,7 +226,6 @@ class CallViewController:UIViewController ,UITextFieldDelegate, UIGestureRecogni
             var maybeError : OTError?
             CallUtils.session?.signalWithType("load_res", string: result as String, connection: nil, error: &maybeError)
         })
-
     }
     
     

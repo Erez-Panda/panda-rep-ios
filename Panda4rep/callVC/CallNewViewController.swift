@@ -7,6 +7,8 @@
 //
 
 import UIKit
+import FontAwesomeIconFactory
+
 let videoWidth : CGFloat = 264/1.5
 let videoHeight : CGFloat = 198/1.5
 
@@ -25,74 +27,148 @@ class CallNewViewController: UIViewController, UIGestureRecognizerDelegate, OTSe
     @IBOutlet weak var toggleSoundButton: UIButton!
     @IBOutlet weak var presentaionImage: UIImageView?
     @IBOutlet weak var buttomView: UIView!
+    @IBOutlet weak var toggleControllPanelButton: NIKFontAwesomeButton!
+    
+    
+    @IBOutlet weak var bottomViewBottomConst: NSLayoutConstraint!
+    @IBOutlet weak var sideViewLeadingConst: NSLayoutConstraint!
+    @IBOutlet weak var sideView: UIView!
+    @IBOutlet weak var toggleToolsButton: NIKFontAwesomeButton!
+    
     var isDragging = false
     var chatViewController: ChatViewController?
     var controlPanelTimer: NSTimer?
-    var isFirstLoad = true
     var publisherSizeConst: [NSLayoutConstraint]?
     var controlPanelHidden = false
+    var toolsPanelHidden = false
     var messageQ : NSArray = []
     var currentImage: UIImage?
     var showIncoming = true
+    
+    var resources: NSArray?
+    var selectedResIndex = 0
+    var displayResources: NSArray?
+    var currentImageIndex = 0
+    
+    var callStartTime: NSDate?
+    var sessionNumber: NSNumber?
+    
+    var firstTime = true
+    var drawingMode = false
+    
 
+    @IBOutlet weak var drawingView: LinearInterpView!
     
     
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        controlPanelTimer = NSTimer.scheduledTimerWithTimeInterval(NSTimeInterval(3), target: self, selector: Selector("hideControls"), userInfo: AnyObject?(), repeats: false)
-        self.view.addGestureRecognizer(UITapGestureRecognizer(target: self, action:"tap:"))
-
+        if firstTime {
+            UIEventRegister.gestureRecognizer(self, rightAction:"prev:", leftAction: "next:", upAction: "up:", downAction: "down:")
+        }
+        
         // Do any additional setup after loading the view.
     }
     override func viewDidLayoutSubviews() {
-        if (isFirstLoad){
+        if firstTime{
             buttomView.layoutIfNeeded()
-            self.view.bringSubviewToFront(buttomView)
-            if let webView = presentationWebView{
-                self.view.bringSubviewToFront(webView)
-            }
-            ViewUtils.addGradientLayer(buttomView, topColor: UIColor(red:0.1/255, green:0.1/255, blue:0.1/255, alpha:0.0), bottomColor: UIColor(red:0.1/255, green:0.1/255, blue:0.1/255, alpha:0.9))
-            if CallUtils.subscriber == nil && !SubscribeToSelf {
-                //self.activeChatView.text = (self.activeChatView.text + "Remote side sent video stream\n")
-                //self.activeChatView.text = ""
-                if (!CallUtils.isFakeCall){
-                    if let stream = CallUtils.stream{
-                        CallUtils.doSubscribe(stream)
-                    }
-                }
-                CallUtils.doPublish()
-                
-            }
-            if (CallUtils.isFakeCall){
-                if let view = CallUtils.publisher?.view {
-                    self.view.addSubview(view)
-                    
-                    ViewUtils.addConstraintsToSuper(view, superView: self.view, top:0.0, left: nil, bottom: nil, right: 0.0)
-                    ViewUtils.addSizeConstaints(view, width: videoWidth, height: videoHeight)
-
-                }
-                presentaionImage?.image = UIImage(named: "fake_call_image.png")
-            }
+            ViewUtils.cornerRadius(toggleControllPanelButton, corners: (UIRectCorner.TopLeft|UIRectCorner.TopRight), cornerRadius: 20.0)
+            ViewUtils.cornerRadius(toggleToolsButton, corners: (UIRectCorner.BottomRight|UIRectCorner.TopRight), cornerRadius: 10.0)
+            //ViewUtils.addGradientLayer(buttomView, topColor: UIColor(red:0.1/255, green:0.1/255, blue:0.1/255, alpha:0.0), bottomColor: UIColor(red:0.1/255, green:0.1/255, blue:0.1/255, alpha:0.9))
             ViewUtils.roundView(chatBadge, borderWidth: 1.0, borderColor: UIColor.whiteColor())
             if ((currentImage) != nil){
                 presentaionImage?.image = currentImage
             }
-            isFirstLoad = false
+            
+            sideView.setTranslatesAutoresizingMaskIntoConstraints(false)
+            buttomView.setTranslatesAutoresizingMaskIntoConstraints(false)
+            
+            //controlPanelTimer = NSTimer.scheduledTimerWithTimeInterval(NSTimeInterval(3), target: self, selector: Selector("hideControls"), userInfo: AnyObject?(), repeats: false)
+            firstTime = false
         } else {
-            controlPanelTimer = NSTimer.scheduledTimerWithTimeInterval(NSTimeInterval(3), target: self, selector: Selector("hideControls"), userInfo: AnyObject?(), repeats: false)
+            
         }
+        
     }
     
     override func viewDidAppear(animated: Bool) {
-        let settings = StorageUtils.getUserSettings()
-        if let hideVideo = settings["disableVideoOnCalling"] as? Bool{
-            if !hideVideo{
-                toggleVideo(UIButton())
+        CallUtils.doPublish()
+        toggleVideo(UIButton())
+        changeDisplayResource(0)
+    }
+    
+    func loadImage(imageFile: NSNumber){
+        ServerAPI.getFileUrl(imageFile, completion: { (result) -> Void in
+            let url = NSURL(string: result as String)
+            if let data = NSData(contentsOfURL: url!){
+                dispatch_async(dispatch_get_main_queue()){
+                    self.presentaionImage?.image = UIImage(data: data)
+                }
             }
-        } else {
-            toggleVideo(UIButton())
+            var maybeError : OTError?
+            CallUtils.session?.signalWithType("load_res", string: result as String, connection: nil, error: &maybeError)
+        })
+    }
+    
+    func changeDisplayResource(index: Int) {
+        if self.resources?.count > 0{
+            if let resource = self.resources?[index] as? NSDictionary{
+                if (resource["type"] as! NSNumber == 1){
+                    if let resourceId = resource["id"] as? NSNumber {
+                        ServerAPI.getResourceDisplay(resourceId, completion: { (result) -> Void in
+                            self.displayResources = result
+                            if let dispRes = self.displayResources?[0] as? NSDictionary{
+                                self.loadImage(dispRes["id"] as! NSNumber)
+                            }
+                            
+                        })
+                    }
+                }
+            }
         }
+    }
+    
+    func next(sender: UISwipeGestureRecognizer) {
+        if self.isDragging {return}
+        if (currentImageIndex+1 == self.displayResources?.count){
+            return
+        }
+        currentImageIndex++
+        if let dispRes = displayResources?[currentImageIndex] as? NSDictionary{
+            if let imgFile = dispRes["id"] as? NSNumber{
+                loadImage(imgFile)
+                
+            }
+        }
+    }
+    func prev(sender: UISwipeGestureRecognizer) {
+        if self.isDragging {return}
+        if currentImageIndex <= 0{
+            return
+        }
+        currentImageIndex--
+        if let dispRes = displayResources?[currentImageIndex] as? NSDictionary{
+            if let imgFile = dispRes["id"] as? NSNumber{
+                loadImage(imgFile)
+            }
+        }
+    }
+    
+    func up(sender: UISwipeGestureRecognizer) {
+        if self.isDragging {return}
+        if (selectedResIndex+1 >= self.resources?.count){
+            selectedResIndex = -1
+        }
+        selectedResIndex++
+        changeDisplayResource(selectedResIndex)
+    }
+    func down(sender: UISwipeGestureRecognizer) {
+        if self.isDragging {return}
+        if selectedResIndex <= 0{
+            selectedResIndex = self.resources!.count
+        }
+        selectedResIndex--
+        changeDisplayResource(selectedResIndex)
     }
     
     func viewForZoomingInScrollView(scrollView: UIScrollView) -> UIView? {
@@ -158,12 +234,19 @@ class CallNewViewController: UIViewController, UIGestureRecognizerDelegate, OTSe
     
     func hideControls(animate: Bool){
         ViewUtils.slideViewOutVertical(buttomView, animate: animate)
+        ViewUtils.slideViewOutVertical(toggleControllPanelButton, animate: animate, offset: toggleControllPanelButton.frame.height)
         controlPanelHidden = true
     }
     
     func hideControls(){
+        
+        //self.view.removeConstraint(sideViewLeadingConst)
+        //self.view.removeConstraint(bottomViewBottomConst)
         if let controls = buttomView {
+            //toggleControllPanelButton.iconHex = "f102"
             ViewUtils.slideViewOutVertical(controls)
+            ViewUtils.slideViewOutVertical(toggleControllPanelButton, offset: toggleControllPanelButton.frame.height)
+            
         }
         controlPanelHidden = true
     }
@@ -171,33 +254,19 @@ class CallNewViewController: UIViewController, UIGestureRecognizerDelegate, OTSe
     @IBAction func endCall(sender: AnyObject) {
         self.performSegueWithIdentifier("showPostCall", sender: AnyObject?())
         CallUtils.stopCall()
-        CallUtils.incomingViewController = nil
-        showIncoming = true //for next time
-        
     }
     func showControlPanel(){
         controlPanelHidden = false
         if let controls = buttomView {
             ViewUtils.slideViewinVertical(controls)
+            ViewUtils.slideViewinVertical(toggleControllPanelButton, offset: controls.frame.height)
+            //toggleControllPanelButton.iconHex = "f103"
         }
-        controlPanelTimer?.invalidate()
-        controlPanelTimer = NSTimer.scheduledTimerWithTimeInterval(NSTimeInterval(3), target: self, selector: Selector("hideControls"), userInfo: AnyObject?(), repeats: false)
+        //controlPanelTimer?.invalidate()
+        //controlPanelTimer = NSTimer.scheduledTimerWithTimeInterval(NSTimeInterval(3), target: self, selector: Selector("hideControls"), userInfo: AnyObject?(), repeats: false)
     }
     
-    func tap(sender:  UITapGestureRecognizer) {
-        var location = sender.locationInView(self.buttomView)
-        if (CGRectContainsPoint(self.toggleVideoButton.frame, location)){
-            self.toggleVideo(sender)
-        }
-        if (CGRectContainsPoint(self.toggleSoundButton.frame, location)){
-            self.toggleSound(sender)
-        }
-        if (CGRectContainsPoint(self.endButton.frame, location)){
-            self.endCall(sender)
-        }
-        if (CGRectContainsPoint(self.chatButton.frame, location)){
-            self.openChat(sender)
-        }
+    @IBAction func toggleControlPanel(sender: NIKFontAwesomeButton) {
         if (self.presentedViewController == nil){
             if (controlPanelHidden){
                 showControlPanel()
@@ -205,9 +274,70 @@ class CallNewViewController: UIViewController, UIGestureRecognizerDelegate, OTSe
                 hideControls(true)
             }
         }
-        
     }
     
+    func showToolsPanel(){
+        ViewUtils.slideViewInFromLeft(sideView)
+        ViewUtils.slideViewInFromLeft(toggleToolsButton, offset: sideView.frame.width)
+        toolsPanelHidden = false
+    }
+    
+    func hideToolsPanel(){
+        ViewUtils.slideViewOutToLeft(sideView)
+        ViewUtils.slideViewOutToLeft(toggleToolsButton, offset: toggleToolsButton.frame.width)
+        toolsPanelHidden = true
+    }
+    
+    @IBAction func toggleToolsPanel(sender: NIKFontAwesomeButton) {
+        if toolsPanelHidden {
+            showToolsPanel()
+        } else {
+            hideToolsPanel()
+        }
+    }
+    
+    @IBAction func openDropbox(sender: NIKFontAwesomeButton) {
+
+    }
+    
+    
+    @IBAction func stopSharing(sender: NIKFontAwesomeButton) {
+        self.presentationWebView!.hidden = true
+    }
+    
+    @IBAction func toggleDrawingMode(sender: NIKFontAwesomeButton) {
+        if self.drawingMode {
+            drawingMode = false
+            drawingView.enabled = false
+            sender.color = UIColor.whiteColor()
+            //self.view.sendSubviewToBack(drawingView)
+            if (self.view.subviews[3] as! NSObject == drawingView){
+                self.view.exchangeSubviewAtIndex(2, withSubviewAtIndex: 3)
+            }
+            
+        } else {
+            drawingMode = true
+            drawingView.enabled = true
+            sender.color = UIColor.blueColor()
+            if (self.view.subviews[2] as! NSObject == drawingView){
+                self.view.exchangeSubviewAtIndex(2, withSubviewAtIndex: 3)
+            }
+            //self.view.bringSubviewToFront(drawingView)
+        }
+    }
+    
+    func showDropboxItem(url: NSURL!){
+        if let data = NSData(contentsOfURL: url){
+            self.presentationWebView!.loadData(data, MIMEType: "application/pdf", textEncodingName: "ISO-8859-1", baseURL: nil)
+            self.presentationWebView!.hidden = false
+            CallUtils.doScreenPublish(presentationWebView!)
+        }
+    }
+    
+    @IBAction func cleanDrawing(sender: AnyObject) {
+        drawingView.cleanView()
+    }
+
     
     override func touchesBegan(touches: Set<NSObject>, withEvent event: UIEvent) {
         super.touchesBegan(touches, withEvent: event)
@@ -215,7 +345,11 @@ class CallNewViewController: UIViewController, UIGestureRecognizerDelegate, OTSe
             ((touch.gestureRecognizers as NSArray)[0] as! UIGestureRecognizer).cancelsTouchesInView = false
             let touchLocation = touch.locationInView(self.view) as CGPoint
             
-
+            if drawingMode {
+                var maybeError : OTError?
+                CallUtils.session?.signalWithType("line_start_point", string: "\(touchLocation.x),\(touchLocation.y) ", connection: nil, error: &maybeError)
+            }
+            
             if let subscriberRect = CallUtils.subscriber?.view.frame {
                 if (CGRectContainsPoint(subscriberRect, touchLocation)){
                     self.isDragging = true
@@ -250,6 +384,13 @@ class CallNewViewController: UIViewController, UIGestureRecognizerDelegate, OTSe
     override func touchesEnded(touches: Set<NSObject>, withEvent event: UIEvent) {
         super.touchesEnded(touches, withEvent: event)
         self.isDragging = false
+        if drawingMode {
+            if let touch: UITouch = touches.first as? UITouch{
+                let touchLocation = touch.locationInView(self.view) as CGPoint
+                var maybeError : OTError?
+                CallUtils.session?.signalWithType("line_point_end", string: "\(touchLocation.x),\(touchLocation.y) ", connection: nil, error: &maybeError)
+            }
+        }
     }
     override func touchesCancelled(touches: Set<NSObject>, withEvent event: UIEvent!) {
         super.touchesCancelled(touches, withEvent: event)
@@ -259,6 +400,10 @@ class CallNewViewController: UIViewController, UIGestureRecognizerDelegate, OTSe
         super.touchesMoved(touches, withEvent: event)
         if let touch: UITouch = touches.first as? UITouch{
             let touchLocation = touch.locationInView(self.view) as CGPoint
+            if drawingMode {
+                var maybeError : OTError?
+                CallUtils.session?.signalWithType("line_point", string: "\(touchLocation.x),\(touchLocation.y) ", connection: nil, error: &maybeError)
+            }
             if (self.isDragging){
                 if let subscriber = CallUtils.subscriber?.view {
                     UIView.animateWithDuration(0.0,
@@ -279,6 +424,8 @@ class CallNewViewController: UIViewController, UIGestureRecognizerDelegate, OTSe
             }
         }
     }
+    
+
     func addMessageToQ(message: String){
         messageQ = messageQ.arrayByAddingObject(message)
         chatBadge?.text = String(messageQ.count)
@@ -312,6 +459,7 @@ class CallNewViewController: UIViewController, UIGestureRecognizerDelegate, OTSe
             self.chatViewController?.view.frame = CGRectMake(0, self.view.frame.size.height, self.view.frame.size.width, self.view.frame.size.height)
             self.addChildViewController(chatViewController!)
             self.view.addSubview(chatViewController!.view)
+            self.view.bringSubviewToFront(chatViewController!.view)
             chatViewController!.didMoveToParentViewController(self)
             releaseMessageQ()
             UIView.animateWithDuration(0.5, animations: { () -> Void in
@@ -322,15 +470,20 @@ class CallNewViewController: UIViewController, UIGestureRecognizerDelegate, OTSe
         }
     }
     
-    func requestForCurrentSlide(){
-            var maybeError : OTError?
-            CallUtils.session?.signalWithType("send_current_res", string: "", connection: nil, error: &maybeError)
-    }
     
     // MARK: - Navigation
 
     // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        if (segue.identifier == "showPostCall"){
+            var svc = segue.destinationViewController as! PostCallNewViewController
+            svc.startTime = self.callStartTime
+            svc.endTime = NSDate()
+            svc.sessionNumber = self.sessionNumber
+        } else if (segue.identifier == "presentDropboxList"){
+            var svc = segue.destinationViewController as! DropboxListViewController
+            svc.parentVC = self
+        }
     }
     
     override func shouldAutorotate() -> Bool {
@@ -376,12 +529,10 @@ class CallNewViewController: UIViewController, UIGestureRecognizerDelegate, OTSe
         // Step 3a: (if NO == subscribeToSelf): Begin subscribing to a stream we
         // have seen on the OpenTok session.
         if CallUtils.subscriber?.stream.streamId != stream.streamId {
+            callStartTime = NSDate()
             CallUtils.stream = stream
             CallUtils.doSubscribe(stream)
-        } else if (CallUtils.isFakeCall){
-            CallUtils.stream = stream
         }
-
     }
     
     func session(session: OTSession, streamDestroyed stream: OTStream) {
@@ -416,31 +567,6 @@ class CallNewViewController: UIViewController, UIGestureRecognizerDelegate, OTSe
     
     func session(session: OTSession!, receivedSignalType type: String!, fromConnection connection: OTConnection!, withString string: String!) {
         if connection?.connectionId != CallUtils.session?.connection?.connectionId {
-            if (type == "load_res"){
-                presentationWebView?.hidden = true
-                var imageUrl = string
-                if let url = NSURL(string: imageUrl){
-                    if let data = NSData(contentsOfURL: url){
-                        if let pImg = presentaionImage {
-                            pImg.image = UIImage(data: data)
-                        } else {
-                            currentImage = UIImage(data: data)
-                        }
-                        
-                        
-                    }
-                }
-            }
-            if (type == "load_video"){
-                var linkObj = string
-                presentationWebView?.hidden = false
-                var embedHTML = "<html><head>"
-                embedHTML += "<style type=\"text/css\">"
-                embedHTML += "body {"
-                embedHTML +=    "background-color: transparent;color: white;}\\</style>\\</head><body style=\"margin:0\">\\<embed webkit-playsinline id=\"yt\" src=\"\(linkObj)\" type=\"application/x-shockwave-flash\" \\width=\"\(presentationWebView?.frame.width)\" height=\"\(presentationWebView?.frame.height)\"></embed>\\</body></html>"
-                
-                presentationWebView?.loadHTMLString(embedHTML, baseURL:nil)
-            }
             if(type == "chat_text"){
                 if let chat = self.chatViewController {
                     if (chat.view.frame.origin.y > 10){
@@ -460,16 +586,17 @@ class CallNewViewController: UIViewController, UIGestureRecognizerDelegate, OTSe
     func subscriberDidConnectToStream(subscriberKit: OTSubscriberKit) {
         NSLog("subscriberDidConnectToStream (\(subscriberKit))")
         self.navigationController?.navigationBarHidden = true
-        //self.endCallButton.hidden = false
         if let view = CallUtils.subscriber?.view {
             self.view.addSubview(view)
-            
             ViewUtils.addConstraintsToSuper(view, superView: self.view, top:0.0, left: nil, bottom: nil, right: 0.0)
             ViewUtils.addSizeConstaints(view, width: videoWidth, height: videoHeight)
-            //activeChatView = smallChatView
-           // self.chatView.hidden = true
-            //self.activeChatView.text = self.chatView.text
-           // self.activeChatView.hidden = false
+            if let pubView = CallUtils.publisher?.view {
+                pubView.removeFromSuperview()
+                view.addSubview(pubView)
+                ViewUtils.addConstraintsToSuper(pubView, superView: view, top:nil, left: nil, bottom: 0.0, right: 0.0)
+                publisherSizeConst = ViewUtils.addSizeConstaints(pubView, width: videoWidth, height: videoHeight)
+                NSTimer.scheduledTimerWithTimeInterval(NSTimeInterval(3), target: self, selector: Selector("shrinkPublisher"), userInfo: AnyObject?(), repeats: false)
+            }
         }
     }
     

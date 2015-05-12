@@ -94,8 +94,8 @@
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" tableViewCell="6cc-iW-Nes" id="ady-Ce-Is7">
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="First name" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="2wh-4f-Rs6">
-                                                    <rect key="frame" x="8" y="15" width="250" height="30"/>
+                                                <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="First name" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="2wh-4f-Rs6">
+                                                    <rect key="frame" x="8" y="14" width="341" height="30"/>
                                                     <constraints>
                                                         <constraint firstAttribute="width" constant="341" id="g5M-oF-TWn"/>
                                                     </constraints>
@@ -117,8 +117,8 @@
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" tableViewCell="URY-Wc-xws" id="v3O-OK-0xh">
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Last name" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="O1w-C8-D7L">
-                                                    <rect key="frame" x="8" y="15" width="250" height="30"/>
+                                                <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Last name" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="O1w-C8-D7L">
+                                                    <rect key="frame" x="8" y="14" width="341" height="30"/>
                                                     <constraints>
                                                         <constraint firstAttribute="width" constant="341" id="k8u-un-Zmo"/>
                                                     </constraints>
@@ -140,8 +140,8 @@
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" tableViewCell="bWo-dY-Dza" id="aOu-s4-f6i">
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Email" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="YwI-DS-pZw">
-                                                    <rect key="frame" x="8" y="15" width="250" height="30"/>
+                                                <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Email" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="YwI-DS-pZw">
+                                                    <rect key="frame" x="8" y="14" width="341" height="30"/>
                                                     <constraints>
                                                         <constraint firstAttribute="width" constant="341" id="hMR-wD-Can"/>
                                                     </constraints>
@@ -163,8 +163,8 @@
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" tableViewCell="n8Y-OJ-5M4" id="Zn6-gg-kg1">
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Password" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="4Qb-s5-Nav">
-                                                    <rect key="frame" x="8" y="15" width="250" height="30"/>
+                                                <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Password" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="4Qb-s5-Nav">
+                                                    <rect key="frame" x="8" y="14" width="341" height="30"/>
                                                     <constraints>
                                                         <constraint firstAttribute="width" constant="341" id="JQG-5o-MTt"/>
                                                     </constraints>
@@ -1036,7 +1036,7 @@
     </scenes>
     <resources>
         <image name="panda" width="137" height="141"/>
-        <image name="panda.jpg" width="28" height="42"/>
+        <image name="panda.jpg" width="18" height="16"/>
     </resources>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
         <simulatedStatusBarMetrics key="statusBar"/>

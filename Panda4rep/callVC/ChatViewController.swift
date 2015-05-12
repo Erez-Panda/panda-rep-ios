@@ -21,13 +21,13 @@ class ChatViewController: UIViewController, UITextFieldDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        if let caller = CallUtils.currentCall?["caller"] as? NSDictionary{
-            let firstName = (caller["user"] as? NSDictionary)?["first_name"] as! String
-            let lastName = (caller["user"] as? NSDictionary)?["last_name"] as! String
+        if let callee = CallUtils.currentCall?["callee"] as? NSDictionary{
+            let firstName = (callee["user"] as? NSDictionary)?["first_name"] as! String
+            let lastName = (callee["user"] as? NSDictionary)?["last_name"] as! String
             chatTitle.attributedText = ViewUtils.getAttrText("Chat with \(firstName) \(lastName)", color: UIColor.whiteColor(), size: 20.0)
         }
             
-        chatText.attributedPlaceholder = ViewUtils.getAttrText("Type youre messge here...", color: UIColor.lightGrayColor(), size: 16.0)
+        chatText.attributedPlaceholder = ViewUtils.getAttrText("Type a message here...", color: UIColor.lightGrayColor(), size: 16.0)
         NSNotificationCenter.defaultCenter().addObserver(self, selector: Selector("keyboardWillShown:"), name: UIKeyboardWillShowNotification, object: nil)
         NSNotificationCenter.defaultCenter().addObserver(self, selector: Selector("keyboardWillHide:"), name: UIKeyboardWillHideNotification, object: nil)
         
@@ -111,7 +111,6 @@ class ChatViewController: UIViewController, UITextFieldDelegate {
     
     func keyboardWillShown(sender: NSNotification){
         let info: NSDictionary = sender.userInfo!
-        UIKeyboardFrameEndUserInfoKey
         let value: NSValue = info.valueForKey(UIKeyboardFrameEndUserInfoKey) as! NSValue
         let keyboardSize: CGSize = value.CGRectValue().size
         UIView.animateWithDuration(0.1, animations: { () -> Void in
@@ -141,10 +140,6 @@ class ChatViewController: UIViewController, UITextFieldDelegate {
         return UIInterfaceOrientation.LandscapeLeft
     }
     
-    override func viewWillAppear(animated: Bool) {
-        // Step 2: As the view comes into the foreground, begin the connection process.
-        //CallUtils.doConnect()
-    }
     
     override func prefersStatusBarHidden() -> Bool {
         return true
