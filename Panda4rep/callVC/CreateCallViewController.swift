@@ -38,6 +38,8 @@ class CreateCallViewController: UIViewController, UITableViewDelegate, UITableVi
     var selectedProduct: NSDictionary?
     var selectedDate: NSDate?
     
+    var parent: HomeViewController?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -51,13 +53,14 @@ class CreateCallViewController: UIViewController, UITableViewDelegate, UITableVi
                 self.productTable.reloadData()
             }
         }
-        
+        /*
         ServerAPI.getRepDoctors { (result) -> Void in
             self.doctors = result
             dispatch_async(dispatch_get_main_queue()){
                 self.doctorsTable.reloadData()
             }
         }
+*/
         doctorView.layoutIfNeeded()
         productView.layoutIfNeeded()
         timeView.layoutIfNeeded()
@@ -118,7 +121,7 @@ class CreateCallViewController: UIViewController, UITableViewDelegate, UITableVi
     }
 
     @IBAction func toggleDoctorView(sender: UIButton) {
-        toggleView(doctorView)
+        //toggleView(doctorView)
     }
     
     
@@ -131,6 +134,7 @@ class CreateCallViewController: UIViewController, UITableViewDelegate, UITableVi
     }
     
     @IBAction func cancel(sender: AnyObject) {
+        self.parent?.pullRefresh(sender)
         self.dismissViewControllerAnimated(true, completion: nil)
     }
     
@@ -186,6 +190,13 @@ class CreateCallViewController: UIViewController, UITableViewDelegate, UITableVi
         }
     }
     
+    func selectDoctor(doctor: NSDictionary){
+        let lastName = doctor["last_name"] as! String
+        doctorLabel.text = "Dr. \(lastName)"
+        doctorLabel.textColor = UIColor.blackColor()
+        selectedDoctor = doctor
+    }
+    
     @IBAction func dateChanged(sender: AnyObject) {
         selectedDate = datePicker.date
         timeLabel.text = TimeUtils.dateToReadableStr(datePicker.date)
@@ -201,13 +212,13 @@ class CreateCallViewController: UIViewController, UITableViewDelegate, UITableVi
                 if let date = selectedDate{
                     let callData = [
                         "caller": userId,
-                        "callee": doc["id"] as! NSNumber,
+                        "guest_callee": doc["id"] as! NSNumber,
                         "title": "Call created by rep",
                         "start": TimeUtils.dateToServerString(date),
                         "end": TimeUtils.dateToServerString(date.dateByAddingTimeInterval(20*60)),
                         "product": prod["id"] as! NSNumber
                         ] as Dictionary<String,AnyObject>
-                    ServerAPI.newCall(callData, completion: { (result) -> Void in
+                    ServerAPI.newGuestCall(callData, completion: { (result) -> Void in
                         dispatch_async(dispatch_get_main_queue()){
                             self.activity.stopAnimating()
                         }
@@ -220,6 +231,13 @@ class CreateCallViewController: UIViewController, UITableViewDelegate, UITableVi
             }
         }
 
+    }
+    
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        if (segue.identifier == "showDoctorList"){
+            var svc = segue.destinationViewController as! DoctorListViewController
+            svc.parentVC = self
+        }
     }
     
     override func preferredStatusBarStyle() -> UIStatusBarStyle {

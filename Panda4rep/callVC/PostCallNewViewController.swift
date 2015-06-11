@@ -84,8 +84,15 @@ class PostCallNewViewController: PandaViewController, FloatRatingViewDelegate, U
         }
         
         if let callee = call?["callee"] as? NSDictionary{
-            let firstName = (callee["user"] as? NSDictionary)?["first_name"] as! String
-            let lastName = (callee["user"] as? NSDictionary)?["last_name"]as! String
+            var firstName = ""
+            var lastName = ""
+            if let user = callee["user"] as? NSDictionary{
+                firstName = user["first_name"] as! String
+                lastName = user["last_name"] as! String
+            } else {
+                firstName = callee["first_name"] as! String
+                lastName = callee["last_name"] as! String
+            }
             callerNameLabel.text =  callerNameLabel.text! + "\(firstName) \(lastName)"
             
         }
@@ -288,6 +295,7 @@ class PostCallNewViewController: PandaViewController, FloatRatingViewDelegate, U
     @IBAction func back(sender: AnyObject) {
         self.navigationController?.popViewControllerAnimated(true)
     }
+    /*
     
     override func shouldAutorotate() -> Bool {
         return true
@@ -300,6 +308,7 @@ class PostCallNewViewController: PandaViewController, FloatRatingViewDelegate, U
     override func preferredInterfaceOrientationForPresentation() -> UIInterfaceOrientation {
         return UIInterfaceOrientation.Portrait
     }
+*/
     
     override func preferredStatusBarStyle() -> UIStatusBarStyle {
         return UIStatusBarStyle.LightContent

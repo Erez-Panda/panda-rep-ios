@@ -8,7 +8,7 @@
 
 var SERVER_URL = "http://livemed.co"
 //var SERVER_URL = "http://127.0.0.1:8000"
-//var SERVER_URL = "http://10.1.10.17:8000"
+//var SERVER_URL = "http://10.0.0.5:8000"
 
 @objc protocol LoginDelegate{
     optional func loginComplete()
@@ -112,6 +112,12 @@ struct ServerAPI {
     
     static func newCall (callData: Dictionary<String, AnyObject>, fromSlot: NSNumber, completion: (result: NSDictionary) -> Void) -> Void{
         self.post("/calls/new/?from_slot=\(fromSlot)", message: callData, completion: {result -> Void in
+            completion(result: self.getDictionaryResult(result))
+        })
+    }
+    
+    static func newGuestCall (callData: Dictionary<String, AnyObject>, completion: (result: NSDictionary) -> Void) -> Void{
+        self.post("/calls/new/?guest_call=\(true)", message: callData, completion: {result -> Void in
             completion(result: self.getDictionaryResult(result))
         })
     }
@@ -378,9 +384,44 @@ struct ServerAPI {
         })
     }
     
+    static func newContact(data: Dictionary<String, AnyObject>, completion: (result: NSDictionary) -> Void) -> Void{
+        self.post("/contacts/", message: data, completion: {result -> Void in
+            completion(result: self.getDictionaryResult(result))
+        })
+    }
+    static func updateContact(data: Dictionary<String, AnyObject>, id: NSNumber,completion: (result: Bool) -> Void) -> Void{
+        self.put("/contacts/\(id)/", message: data, completion: {result -> Void in
+            completion(result: true)
+        })
+    }
+    
+    static func deleteContact(id: NSNumber,completion: (result: Bool) -> Void) -> Void{
+        self.post("/contacts/\(id)/", message: [:], method: "DELETE",completion: {result -> Void in
+            completion(result: true)
+        })
+    }
+    
+    static func getContacts(completion: (result: NSArray) -> Void) -> Void{
+        self.get("/contacts/", completion: {result -> Void in
+            completion(result: self.getArrayResult(result))
+        })
+    }
+    
+    static func startCallArchive(data: Dictionary<String, AnyObject>,completion: (result: Bool) -> Void) -> Void{
+        self.post("/calls/archive/start/", message: data, completion: {result -> Void in
+            completion(result: true)
+        })
+    }
+    
+    static func stopCallArchive(data: Dictionary<String, AnyObject>,completion: (result: Bool) -> Void) -> Void{
+        self.post("/calls/archive/stop/", message: data, completion: {result -> Void in
+            completion(result: true)
+        })
+    }
+    
 
     
-    static func post(url: String, message: Dictionary<String, AnyObject>, completion: (result: AnyObject) -> Void) -> Void{
+    static func post(url: String, message: Dictionary<String, AnyObject>, method: String = "POST", completion: (result: AnyObject) -> Void) -> Void{
         if (!NetworkUtils.checkConnection()){
             completion(result: false)
             return
@@ -388,7 +429,7 @@ struct ServerAPI {
         var request = NSMutableURLRequest(URL: NSURL(string: SERVER_URL + url)!)
         var session = NSURLSession.sharedSession()
         
-        request.HTTPMethod = "POST"
+        request.HTTPMethod = method
         
         var err: NSError?
         request.HTTPBody = NSJSONSerialization.dataWithJSONObject(message, options: nil, error: &err)
@@ -436,13 +477,8 @@ struct ServerAPI {
         
     }
     
-    static func get(url: String, completion: (result: AnyObject) -> Void) -> Void{
-        get(url, isJson: true, completion: {result -> Void in
-            completion(result: result as AnyObject)
-        })
-    }
     
-    static func get(url: String, isJson: Bool, completion: (result: AnyObject) -> Void) -> Void{
+    static func get(url: String, isJson: Bool = true, completion: (result: AnyObject) -> Void) -> Void{
         if (!NetworkUtils.checkConnection()){
             completion(result: false)
             return

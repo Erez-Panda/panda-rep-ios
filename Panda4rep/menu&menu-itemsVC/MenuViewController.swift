@@ -295,6 +295,7 @@ class MenuViewController: UIViewController, UITableViewDelegate, UITableViewData
             //svc.startIndex = self.selectedIndex
         }
     }
+    /*
 
     override func shouldAutorotate() -> Bool {
         return true
@@ -307,5 +308,6 @@ class MenuViewController: UIViewController, UITableViewDelegate, UITableViewData
     override func preferredInterfaceOrientationForPresentation() -> UIInterfaceOrientation {
         return UIInterfaceOrientation.Portrait
     }
+*/
 
 }

@@ -135,6 +135,7 @@ class ProfileUIViewController: UIViewController, UITableViewDelegate, UITableVie
     @IBAction func openMenu(sender: AnyObject) {
         ViewUtils.slideInMenu(self)
     }
+    /*
     override func shouldAutorotate() -> Bool {
         return true
     }
@@ -146,6 +147,7 @@ class ProfileUIViewController: UIViewController, UITableViewDelegate, UITableVie
     override func preferredInterfaceOrientationForPresentation() -> UIInterfaceOrientation {
         return UIInterfaceOrientation.Portrait
     }
+*/
 
     
 }

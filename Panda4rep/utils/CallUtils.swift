@@ -37,6 +37,24 @@ struct CallUtils{
     static var isFakeCall = false
     static var currentCall: NSDictionary?
     
+    static func startArchive(){
+        if let id = self.currentCall?["id"] as? NSNumber{
+            let data = ["call": id] as Dictionary<String, AnyObject>
+            ServerAPI.startCallArchive(data, completion: { (result) -> Void in
+                
+            })
+        }
+    }
+    
+    static func stopArchive(){
+        if let id = self.currentCall?["id"] as? NSNumber{
+            let data = ["call": id] as Dictionary<String, AnyObject>
+            ServerAPI.stopCallArchive(data, completion: { (result) -> Void in
+                
+            })
+        }
+    }
+    
     static func fakeCall (){
         isFakeCall = true
 //        ViewUtils.showIncomingCall()

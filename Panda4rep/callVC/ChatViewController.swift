@@ -127,6 +127,7 @@ class ChatViewController: UIViewController, UITextFieldDelegate {
         })
     }
     
+    /*
     
     override func shouldAutorotate() -> Bool {
         return true
@@ -139,6 +140,7 @@ class ChatViewController: UIViewController, UITextFieldDelegate {
     override func preferredInterfaceOrientationForPresentation() -> UIInterfaceOrientation {
         return UIInterfaceOrientation.LandscapeLeft
     }
+*/
     
     
     override func prefersStatusBarHidden() -> Bool {

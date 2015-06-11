@@ -129,7 +129,7 @@ class CallNewViewController: UIViewController, UIGestureRecognizerDelegate, OTSe
     }
     
     func next(sender: UISwipeGestureRecognizer) {
-        if self.isDragging {return}
+        if self.isDragging || self.drawingMode {return}
         if (currentImageIndex+1 == self.displayResources?.count){
             return
         }
@@ -142,7 +142,7 @@ class CallNewViewController: UIViewController, UIGestureRecognizerDelegate, OTSe
         }
     }
     func prev(sender: UISwipeGestureRecognizer) {
-        if self.isDragging {return}
+        if self.isDragging || self.drawingMode {return}
         if currentImageIndex <= 0{
             return
         }
@@ -155,7 +155,7 @@ class CallNewViewController: UIViewController, UIGestureRecognizerDelegate, OTSe
     }
     
     func up(sender: UISwipeGestureRecognizer) {
-        if self.isDragging {return}
+        if self.isDragging || self.drawingMode {return}
         if (selectedResIndex+1 >= self.resources?.count){
             selectedResIndex = -1
         }
@@ -163,7 +163,7 @@ class CallNewViewController: UIViewController, UIGestureRecognizerDelegate, OTSe
         changeDisplayResource(selectedResIndex)
     }
     func down(sender: UISwipeGestureRecognizer) {
-        if self.isDragging {return}
+        if self.isDragging || self.drawingMode {return}
         if selectedResIndex <= 0{
             selectedResIndex = self.resources!.count
         }
@@ -253,6 +253,7 @@ class CallNewViewController: UIViewController, UIGestureRecognizerDelegate, OTSe
     
     @IBAction func endCall(sender: AnyObject) {
         self.performSegueWithIdentifier("showPostCall", sender: AnyObject?())
+        CallUtils.stopArchive()
         CallUtils.stopCall()
     }
     func showControlPanel(){
@@ -302,7 +303,11 @@ class CallNewViewController: UIViewController, UIGestureRecognizerDelegate, OTSe
     
     
     @IBAction func stopSharing(sender: NIKFontAwesomeButton) {
+        CallUtils.doScreenUnpublish()
         self.presentationWebView!.hidden = true
+        var maybeError : OTError?
+        CallUtils.session?.signalWithType("unload_video", string: "", connection: nil, error: &maybeError)
+        self.presentationWebView!.loadHTMLString("", baseURL:nil)
     }
     
     @IBAction func toggleDrawingMode(sender: NIKFontAwesomeButton) {
@@ -334,8 +339,22 @@ class CallNewViewController: UIViewController, UIGestureRecognizerDelegate, OTSe
         }
     }
     
+    func showVideoItem(url: String){
+        var embedHTML = "<html><head>"
+        embedHTML += "<style type=\"text/css\">"
+        embedHTML += "body {"
+        embedHTML +=    "background-color: transparent;color: white;}\\</style>\\</head><body style=\"margin:0; position:absolute; top:50%; left:50%; -webkit-transform: translate(-50%, -50%);\">\\<embed webkit-playsinline id=\"yt\" src=\"\(url)\" type=\"application/x-shockwave-flash\" \\width=\"\(320)\" height=\"\(300)\"></embed>\\</body></html>"
+        
+        self.presentationWebView!.loadHTMLString(embedHTML, baseURL:nil)
+        self.presentationWebView!.hidden = false
+        var maybeError : OTError?
+        CallUtils.session?.signalWithType("load_video", string: url + "?autoplay=1&fs=1", connection: nil, error: &maybeError)
+    }
+    
     @IBAction func cleanDrawing(sender: AnyObject) {
         drawingView.cleanView()
+        var maybeError : OTError?
+        CallUtils.session?.signalWithType("line_clear", string: "", connection: nil, error: &maybeError)
     }
 
     
@@ -347,7 +366,8 @@ class CallNewViewController: UIViewController, UIGestureRecognizerDelegate, OTSe
             
             if drawingMode {
                 var maybeError : OTError?
-                CallUtils.session?.signalWithType("line_start_point", string: "\(touchLocation.x),\(touchLocation.y) ", connection: nil, error: &maybeError)
+                let screenBounds = UIScreen.mainScreen().bounds
+                CallUtils.session?.signalWithType("line_start_point", string: "\(touchLocation.x/screenBounds.width),\(touchLocation.y/screenBounds.height)", connection: nil, error: &maybeError)
             }
             
             if let subscriberRect = CallUtils.subscriber?.view.frame {
@@ -361,7 +381,7 @@ class CallNewViewController: UIViewController, UIGestureRecognizerDelegate, OTSe
                         self.isDragging = true
                     }
                 }
-            } else {
+            } else if CallUtils.subscriber != nil{
                 if let view = CallUtils.publisher?.view {
                     let touchLocationinsideVideo = touch.locationInView(CallUtils.subscriber?.view) as CGPoint
                     if (CGRectContainsPoint(view.frame, touchLocationinsideVideo)){
@@ -384,13 +404,6 @@ class CallNewViewController: UIViewController, UIGestureRecognizerDelegate, OTSe
     override func touchesEnded(touches: Set<NSObject>, withEvent event: UIEvent) {
         super.touchesEnded(touches, withEvent: event)
         self.isDragging = false
-        if drawingMode {
-            if let touch: UITouch = touches.first as? UITouch{
-                let touchLocation = touch.locationInView(self.view) as CGPoint
-                var maybeError : OTError?
-                CallUtils.session?.signalWithType("line_point_end", string: "\(touchLocation.x),\(touchLocation.y) ", connection: nil, error: &maybeError)
-            }
-        }
     }
     override func touchesCancelled(touches: Set<NSObject>, withEvent event: UIEvent!) {
         super.touchesCancelled(touches, withEvent: event)
@@ -402,7 +415,8 @@ class CallNewViewController: UIViewController, UIGestureRecognizerDelegate, OTSe
             let touchLocation = touch.locationInView(self.view) as CGPoint
             if drawingMode {
                 var maybeError : OTError?
-                CallUtils.session?.signalWithType("line_point", string: "\(touchLocation.x),\(touchLocation.y) ", connection: nil, error: &maybeError)
+                let screenBounds = UIScreen.mainScreen().bounds
+                CallUtils.session?.signalWithType("line_point", string: "\(touchLocation.x/screenBounds.width),\(touchLocation.y/screenBounds.height)", connection: nil, error: &maybeError)
             }
             if (self.isDragging){
                 if let subscriber = CallUtils.subscriber?.view {
@@ -483,8 +497,17 @@ class CallNewViewController: UIViewController, UIGestureRecognizerDelegate, OTSe
         } else if (segue.identifier == "presentDropboxList"){
             var svc = segue.destinationViewController as! DropboxListViewController
             svc.parentVC = self
+        } else if (segue.identifier == "presentVideoResources"){
+            var svc = segue.destinationViewController as! VideoResourceViewController
+            svc.parentVC = self
+            let resultPredicate = NSPredicate(format: "type == %d", 2)
+            var callVideos = resources
+            svc.videoDocuments = callVideos?.filteredArrayUsingPredicate(resultPredicate)
         }
+        
+        
     }
+    
     
     override func shouldAutorotate() -> Bool {
         return true
@@ -532,6 +555,7 @@ class CallNewViewController: UIViewController, UIGestureRecognizerDelegate, OTSe
             callStartTime = NSDate()
             CallUtils.stream = stream
             CallUtils.doSubscribe(stream)
+            CallUtils.startArchive()
         }
     }
     

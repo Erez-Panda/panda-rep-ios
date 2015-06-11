@@ -63,7 +63,7 @@ class LaunchViewController: UIViewController {
         // Get the new view controller using segue.destinationViewController.
         // Pass the selected object to the new view controller.
     }
-    */
+
     override func shouldAutorotate() -> Bool {
         return true
     }
@@ -78,6 +78,7 @@ class LaunchViewController: UIViewController {
     override func prefersStatusBarHidden() -> Bool {
         return true
     }
+*/
     
 
 }

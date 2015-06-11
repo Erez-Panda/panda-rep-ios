@@ -16,6 +16,7 @@ struct StorageUtils {
         case PromotionalBookmark = "promoBookmarks"
         case ArticleRecent = "articleRecents"
         case PromotionalRecent = "promoRecents"
+        case DoctorContact = "doctorContact"
     }
     
     static func cleanDictionaryNil(dictionary: NSDictionary) -> Dictionary<String, AnyObject>{
@@ -201,6 +202,48 @@ struct StorageUtils {
             return drugs as NSArray
         }
         return []
+    }
+    
+    static func getItems(type: DataType) -> NSArray {
+        let defaultUser = NSUserDefaults.standardUserDefaults()
+        if let existingItems = defaultUser.objectForKey(type.rawValue) as? NSArray{
+            return existingItems
+        }
+        return []
+    }
+    
+    static func setItems(type: DataType, items: NSArray){
+        let defaultUser = NSUserDefaults.standardUserDefaults()
+        var cleanItems : NSMutableArray = []
+        for item in items{
+            cleanItems.addObject(cleanDictionaryNil(item as! NSDictionary))
+        }
+        NSUserDefaults.standardUserDefaults().setObject(cleanItems, forKey: type.rawValue)
+        NSUserDefaults.standardUserDefaults().setObject( Int(NSDate.new().timeIntervalSince1970), forKey: "\(type.rawValue)_last_update")
+        NSUserDefaults.standardUserDefaults().synchronize()
+    }
+    
+    static func addItem(type: DataType, dictionary: NSDictionary){
+        var items: NSArray
+        let cleanItem = cleanDictionaryNil(dictionary)
+        let defaultUser = NSUserDefaults.standardUserDefaults()
+        if let existingItems = defaultUser.objectForKey(type.rawValue) as? NSArray{
+            if let id = cleanItem["id"] as? NSNumber{
+                for i in existingItems{
+                    if let i_id = i["id"] as? NSNumber{
+                        if i_id == id{
+                            // item already in list
+                            return
+                        }
+                    }
+                }
+            }
+            items = existingItems.arrayByAddingObject(cleanItem)
+        } else {
+            items = [cleanItem]
+        }
+        NSUserDefaults.standardUserDefaults().setObject(items, forKey: type.rawValue)
+        NSUserDefaults.standardUserDefaults().synchronize()
     }
 }
 

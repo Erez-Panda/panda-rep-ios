@@ -11,7 +11,7 @@ import UIKit
 class UINavigationControllerWithOrientation: UINavigationController {
     
     
-    
+    /*
     override func shouldAutorotate() -> Bool {
         return self.topViewController.shouldAutorotate()
     }
@@ -23,6 +23,7 @@ class UINavigationControllerWithOrientation: UINavigationController {
     override func preferredInterfaceOrientationForPresentation() -> UIInterfaceOrientation {
         return self.topViewController.preferredInterfaceOrientationForPresentation()
     }
+*/
     
     override func preferredStatusBarStyle() -> UIStatusBarStyle {
         return UIStatusBarStyle.LightContent

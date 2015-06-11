@@ -133,6 +133,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         return isValid && !testStr.isEmpty
         
     }
+    /*
     
     override func prefersStatusBarHidden() -> Bool {
         return false
@@ -148,5 +149,6 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     override func preferredInterfaceOrientationForPresentation() -> UIInterfaceOrientation {
         return UIInterfaceOrientation.Portrait
     }
+*/
 }
 

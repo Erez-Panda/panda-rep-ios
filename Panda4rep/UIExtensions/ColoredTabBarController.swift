@@ -54,7 +54,7 @@ class ColoredTabBarController: UITabBarController {
         // Get the new view controller using segue.destinationViewController.
         // Pass the selected object to the new view controller.
     }
-    */
+
     
     override func shouldAutorotate() -> Bool {
         return true
@@ -67,6 +67,7 @@ class ColoredTabBarController: UITabBarController {
     override func preferredInterfaceOrientationForPresentation() -> UIInterfaceOrientation {
         return UIInterfaceOrientation.Portrait
     }
+*/
     
     override func preferredStatusBarStyle() -> UIStatusBarStyle {
         return UIStatusBarStyle.LightContent

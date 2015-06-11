@@ -21,11 +21,13 @@ class PreCallViewController: PandaViewController, UITableViewDataSource, UITable
     @IBOutlet weak var dateLabel: UILabel!
     @IBOutlet weak var productLabel: UILabel!
     @IBOutlet weak var productNameLabel: UILabel!
-    @IBOutlet weak var notesTextView: UITextView!
     @IBOutlet weak var agendaView: UIView!
     @IBOutlet weak var attachmentView: UIView!
     @IBOutlet weak var attachmentTable: UITableView!
     
+    @IBOutlet weak var summaryView: UIView!
+    @IBOutlet weak var summaryTextView: UITextView!
+    @IBOutlet weak var sessionLabel: UILabel!
     var sessionNumber : NSNumber?
     
     override func viewDidLoad() {
@@ -63,7 +65,8 @@ class PreCallViewController: PandaViewController, UITableViewDataSource, UITable
                             details = "N/A"
                         }
                         dispatch_async(dispatch_get_main_queue()){
-                            self.notesTextView.attributedText = ViewUtils.getAttrText("Session number: \(self.sessionNumber!) \nLast Call Summary:\n\(details!)", color: UIColor.blackColor(), size: 18.0, fontName:"OpenSans")
+                            self.sessionLabel.text = self.sessionLabel.text! + " \(self.sessionNumber!)"
+                            self.summaryTextView.text = details
                         }
                     
                     }
@@ -81,7 +84,13 @@ class PreCallViewController: PandaViewController, UITableViewDataSource, UITable
                 productNameLabel.attributedText = ViewUtils.getAttrText(product["name"] as! String, color: UIColor.grayColor(), size: 24.0, fontName:"OpenSans")
             }
             if let callee = c["callee"] as? NSDictionary{
-                let lastName = (callee["user"] as? NSDictionary)?["last_name"] as! String
+                var lastName = ""
+                if let user = callee["user"] as? NSDictionary{
+                    lastName = user["last_name"] as! String
+                } else {
+                    lastName = callee["last_name"] as! String
+                }
+                
                 titleLabel.attributedText = ViewUtils.getAttrText("Your call with Dr. \(lastName)", color: UIColor.grayColor(), size: 24.0, fontName:"OpenSans-Semibold")
             }
             dateLabel.attributedText = ViewUtils.getAttrText(TimeUtils.dateToReadableStr(c["start"] as! NSDate), color: UIColor.grayColor(), size: 24.0, fontName:"OpenSans")
@@ -92,8 +101,8 @@ class PreCallViewController: PandaViewController, UITableViewDataSource, UITable
         let borderColor = ColorUtils.uicolorFromHex(0xF1F1F1)
         ViewUtils.bottomBorderView(dateLabel, borderWidth: 1.0, borderColor: borderColor, offset: 0)
         ViewUtils.leftBorderView(productNameLabel, borderWidth: 1.0, borderColor: borderColor, offset: -20)
-        ViewUtils.topBorderView(notesTextView, borderWidth: 1.0, borderColor: borderColor, offset: 0)
-        ViewUtils.bottomBorderView(notesTextView, borderWidth: 1.0, borderColor: borderColor, offset: -1.0)
+        ViewUtils.topBorderView(summaryView, borderWidth: 1.0, borderColor: borderColor, offset: 0)
+        ViewUtils.bottomBorderView(summaryView, borderWidth: 1.0, borderColor: borderColor, offset: -1.0)
         ViewUtils.bottomBorderView(agendaView, borderWidth: 1.0, borderColor: borderColor, offset: 0)
         //ViewUtils.bottomBorderView(attachmentView, borderWidth: 1.0, borderColor: UIColor.lightGrayColor(), offset: 0)
         

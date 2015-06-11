@@ -107,41 +107,28 @@ struct ViewUtils {
         return roundView
     }
     
-    static func slideViewOutVertical(view: UIView){
-        slideViewOutVertical(view, offset: 0)
-    }
-    
-    static func slideViewOutVertical(view: UIView, offset: CGFloat){
+    static func slideViewOutVertical(view: UIView, animate: Bool = true, offset: CGFloat = 0){
         let screenSize: CGRect = UIScreen.mainScreen().bounds
-        UIView.animateWithDuration(0.5, animations: { () -> Void in
-            view.frame.origin.y = screenSize.height - offset
-            
-        })
-    }
-    
-    static func slideViewOutVertical(view: UIView, animate: Bool){
-        slideViewOutVertical(view, animate: animate, offset: 0)
-    }
-    
-    static func slideViewOutVertical(view: UIView, animate: Bool, offset: CGFloat){
         if (animate){
-            slideViewOutVertical(view, offset: offset)
+            UIView.animateWithDuration(0.5, animations: { () -> Void in
+                view.frame.origin.y = screenSize.height - offset
+                
+            })
         } else {
-            let screenSize: CGRect = UIScreen.mainScreen().bounds
             view.frame.origin.y = screenSize.height - offset
         }
     }
     
-    static func slideViewinVertical(view: UIView){
-        slideViewinVertical(view, offset: 0)
-    }
-    
-    static func slideViewinVertical(view: UIView, offset: CGFloat){
+    static func slideViewinVertical(view: UIView, animate: Bool = true, offset: CGFloat = 0){
         let screenSize: CGRect = UIScreen.mainScreen().bounds
-        UIView.animateWithDuration(0.5, animations: { () -> Void in
+        if (animate){
+            UIView.animateWithDuration(0.5, animations: { () -> Void in
+                view.frame.origin.y = screenSize.height - view.frame.height - offset
+                
+            })
+        } else {
             view.frame.origin.y = screenSize.height - view.frame.height - offset
-            
-        })
+        }
     }
     
     static func slideViewInFromLeft(view: UIView, animate: Bool = true, offset: CGFloat = 0){
@@ -164,6 +151,16 @@ struct ViewUtils {
         }
     }
     
+    static func slideViewOutToRight(view: UIView, animate: Bool = true, offset: CGFloat = 0){
+        let screenSize: CGRect = UIScreen.mainScreen().bounds
+        if (animate){
+            UIView.animateWithDuration(0.5, animations: { () -> Void in
+                view.frame.origin.x = screenSize.width - offset
+            })
+        } else {
+            view.frame.origin.x = screenSize.width - offset
+        }
+    }
  
     static func slideInMenu (viewController: UIViewController){
         let menuView = viewController.storyboard?.instantiateViewControllerWithIdentifier("MenuViewController") as! MenuViewController

@@ -78,11 +78,15 @@
 		A822CBFA1AE9D70A00CE8CD9 /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A822CBF31AE9D70A00CE8CD9 /* SettingsViewController.swift */; };
 		A822CBFB1AE9D70A00CE8CD9 /* SupportViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A822CBF41AE9D70A00CE8CD9 /* SupportViewController.swift */; };
 		A85AE7641AF0701700B537D4 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = A85AE7621AF0701700B537D4 /* LaunchScreen.xib */; };
+		A8A491061B26F6080017324A /* AcceptCallTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8A491051B26F6080017324A /* AcceptCallTableViewCell.swift */; };
 		A8BCC4121AFAD7C2001229E5 /* AttachmentListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8BCC4111AFAD7C2001229E5 /* AttachmentListViewController.swift */; };
 		A8C739561AF2EDDA00A8DAAB /* CreateCallViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8C739551AF2EDDA00A8DAAB /* CreateCallViewController.swift */; };
 		A8D7DADB1AFD5CE7008E2D29 /* DropboxListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8D7DADA1AFD5CE7008E2D29 /* DropboxListViewController.swift */; };
 		A8D7DADE1AFD7389008E2D29 /* TBScreenCapture.m in Sources */ = {isa = PBXBuildFile; fileRef = A8D7DADD1AFD7389008E2D29 /* TBScreenCapture.m */; };
 		A8D7DAE31AFD8F0E008E2D29 /* LinearInterpView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8D7DAE21AFD8F0E008E2D29 /* LinearInterpView.swift */; };
+		A8D7DAE71B02D9AB008E2D29 /* VideoResourceViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8D7DAE61B02D9AB008E2D29 /* VideoResourceViewController.swift */; };
+		A8D7DAE91B040CD0008E2D29 /* MPGTextField-Swift.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8D7DAE81B040CD0008E2D29 /* MPGTextField-Swift.swift */; };
+		A8D7DAEB1B040D33008E2D29 /* DoctorListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8D7DAEA1B040D33008E2D29 /* DoctorListViewController.swift */; };
 		A8DD82E91AF00AE70098B8C6 /* CallNewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8DD82E21AF00AE60098B8C6 /* CallNewViewController.swift */; };
 		A8DD82EA1AF00AE70098B8C6 /* ChatViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8DD82E31AF00AE60098B8C6 /* ChatViewController.swift */; };
 		A8DD82EC1AF00AE70098B8C6 /* PostCallNewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8DD82E51AF00AE60098B8C6 /* PostCallNewViewController.swift */; };
@@ -205,6 +209,7 @@
 		A822CBF31AE9D70A00CE8CD9 /* SettingsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SettingsViewController.swift; path = "menu&menu-itemsVC/SettingsViewController.swift"; sourceTree = "<group>"; };
 		A822CBF41AE9D70A00CE8CD9 /* SupportViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SupportViewController.swift; path = "menu&menu-itemsVC/SupportViewController.swift"; sourceTree = "<group>"; };
 		A85AE7631AF0701700B537D4 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
+		A8A491051B26F6080017324A /* AcceptCallTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AcceptCallTableViewCell.swift; path = UIExtensions/AcceptCallTableViewCell.swift; sourceTree = "<group>"; };
 		A8BCC4111AFAD7C2001229E5 /* AttachmentListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AttachmentListViewController.swift; path = callVC/AttachmentListViewController.swift; sourceTree = "<group>"; };
 		A8C739551AF2EDDA00A8DAAB /* CreateCallViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CreateCallViewController.swift; path = callVC/CreateCallViewController.swift; sourceTree = "<group>"; };
 		A8C739571AF3006F00A8DAAB /* Panda4rep-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Panda4rep-Bridging-Header.h"; sourceTree = SOURCE_ROOT; };
@@ -212,6 +217,9 @@
 		A8D7DADC1AFD7389008E2D29 /* TBScreenCapture.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TBScreenCapture.h; path = ScreenSharing/TBScreenCapture.h; sourceTree = "<group>"; };
 		A8D7DADD1AFD7389008E2D29 /* TBScreenCapture.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TBScreenCapture.m; path = ScreenSharing/TBScreenCapture.m; sourceTree = "<group>"; };
 		A8D7DAE21AFD8F0E008E2D29 /* LinearInterpView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LinearInterpView.swift; sourceTree = "<group>"; };
+		A8D7DAE61B02D9AB008E2D29 /* VideoResourceViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = VideoResourceViewController.swift; path = callVC/VideoResourceViewController.swift; sourceTree = "<group>"; };
+		A8D7DAE81B040CD0008E2D29 /* MPGTextField-Swift.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "MPGTextField-Swift.swift"; path = "components/MPGTextField-Swift.swift"; sourceTree = "<group>"; };
+		A8D7DAEA1B040D33008E2D29 /* DoctorListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DoctorListViewController.swift; sourceTree = "<group>"; };
 		A8DD82E21AF00AE60098B8C6 /* CallNewViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CallNewViewController.swift; path = callVC/CallNewViewController.swift; sourceTree = "<group>"; };
 		A8DD82E31AF00AE60098B8C6 /* ChatViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ChatViewController.swift; path = callVC/ChatViewController.swift; sourceTree = "<group>"; };
 		A8DD82E51AF00AE60098B8C6 /* PostCallNewViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PostCallNewViewController.swift; path = callVC/PostCallNewViewController.swift; sourceTree = "<group>"; };
@@ -367,6 +375,7 @@
 				A822CBBA1AE9D06700CE8CD9 /* TableViewCellWithTitle.swift */,
 				A822CBBB1AE9D06700CE8CD9 /* UINavigationControllerWithOrientation.swift */,
 				A822CBBC1AE9D06700CE8CD9 /* ZoneCallTableViewCell.swift */,
+				A8A491051B26F6080017324A /* AcceptCallTableViewCell.swift */,
 				A8074D6A1AF2B1F700A25655 /* AttachmentTableViewCell.swift */,
 				A8E0DF6D1AF4417B0014CE59 /* TableViewCellWithLabelAndButton.swift */,
 			);
@@ -426,6 +435,7 @@
 				A8C739551AF2EDDA00A8DAAB /* CreateCallViewController.swift */,
 				A8BCC4111AFAD7C2001229E5 /* AttachmentListViewController.swift */,
 				A8D7DADA1AFD5CE7008E2D29 /* DropboxListViewController.swift */,
+				A8D7DAE61B02D9AB008E2D29 /* VideoResourceViewController.swift */,
 			);
 			name = callVC;
 			sourceTree = "<group>";
@@ -433,6 +443,7 @@
 		BA1AA7D41A516DB900BCE29D /* components */ = {
 			isa = PBXGroup;
 			children = (
+				A8D7DAE81B040CD0008E2D29 /* MPGTextField-Swift.swift */,
 				A8074D681AF1655200A25655 /* AKPickerView.swift */,
 				BA1AA7D21A516DA900BCE29D /* FloatRatingView.swift */,
 			);
@@ -496,6 +507,7 @@
 				A822CBEA1AE9D48000CE8CD9 /* HomeViewController.swift */,
 				A8E0DF6F1AF85CA10014CE59 /* DashboardViewController.swift */,
 				A8D7DAE21AFD8F0E008E2D29 /* LinearInterpView.swift */,
+				A8D7DAEA1B040D33008E2D29 /* DoctorListViewController.swift */,
 			);
 			path = Panda4rep;
 			sourceTree = "<group>";
@@ -710,10 +722,12 @@
 				A822CBF81AE9D70A00CE8CD9 /* MenuViewController.swift in Sources */,
 				A822CB8A1AE9BD6700CE8CD9 /* TrainingViewController.swift in Sources */,
 				A8DD82EC1AF00AE70098B8C6 /* PostCallNewViewController.swift in Sources */,
+				A8D7DAE91B040CD0008E2D29 /* MPGTextField-Swift.swift in Sources */,
 				A822CB9F1AE9BDD800CE8CD9 /* ServerAPI.swift in Sources */,
 				A822CB781AE9BD6700CE8CD9 /* CallOfferViewController.swift in Sources */,
 				BA1AA7D31A516DA900BCE29D /* FloatRatingView.swift in Sources */,
 				A822CBEB1AE9D48000CE8CD9 /* HomeViewController.swift in Sources */,
+				A8A491061B26F6080017324A /* AcceptCallTableViewCell.swift in Sources */,
 				A822CBFB1AE9D70A00CE8CD9 /* SupportViewController.swift in Sources */,
 				A822CB7A1AE9BD6700CE8CD9 /* CallViewController.swift in Sources */,
 				A822CB9D1AE9BDD800CE8CD9 /* iOSVersion.swift in Sources */,
@@ -753,6 +767,7 @@
 				A822CB7D1AE9BD6700CE8CD9 /* MainViewController.swift in Sources */,
 				A822CBC51AE9D06700CE8CD9 /* ProfileTableViewCell.swift in Sources */,
 				A822CB821AE9BD6700CE8CD9 /* ProfileViewController.swift in Sources */,
+				A8D7DAE71B02D9AB008E2D29 /* VideoResourceViewController.swift in Sources */,
 				A822CBBD1AE9D06700CE8CD9 /* ArticleTableViewCell.swift in Sources */,
 				A822CBBF1AE9D06700CE8CD9 /* ChatBoxView.swift in Sources */,
 				A822CBA21AE9BDD800CE8CD9 /* UIEventRegister.swift in Sources */,
@@ -768,6 +783,7 @@
 				A822CB7E1AE9BD6700CE8CD9 /* NotApprovedViewController.swift in Sources */,
 				A822CBFA1AE9D70A00CE8CD9 /* SettingsViewController.swift in Sources */,
 				A8E0DF701AF85CA10014CE59 /* DashboardViewController.swift in Sources */,
+				A8D7DAEB1B040D33008E2D29 /* DoctorListViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

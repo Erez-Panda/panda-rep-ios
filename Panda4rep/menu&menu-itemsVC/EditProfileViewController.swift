@@ -285,6 +285,7 @@ class EditProfileViewController: UIViewController ,UITableViewDelegate, UITableV
             self.view.frame.origin.y  = 0.0
         })
     }
+    /*
     override func shouldAutorotate() -> Bool {
         return true
     }
@@ -296,5 +297,6 @@ class EditProfileViewController: UIViewController ,UITableViewDelegate, UITableV
     override func preferredInterfaceOrientationForPresentation() -> UIInterfaceOrientation {
         return UIInterfaceOrientation.Portrait
     }
+*/
 
 }
