@@ -224,7 +224,7 @@ class PostCallNewViewController: PandaViewController, FloatRatingViewDelegate, U
                     }
                 }
                 CallUtils.getCallViewController()?.presentingViewController?.dismissViewControllerAnimated(true, completion: { () -> Void in
-                    //
+                    CallUtils.callViewController = nil
                 })
             }
             if sendFollowupButton.selected {

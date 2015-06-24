@@ -6,9 +6,9 @@
 //  Copyright (c) 2014 Erez. All rights reserved.
 //
 
-var SERVER_URL = "http://livemed.co"
+//var SERVER_URL = "http://livemed.co"
 //var SERVER_URL = "http://127.0.0.1:8000"
-//var SERVER_URL = "http://10.0.0.5:8000"
+var SERVER_URL = "http://10.0.0.5:8000"
 
 @objc protocol LoginDelegate{
     optional func loginComplete()
@@ -261,10 +261,10 @@ struct ServerAPI {
         })
     }
     
-    static func acceptCallOffer(offerId: NSNumber, completion: (result: Bool) -> Void) -> Void{
+    static func acceptCallOffer(offerId: NSNumber, completion: (result: NSDictionary) -> Void) -> Void{
         let data = ["offer_id": offerId] as Dictionary<String, AnyObject>
         self.post("/calls/user/offer/accept/", message: data, completion: {result -> Void in
-            completion(result: true)
+            completion(result: self.getDictionaryResult(result))
         })
     }
     

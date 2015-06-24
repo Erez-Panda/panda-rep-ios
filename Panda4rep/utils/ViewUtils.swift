@@ -391,16 +391,6 @@ struct ViewUtils {
         alert.show()
     }
     
-    static func getStoryboard() -> UIStoryboard {
-        let mainStoryboard: UIStoryboard
-        if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.Pad){
-            mainStoryboard = UIStoryboard(name: "iPad", bundle: nil)
-        } else {
-            mainStoryboard = UIStoryboard(name: "NewUI", bundle: nil)
-        }
-        return mainStoryboard
-    }
-    
     static func addDoneToolBarToKeyboard(textView: UITextView, vc: UIViewController){
         var doneToolbar = UIToolbar(frame: CGRect(x: 0, y: 0, width: 320, height: 50))
         doneToolbar.barStyle = UIBarStyle.Default

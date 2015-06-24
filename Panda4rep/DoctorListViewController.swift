@@ -109,7 +109,20 @@ class DoctorListViewController: UIViewController, MPGTextFieldDelegate, UITextFi
     }
     
     func textFieldShouldReturn(textField: UITextField) -> Bool {
-        textField.resignFirstResponder()
+        if (textField == self.firstName){
+            self.lastName.becomeFirstResponder()
+        } else if (textField == self.lastName){
+            self.email.becomeFirstResponder()
+        } else if (textField == self.email){
+            self.specialty.becomeFirstResponder()
+        } else if (textField == self.specialty){
+            self.phone.becomeFirstResponder()
+        } else if (textField == self.phone){
+            self.address.becomeFirstResponder()
+        } else if (textField == self.address){
+            textField.resignFirstResponder()
+            self.saveNewContact(UIButton())
+        }
         return true
     }
     

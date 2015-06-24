@@ -49,6 +49,7 @@ class CallNewViewController: UIViewController, UIGestureRecognizerDelegate, OTSe
     var selectedResIndex = 0
     var displayResources: NSArray?
     var currentImageIndex = 0
+    var currentImageUrl: String?
     
     var callStartTime: NSDate?
     var sessionNumber: NSNumber?
@@ -84,7 +85,6 @@ class CallNewViewController: UIViewController, UIGestureRecognizerDelegate, OTSe
             buttomView.setTranslatesAutoresizingMaskIntoConstraints(false)
             
             //controlPanelTimer = NSTimer.scheduledTimerWithTimeInterval(NSTimeInterval(3), target: self, selector: Selector("hideControls"), userInfo: AnyObject?(), repeats: false)
-            firstTime = false
         } else {
             
         }
@@ -92,13 +92,17 @@ class CallNewViewController: UIViewController, UIGestureRecognizerDelegate, OTSe
     }
     
     override func viewDidAppear(animated: Bool) {
-        CallUtils.doPublish()
-        toggleVideo(UIButton())
-        changeDisplayResource(0)
+        if firstTime{
+            CallUtils.doPublish()
+            toggleVideo(UIButton())
+            changeDisplayResource(0)
+            firstTime = false
+        }
     }
     
     func loadImage(imageFile: NSNumber){
         ServerAPI.getFileUrl(imageFile, completion: { (result) -> Void in
+            self.currentImageUrl = result as String
             let url = NSURL(string: result as String)
             if let data = NSData(contentsOfURL: url!){
                 dispatch_async(dispatch_get_main_queue()){
@@ -601,6 +605,9 @@ class CallNewViewController: UIViewController, UIGestureRecognizerDelegate, OTSe
                 } else {
                     addMessageToQ(string)
                 }
+            } else if (type == "send_current_res"){
+                var maybeError : OTError?
+                CallUtils.session?.signalWithType("load_res", string: self.currentImageUrl, connection: nil, error: &maybeError)
             }
         }
     }

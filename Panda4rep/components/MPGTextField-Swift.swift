@@ -76,11 +76,11 @@ class MPGTextField_Swift: UITextField, UITextFieldDelegate, UITableViewDelegate,
     override func resignFirstResponder() -> Bool{
         UIView.animateWithDuration(0.3,
             animations: ({
-                    self.tableViewController!.tableView.alpha = 0.0
+                    self.tableViewController?.tableView.alpha = 0.0
                 }),
             completion:{
                     (finished : Bool) in
-                    self.tableViewController!.tableView.removeFromSuperview()
+                    self.tableViewController?.tableView.removeFromSuperview()
                     self.tableViewController = nil
                 })
         self.handleExit()
@@ -178,7 +178,7 @@ class MPGTextField_Swift: UITextField, UITextFieldDelegate, UITableViewDelegate,
     }
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath){
-        //self.text = self.applyFilterWithSearchQuery(self.text)[indexPath.row]["DisplayText"]
+        self.text = self.applyFilterWithSearchQuery(self.text)[indexPath.row]["DisplayText"] as! String
         self.resignFirstResponder()
     }
     

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="7702" systemVersion="14D136" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="7706" systemVersion="14D136" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7701"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7703"/>
     </dependencies>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
@@ -10,29 +10,28 @@
             <rect key="frame" x="0.0" y="0.0" width="480" height="480"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="bg4splash" translatesAutoresizingMaskIntoConstraints="NO" id="eJj-Rs-rXz">
-                    <rect key="frame" x="0.0" y="0.0" width="480" height="480"/>
-                </imageView>
-                <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="logo4splash" translatesAutoresizingMaskIntoConstraints="NO" id="Xfw-64-Gq9">
-                    <rect key="frame" x="189" y="138" width="103" height="124"/>
+                <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="logo" translatesAutoresizingMaskIntoConstraints="NO" id="Xfw-64-Gq9">
+                    <rect key="frame" x="0.0" y="147.5" width="480" height="185"/>
                 </imageView>
             </subviews>
             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
             <constraints>
-                <constraint firstAttribute="centerY" secondItem="Xfw-64-Gq9" secondAttribute="centerY" constant="40" id="DKB-0I-1eC"/>
-                <constraint firstItem="eJj-Rs-rXz" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="JQl-m0-dMA"/>
-                <constraint firstItem="eJj-Rs-rXz" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="KxZ-8K-iTn"/>
+                <constraint firstAttribute="trailing" secondItem="Xfw-64-Gq9" secondAttribute="trailing" id="CpM-xx-H7n"/>
+                <constraint firstAttribute="centerY" secondItem="Xfw-64-Gq9" secondAttribute="centerY" id="DKB-0I-1eC"/>
                 <constraint firstAttribute="centerX" secondItem="Xfw-64-Gq9" secondAttribute="centerX" id="PKT-Wm-qpg"/>
-                <constraint firstAttribute="bottom" secondItem="eJj-Rs-rXz" secondAttribute="bottom" id="T1n-yE-P12"/>
-                <constraint firstAttribute="trailing" secondItem="eJj-Rs-rXz" secondAttribute="trailing" id="s51-Yc-IAM"/>
+                <constraint firstItem="Xfw-64-Gq9" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="-74" id="y7S-YU-y8o"/>
             </constraints>
             <nil key="simulatedStatusBarMetrics"/>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <variation key="default">
+                <mask key="constraints">
+                    <exclude reference="y7S-YU-y8o"/>
+                </mask>
+            </variation>
             <point key="canvasLocation" x="548" y="455"/>
         </view>
     </objects>
     <resources>
-        <image name="bg4splash" width="320" height="568"/>
-        <image name="logo4splash" width="103" height="124"/>
+        <image name="logo" width="629" height="185"/>
     </resources>
 </document>

@@ -145,7 +145,8 @@ class DashboardViewController: PandaViewController {
     
     func plotPieChart(view: UIView, items: NSArray, absoluteValue: Bool){
         let screenWidth = UIScreen.mainScreen().bounds.size.width
-        let pieChart = PNPieChart(frame: CGRectMake(5, 30, (screenWidth/2)-10, (screenWidth/2)-10), items: items as [AnyObject])
+        let width = min(view.frame.height-35, view.frame.width-10)
+        let pieChart = PNPieChart(frame: CGRectMake((view.frame.width-width)/2, 30, width, width), items: items as [AnyObject])
         pieChart.descriptionTextColor = UIColor.whiteColor()
         pieChart.descriptionTextFont = UIFont(name: "OpenSans", size: 10.0 )
         pieChart.showAbsoluteValues = absoluteValue

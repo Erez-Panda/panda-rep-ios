@@ -8,7 +8,7 @@
 
 import UIKit
 
-class PreCallViewController: PandaViewController, UITableViewDataSource, UITableViewDelegate {
+class PreCallViewController: PandaViewController, UITableViewDataSource, UITableViewDelegate, CallDelegate {
     var call : NSDictionary?
     var resources : NSArray?
     var selectedresources : NSMutableArray = []
@@ -32,6 +32,7 @@ class PreCallViewController: PandaViewController, UITableViewDataSource, UITable
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        CallUtils.delegate = self
         if let c = call {
             if let callViewController = self.storyboard?.instantiateViewControllerWithIdentifier("CallNewViewController") as? CallNewViewController {
                 if let id = c["id"] as? NSNumber {
@@ -106,6 +107,10 @@ class PreCallViewController: PandaViewController, UITableViewDataSource, UITable
         ViewUtils.bottomBorderView(agendaView, borderWidth: 1.0, borderColor: borderColor, offset: 0)
         //ViewUtils.bottomBorderView(attachmentView, borderWidth: 1.0, borderColor: UIColor.lightGrayColor(), offset: 0)
         
+    }
+    func remoteSideConnected(){
+        callButton.enabled = true
+        callButton.backgroundColor = ColorUtils.buttonColor()
     }
     
     func numberOfSectionsInTableView(tableView: UITableView) -> Int{

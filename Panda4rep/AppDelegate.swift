@@ -153,9 +153,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate, LoginDelegate, UIAlertVie
         if (buttonIndex == 0){ //Accept
             if let offerId: AnyObject = (alertView as! UIAlertViewWithData).data?["offer_id"] {
                 ServerAPI.acceptCallOffer(offerId as! NSNumber, completion: {result -> Void in
-                    //
+                    if let error = result["error"] as? String{
+                        dispatch_async(dispatch_get_main_queue()){
+                            ViewUtils.showSimpleError(error)
+                        }
+                    }
+                    NSNotificationCenter.defaultCenter().postNotification(NSNotification(name: "CallOfferOffered", object: nil))
                 })
             }
+        } else if (buttonIndex == 1){ //Cancel
+            NSNotificationCenter.defaultCenter().postNotification(NSNotification(name: "CallOfferOffered", object: nil))
         }
     }
     

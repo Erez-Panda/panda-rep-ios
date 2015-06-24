@@ -16,11 +16,13 @@ class MenuViewController: UIViewController, UITableViewDelegate, UITableViewData
     var startPoint: CGPoint?
     @IBOutlet weak var containerView: UIView!
     @IBOutlet weak var userNameLabel: UILabel!
-    var user: NSDictionary = ["first_name": "Koko", "last_name": "Riko"]
-    var menuItems = ["Home", "Profile", "Settings", "Support", "About", "Logout"]
+    var user: NSDictionary?
+    var menuItems = ["About", "Logout"]
+    //var menuItems = ["Home", "Profile", "Settings", "Support", "About", "Logout"]
     //var subMenuItems = ["Video Calls", "Articles", "Promotional Materials", "Medical Inquiries"]
     //var subMenuImages = ["menu_icon_video_call", "menu_icon_articles", "menu_icon_promotional", "menu_icon_medical_letters"]
-    var menuIcons = ["home_icon", "profile_icon", "settings_icon", "support_icon" ,"about_icon","logout_icon",]
+    //var menuIcons = ["home_icon", "profile_icon", "settings_icon", "support_icon" ,"about_icon","logout_icon"]
+    var menuIcons = ["about_icon","logout_icon"]
     var menuOpen = false
     var tableCellNumber = 0
     var selectedIndex: Int?
@@ -39,8 +41,8 @@ class MenuViewController: UIViewController, UITableViewDelegate, UITableViewData
         user = StorageUtils.getUserData(StorageUtils.DataType.User)
         tableCellNumber = self.menuItems.count
         ViewUtils.roundView(profileImage, borderWidth: 2.0, borderColor: ColorUtils.buttonColor())
-        let firstName = user["first_name"] as! String
-        let lastName = user["last_name"] as! String
+        let firstName = user?["first_name"] as! String
+        let lastName = user?["last_name"] as! String
         userNameLabel.text = firstName + " " + lastName
         tableView.tableFooterView = UIView(frame: CGRectZero)
         if iOS8 {
@@ -157,6 +159,7 @@ class MenuViewController: UIViewController, UITableViewDelegate, UITableViewData
     }
     
     func openMenuItem(index: Int){
+/*
         if (index == 1){
             closeMenuAndShowViewController("ProfileUIViewController")
         }
@@ -166,7 +169,8 @@ class MenuViewController: UIViewController, UITableViewDelegate, UITableViewData
         if (index == 3){
             closeMenuAndShowViewController("SupportViewController")
         }
-        if (index == 4){
+*/
+        if (index == 0){
             let nsObject: AnyObject? = NSBundle.mainBundle().infoDictionary!["CFBundleShortVersionString"]
             let version = nsObject as! String
             var alert = UIAlertView()
@@ -174,14 +178,14 @@ class MenuViewController: UIViewController, UITableViewDelegate, UITableViewData
             alert.message = "Version: \(version)"
             alert.addButtonWithTitle("Ok")
             alert.show()
-        }
-
-        if (index == 5){
+        } else if (index == 1){
             ServerAPI.loginout({result -> Void in
                 StorageUtils.cleanUserData()
                 let vc = self.storyboard?.instantiateViewControllerWithIdentifier("LoginViewController") as! LoginViewController
                 self.presentViewController(vc, animated: true, completion: nil)
             })
+        } else {
+            self.close(true)
         }
     }
     

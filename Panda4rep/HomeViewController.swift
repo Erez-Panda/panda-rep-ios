@@ -91,20 +91,19 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
         ViewUtils.topBorderView(dayPicker, borderWidth: 1.0, borderColor: UIColor.lightGrayColor(), offset: 0)
         ViewUtils.borderView(newCallButton, borderWidth: 1.0, borderColor: UIColor.clearColor(), borderRadius: 4)
         
-        ServerAPI.getUserCalls({ (result) -> Void in
-            self.calls = result
-            self.calls = self.updateStartDate(self.calls)
-            self.filteredCalls = self.calls
-            dispatch_async(dispatch_get_main_queue()){
-                self.activityIndicator.stopAnimating()
-                //self.filterResults(TimeUtils.getDateFromComponents(self.currYear, month: nil, day: self.offset))
-                self.monthPicker.selectItem(self.selectedMonth-1, animated: true)
-                self.dayPicker.selectItem(20, animated: true)
-            }
-        })
-        
         ServerAPI.getUserCallOffers { (result) -> Void in
             self.offers = self.generateCallOffersArray(result)
+            ServerAPI.getUserCalls({ (result) -> Void in
+                self.calls = result
+                self.calls = self.updateStartDate(self.calls)
+                self.filteredCalls = self.calls
+                dispatch_async(dispatch_get_main_queue()){
+                    self.activityIndicator.stopAnimating()
+                    //self.filterResults(TimeUtils.getDateFromComponents(self.currYear, month: nil, day: self.offset))
+                    self.monthPicker.selectItem(self.selectedMonth-1, animated: true)
+                    self.dayPicker.selectItem(20, animated: true)
+                }
+            })
         }
         
         self.refreshControl = UIRefreshControl()
@@ -112,25 +111,28 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
         self.refreshControl.addTarget(self, action: "pullRefresh:", forControlEvents: UIControlEvents.ValueChanged)
         self.tableView.addSubview(refreshControl)
         // Do any additional setup after loading the view.
+        
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "callOfferOffered", name: "CallOfferOffered", object: nil)
     }
     
-    func pullRefresh(sender:AnyObject){
+    func callOfferOffered(){
+        pullRefresh(nil)
+    }
+    
+    func pullRefresh(sender:AnyObject?){
         ServerAPI.getUserCallOffers { (result) -> Void in
             self.offers = self.generateCallOffersArray(result)
+        
+            ServerAPI.getUserCalls({ (result) -> Void in
+                self.calls = result
+                self.calls = self.updateStartDate(self.calls)
+                self.filteredCalls = self.calls
+                dispatch_async(dispatch_get_main_queue()){
+                    self.filterResults(TimeUtils.getDateFromComponents(self.currYear, month: nil, day: self.offset))
+                    self.refreshControl.endRefreshing()
+                }
+            })
         }
-        ServerAPI.getUserCalls({ (result) -> Void in
-            self.calls = result
-            self.calls = self.updateStartDate(self.calls)
-            self.filteredCalls = self.calls
-            dispatch_async(dispatch_get_main_queue()){
-                self.filterResults(TimeUtils.getDateFromComponents(self.currYear, month: nil, day: self.offset))
-                self.refreshControl.endRefreshing()
-            }
-        })
-    }
-    
-    override func viewDidAppear(animated: Bool) {
-
     }
 
     
@@ -179,7 +181,7 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
     func filterResults(date: NSDate){
 
         let resultPredicate = NSPredicate(format: "start >= %@ AND start <= %@", argumentArray:[date, date.dateByAddingTimeInterval(60*60*24)])
-        if calls.count > 0 {
+        if calls.count > 0 || offers.count > 0{
             filteredCalls = self.calls.filteredArrayUsingPredicate(resultPredicate)
             filteredOffers = self.offers.filteredArrayUsingPredicate(resultPredicate)
             if (filteredOffers.count > 0){
@@ -338,6 +340,11 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
             ViewUtils.slideViewOutToRight(sender)
             if let id = call["id"] as? NSNumber{
                 ServerAPI.acceptCallOffer(id, completion: {result -> Void in
+                    if let error = result["error"] as? String{
+                        dispatch_async(dispatch_get_main_queue()){
+                            ViewUtils.showSimpleError(error)
+                        }
+                    }
                     cell.activity.stopAnimating()
                     self.pullRefresh(sender)
                 })

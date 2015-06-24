@@ -114,6 +114,13 @@ struct CallUtils{
         doUnpublish()
         var maybeError : OTError?
         session?.disconnect(&maybeError)
+        session = nil
+        token = nil
+        stream = nil
+        sessionDelegate = nil
+        subscriberDelegate = nil
+        publisherDelegate = nil
+        remoteSideConnect = false
     }
     
     static func resumeCall(){
