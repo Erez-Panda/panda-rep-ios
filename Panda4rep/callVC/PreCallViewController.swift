@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import FontAwesomeIconFactory
 
 class PreCallViewController: PandaViewController, UITableViewDataSource, UITableViewDelegate, CallDelegate {
     var call : NSDictionary?
@@ -15,7 +16,7 @@ class PreCallViewController: PandaViewController, UITableViewDataSource, UITable
 
     @IBOutlet weak var backButton: UIButton!
     @IBOutlet weak var callButton: UIButton!
-    
+    @IBOutlet weak var reminderButton: NIKFontAwesomeButton!
     
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var dateLabel: UILabel!
@@ -79,6 +80,7 @@ class PreCallViewController: PandaViewController, UITableViewDataSource, UITable
         // Do any additional setup after loading the view.
         ViewUtils.borderView(callButton, borderWidth: 1.0, borderColor: UIColor.clearColor(), borderRadius: 5)
         ViewUtils.borderView(backButton, borderWidth: 1.0, borderColor: ColorUtils.mainColor(), borderRadius: 5)
+        ViewUtils.borderView(reminderButton, borderWidth: 1.0, borderColor: UIColor.clearColor(), borderRadius: 5)
         productLabel.attributedText = ViewUtils.getAttrText("Product", color: ColorUtils.uicolorFromHex(0xE1E1E1), size: 24.0, fontName:"OpenSans")
         if let c = call {
             if let product = c["product"] as? NSDictionary{
@@ -200,6 +202,17 @@ class PreCallViewController: PandaViewController, UITableViewDataSource, UITable
             let home = self.navigationController?.popViewControllerAnimated(false)
             home?.presentViewController(vc, animated: true, completion: {
             })
+        }
+    }
+    
+    @IBAction func sendReminder(sender: AnyObject) {
+        reminderButton.hidden = true
+        if let c = call {
+            if let id = c["id"] as? NSNumber{
+                ServerAPI.sendCallingNotification(["call":id], completion: { (result) -> Void in
+                    //
+                })
+            }
         }
     }
     

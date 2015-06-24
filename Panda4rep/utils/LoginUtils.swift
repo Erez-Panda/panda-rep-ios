@@ -29,6 +29,7 @@ struct LoginUtils {
                 
                 if success {
                     completion(result: true)
+                    return
                 }
                 else{
                     // If authentication failed then show a message to the console with a short description.
@@ -73,10 +74,11 @@ struct LoginUtils {
             
             // Optionally the error description can be displayed on the console.
             println(error?.localizedDescription)
-            
+            completion(result: true)
+            return
             // Show the custom alert view to allow users to enter the password.
-            self.showPasswordAlert()
-            completion(result: false)
+            //self.showPasswordAlert()
+            //completion(result: false)
         }
     }
     

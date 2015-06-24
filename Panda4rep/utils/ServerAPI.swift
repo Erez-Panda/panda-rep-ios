@@ -6,9 +6,9 @@
 //  Copyright (c) 2014 Erez. All rights reserved.
 //
 
-//var SERVER_URL = "http://livemed.co"
+var SERVER_URL = "http://livemed.co"
 //var SERVER_URL = "http://127.0.0.1:8000"
-var SERVER_URL = "http://10.0.0.5:8000"
+//var SERVER_URL = "http://10.0.0.5:8000"
 
 @objc protocol LoginDelegate{
     optional func loginComplete()
@@ -419,6 +419,11 @@ struct ServerAPI {
         })
     }
     
+    static func sendCallingNotification(data: Dictionary<String, AnyObject>,completion: (result: Bool) -> Void) -> Void{
+        self.post("/calls/send_calling_notification/", message: data, completion: {result -> Void in
+            completion(result: true)
+        })
+    }
 
     
     static func post(url: String, message: Dictionary<String, AnyObject>, method: String = "POST", completion: (result: AnyObject) -> Void) -> Void{
@@ -441,13 +446,13 @@ struct ServerAPI {
             request.addValue("Token \(self.token)", forHTTPHeaderField: "Authorization")
         }
         var task = session.dataTaskWithRequest(request, completionHandler: {data, response, error -> Void in
-            println("Response: \(response)")
+            //println("Response: \(response)")
             if (response == nil){
                 completion(result: false)
                 return
             }
             var strData = NSString(data: data, encoding: NSUTF8StringEncoding)
-            println("Body: \(strData)")
+            //println("Body: \(strData)")
             var err: NSError?
             var json: AnyObject? = NSJSONSerialization.JSONObjectWithData(data, options: .MutableLeaves, error: &err)
             
@@ -496,13 +501,13 @@ struct ServerAPI {
             request.addValue("Token \(self.token)", forHTTPHeaderField: "Authorization")
         }
         var task = session.dataTaskWithRequest(request, completionHandler: {data, response, error -> Void in
-            println("Response: \(response)")
+            //println("Response: \(response)")
             if (response == nil || (response as! NSHTTPURLResponse).statusCode > 299){
                 completion(result: false)
                 return
             }
             var strData = NSString(data: data, encoding: NSUTF8StringEncoding)!
-            println("Body: \(strData)")
+            //println("Body: \(strData)")
             
             if (!isJson) {
                 let str = strData.stringByReplacingOccurrencesOfString("\"", withString: "")
@@ -562,13 +567,13 @@ struct ServerAPI {
             request.addValue("Token \(self.token)", forHTTPHeaderField: "Authorization")
         }
         var task = session.dataTaskWithRequest(request, completionHandler: {data, response, error -> Void in
-            println("Response: \(response)")
+            //println("Response: \(response)")
             if (response == nil || (response as! NSHTTPURLResponse).statusCode > 299){
                 completion(result: false)
                 return
             }
             var strData = NSString(data: data, encoding: NSUTF8StringEncoding)
-            println("Body: \(strData)")
+            //println("Body: \(strData)")
             var err: NSError?
             var json: AnyObject? = NSJSONSerialization.JSONObjectWithData(data, options: .MutableLeaves, error: &err)
             
@@ -625,21 +630,21 @@ struct ServerAPI {
 
 
         var task = session.dataTaskWithRequest(request, completionHandler: {data, response, error -> Void in
-            println("Response: \(response)")
+            //println("Response: \(response)")
             if (response == nil || (response as! NSHTTPURLResponse).statusCode > 299){
                 completion(result: [:])
                 return
             }
             var strData = NSString(data: data, encoding: NSUTF8StringEncoding)
-            println("Body: \(strData)")
+            //println("Body: \(strData)")
             var err: NSError?
             var json: AnyObject? = NSJSONSerialization.JSONObjectWithData(data, options: .MutableLeaves, error: &err)
             
             // Did the JSONObjectWithData constructor return an error? If so, log the error to the console
             if(err != nil) {
-                println(err!.localizedDescription)
+                //println(err!.localizedDescription)
                 let jsonStr = NSString(data: data, encoding: NSUTF8StringEncoding)
-                println("Error could not parse JSON: '\(jsonStr)'")
+                //println("Error could not parse JSON: '\(jsonStr)'")
             }
             else {
                 // The JSONObjectWithData constructor didn't return an error. But, we should still
@@ -653,7 +658,7 @@ struct ServerAPI {
                 else {
                     // Woa, okay the json object was nil, something went worng. Maybe the server isn't running?
                     let jsonStr = NSString(data: data, encoding: NSUTF8StringEncoding)
-                    println("Error could not parse JSON: \(jsonStr)")
+                    //println("Error could not parse JSON: \(jsonStr)")
                 }
             }
         })
@@ -664,13 +669,14 @@ struct ServerAPI {
         var session = NSURLSession.sharedSession()
 
         var task = session.downloadTaskWithURL(NSURL(string: url)!, completionHandler: { (nsUrl, response, error) -> Void in
-            println(response.suggestedFilename)
+            //println(response.suggestedFilename)
             NSFileManager.defaultManager().moveItemAtPath(nsUrl.path!, toPath:response.suggestedFilename!, error:nil);
             completion(result: NSURL(fileURLWithPath: response.suggestedFilename!)!)
             
         })
         task.resume()
     }
+    
     
 }
 

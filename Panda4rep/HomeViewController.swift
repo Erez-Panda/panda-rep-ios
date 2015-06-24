@@ -7,21 +7,9 @@
 //
 
 import UIKit
+import HorizontalDatePicker
 
-class HomeViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, AKPickerViewDelegate, AKPickerViewDataSource {
-    
-    let months = ["January",
-        "February",
-        "March",
-        "April",
-        "May",
-        "June",
-        "July",
-        "August",
-        "September",
-        "October",
-        "November",
-        "December"]
+class HomeViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, DateSelectorViewDelegate {
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -39,57 +27,26 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
     var filteredOffers : NSArray = []
 
     
+    @IBOutlet weak var dateSelector: DateSelectorView!
     @IBOutlet weak var newCallButton: UIButton!
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     @IBOutlet weak var tableView: UITableView!
-
-    @IBOutlet weak var monthPicker: AKPickerView!
-    @IBOutlet weak var dayPicker: AKPickerView!
+    @IBOutlet weak var noCallsLabel: UILabel!
+    
     var refreshControl:UIRefreshControl!
     
-    var currYear = 0
-    var selectedMonth = 0
-    var selectedDay = 0
-    var offset = 0
+    var selectedDate =  NSCalendar.currentCalendar().startOfDayForDate(NSDate())
+
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        dateSelector.delegate = self
+        dateSelector.startDate = selectedDate
         ViewUtils.setMenuButton(self)
         activityIndicator.startAnimating()
         //tableView.tableFooterView = UIView(frame: CGRectZero)
         tableView.layoutMargins = UIEdgeInsetsZero
         tableView.separatorInset = UIEdgeInsetsZero
-        
-        monthPicker.delegate = self
-        monthPicker.dataSource = self
-        monthPicker.interitemSpacing = 100
-        monthPicker.pickerViewStyle = AKPickerViewStyle.Flat
-        monthPicker.font = UIFont(name: "OpenSans-Semibold", size: 28.0)!
-        monthPicker.highlightedTextColor = UIColor.blackColor()
-        monthPicker.textColor = ColorUtils.uicolorFromHex(0x727272)
-        monthPicker.highlightedFont = UIFont(name: "OpenSans-Semibold", size: 28.0)!
-        
-        dayPicker.delegate = self
-        dayPicker.dataSource = self
-        dayPicker.interitemSpacing = 25
-        dayPicker.font = UIFont(name: "OpenSans-Light", size: 40.0)!
-        dayPicker.highlightedTextColor = ColorUtils.mainColor() //ColorUtils.uicolorFromHex(0x727272)
-        dayPicker.highlightedFont = UIFont(name: "OpenSans-Light", size: 40.0)!// UIFont(name: "OpenSans-Semibold", size: 34.0)!
-        dayPicker.addBorder = true
-        
-        let dateComp = TimeUtils.getDateComponentsFromDate(NSDate())
-        currYear = dateComp.year
-        
-        selectedMonth = dateComp.month
-        selectedDay = TimeUtils.getDayInYear(NSDate())
-        offset = selectedDay
-        
-        dayPicker.layoutIfNeeded()
-        monthPicker.layoutIfNeeded()
-        
-        ViewUtils.bottomBorderView(dayPicker, borderWidth: 1.0, borderColor: UIColor.lightGrayColor(), offset: 0)
-        ViewUtils.topBorderView(dayPicker, borderWidth: 1.0, borderColor: UIColor.lightGrayColor(), offset: 0)
-        ViewUtils.borderView(newCallButton, borderWidth: 1.0, borderColor: UIColor.clearColor(), borderRadius: 4)
         
         ServerAPI.getUserCallOffers { (result) -> Void in
             self.offers = self.generateCallOffersArray(result)
@@ -99,9 +56,7 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
                 self.filteredCalls = self.calls
                 dispatch_async(dispatch_get_main_queue()){
                     self.activityIndicator.stopAnimating()
-                    //self.filterResults(TimeUtils.getDateFromComponents(self.currYear, month: nil, day: self.offset))
-                    self.monthPicker.selectItem(self.selectedMonth-1, animated: true)
-                    self.dayPicker.selectItem(20, animated: true)
+                    self.filterResults(self.selectedDate)
                 }
             })
         }
@@ -128,55 +83,17 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
                 self.calls = self.updateStartDate(self.calls)
                 self.filteredCalls = self.calls
                 dispatch_async(dispatch_get_main_queue()){
-                    self.filterResults(TimeUtils.getDateFromComponents(self.currYear, month: nil, day: self.offset))
+                    self.filterResults(self.selectedDate)
                     self.refreshControl.endRefreshing()
                 }
             })
         }
     }
-
     
-    func numberOfItemsInPickerView(pickerView: AKPickerView) -> Int {
-        if monthPicker == pickerView {
-            return 12
-        } else {
-            return 40//TimeUtils.getYearNumberOfDays(currYear!)
-        }
+    func dateSelectorView(dateSelectorView: DateSelectorView, didSelecetDate date: NSDate) {
+        selectedDate = date
+        filterResults(date)
     }
-    
-    func pickerView(pickerView: AKPickerView, titleForItem item: Int) -> String {
-        if monthPicker == pickerView {
-            return months[item]
-        } else{
-            let date = TimeUtils.getDateFromComponents(currYear, month: nil, day: item + 1 + offset-21)
-            let comp = TimeUtils.getDateComponentsFromDate(date)
-            return String(format: "%02d", comp.day)
-        }
-    }
-    
-    func pickerView(pickerView: AKPickerView, didSelectItem item: Int) {
-        if monthPicker == pickerView {
-            if selectedMonth != item + 1{
-                selectedMonth = item + 1
-                let currDate = TimeUtils.getDateFromComponents(currYear, month: nil, day: offset)
-                offset = TimeUtils.getDayInYear(TimeUtils.getDateFromComponents(currYear, month: selectedMonth, day: TimeUtils.getDateComponentsFromDate(currDate).day))
-                dayPicker.scrollToItem(20, animated: true)
-            }
-        } else {
-            selectedDay = item+1
-            offset =  offset + (selectedDay - 21)
-            
-            monthPicker.selectItem(TimeUtils.getMonthFromDate(TimeUtils.getDateFromComponents(currYear, month: nil, day: offset))-1, animated: true)
-            
-            dayPicker.reloadData()
-            if (dayPicker.selectedItem != 20){
-                dayPicker.selectItem(20, animated: false)
-            }
-        }
-        //println(TimeUtils.getDateFromComponents(currYear!, month: nil, day: offset))
-        filterResults(TimeUtils.getDateFromComponents(currYear, month: nil, day: offset))
-    }
-
     
     func filterResults(date: NSDate){
 
@@ -188,11 +105,15 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
                 filteredCalls = filteredCalls.arrayByAddingObjectsFromArray(filteredOffers as [AnyObject])
             }
             if (filteredCalls.count == 0){
+                noCallsLabel.hidden = false
                 //self.tableView.hidden = true
             } else {
-                self.tableView.hidden = false
+                noCallsLabel.hidden = true
+                //self.tableView.hidden = false
             }
             self.tableView.reloadData()
+        } else {
+            noCallsLabel.hidden = false
         }
     }
     

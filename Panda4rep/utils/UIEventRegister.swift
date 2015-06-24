@@ -42,4 +42,3 @@ struct UIEventRegister {
         sender.view.addGestureRecognizer(tap)
     }
 }
-

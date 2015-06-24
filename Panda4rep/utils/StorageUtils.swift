@@ -35,18 +35,7 @@ struct StorageUtils {
     static func saveUserData(userData: NSDictionary) -> Void{
         NSUserDefaults.standardUserDefaults().setObject(userData["user"], forKey: DataType.User.rawValue)
         var userInfo = userData as! Dictionary<String, AnyObject>
-        userInfo["user"] = ""
-        userInfo["medrepprofile"] = ""
-        userInfo["doctorprofile"] = ""
-        for (key, value) in userInfo {
-            if value as? String == nil {
-                if value as? NSNumber == nil{
-                    userInfo[key] = ""
-                }
-            }
-        }
-        println("*****")
-        println(userInfo)
+        userInfo = cleanDictionaryNil(userInfo)
         NSUserDefaults.standardUserDefaults().setObject(userInfo, forKey: DataType.Profile.rawValue)
         NSUserDefaults.standardUserDefaults().synchronize()
     }
@@ -172,7 +161,7 @@ struct StorageUtils {
     
     static func saveUserSettings(settings: NSDictionary){
         let defaultUser = NSUserDefaults.standardUserDefaults()
-        NSUserDefaults.standardUserDefaults().setObject(settings, forKey: "userSettings")
+        NSUserDefaults.standardUserDefaults().setObject(cleanDictionaryNil(settings), forKey: "userSettings")
         NSUserDefaults.standardUserDefaults().synchronize()
     }
     
@@ -186,7 +175,13 @@ struct StorageUtils {
     
     static func saveAllDrugs(drugs: NSArray){
         let defaultUser = NSUserDefaults.standardUserDefaults()
-        NSUserDefaults.standardUserDefaults().setObject(drugs, forKey: "drugs")
+        let validDrugs : NSMutableArray = []
+        for drug in drugs{
+            if let d = drug as? NSDictionary{
+                validDrugs.addObject(self.cleanDictionaryNil(drug as! NSDictionary))
+            }
+        }
+        NSUserDefaults.standardUserDefaults().setObject(validDrugs, forKey: "drugs")
         NSUserDefaults.standardUserDefaults().setObject( Int(NSDate.new().timeIntervalSince1970), forKey: "drugs_last_update")
         NSUserDefaults.standardUserDefaults().synchronize()
     }
