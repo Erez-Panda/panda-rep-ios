@@ -14,7 +14,6 @@ class PreCallViewController: PandaViewController, UITableViewDataSource, UITable
     var resources : NSArray?
     var selectedresources : NSMutableArray = []
 
-    @IBOutlet weak var backButton: UIButton!
     @IBOutlet weak var callButton: UIButton!
     @IBOutlet weak var reminderButton: NIKFontAwesomeButton!
     
@@ -79,7 +78,6 @@ class PreCallViewController: PandaViewController, UITableViewDataSource, UITable
         }
         // Do any additional setup after loading the view.
         ViewUtils.borderView(callButton, borderWidth: 1.0, borderColor: UIColor.clearColor(), borderRadius: 5)
-        ViewUtils.borderView(backButton, borderWidth: 1.0, borderColor: ColorUtils.mainColor(), borderRadius: 5)
         ViewUtils.borderView(reminderButton, borderWidth: 1.0, borderColor: UIColor.clearColor(), borderRadius: 5)
         productLabel.attributedText = ViewUtils.getAttrText("Product", color: ColorUtils.uicolorFromHex(0xE1E1E1), size: 24.0, fontName:"OpenSans")
         if let c = call {
@@ -111,6 +109,7 @@ class PreCallViewController: PandaViewController, UITableViewDataSource, UITable
         
     }
     func remoteSideConnected(){
+        disableReminderButton("Remote Connected")
         callButton.enabled = true
         callButton.backgroundColor = ColorUtils.buttonColor()
     }
@@ -206,7 +205,7 @@ class PreCallViewController: PandaViewController, UITableViewDataSource, UITable
     }
     
     @IBAction func sendReminder(sender: AnyObject) {
-        reminderButton.hidden = true
+        disableReminderButton("Sent")
         if let c = call {
             if let id = c["id"] as? NSNumber{
                 ServerAPI.sendCallingNotification(["call":id], completion: { (result) -> Void in
@@ -216,8 +215,12 @@ class PreCallViewController: PandaViewController, UITableViewDataSource, UITable
         }
     }
     
-    @IBAction func back(sender: AnyObject) {
-        self.navigationController?.popViewControllerAnimated(true)
+    func disableReminderButton(message: String){
+        reminderButton.enabled = false
+        reminderButton.backgroundColor = UIColor.lightGrayColor()
+        reminderButton.setTitle(message, forState: UIControlState.Normal)
+        reminderButton.color = UIColor.clearColor()
+        reminderButton.titleEdgeInsets.left = 0
     }
 
 }

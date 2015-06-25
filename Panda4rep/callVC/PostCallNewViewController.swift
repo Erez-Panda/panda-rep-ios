@@ -14,7 +14,6 @@ class PostCallNewViewController: PandaViewController, FloatRatingViewDelegate, U
     @IBOutlet weak var floatRatingView: FloatRatingView!
     @IBOutlet weak var callerNameLabel: UILabel!
     
-    @IBOutlet weak var backButton: UIButton!
     @IBOutlet weak var saveButton: UIButton!
     
     @IBOutlet weak var summaryTextView: UITextView!
@@ -112,7 +111,6 @@ class PostCallNewViewController: PandaViewController, FloatRatingViewDelegate, U
     
     override func viewDidLayoutSubviews() {
         ViewUtils.borderView(saveButton, borderWidth: 1.0, borderColor: UIColor.clearColor(), borderRadius: 5)
-        ViewUtils.borderView(backButton, borderWidth: 1.0, borderColor: ColorUtils.buttonColor(), borderRadius: 5)
         let borderColor = ColorUtils.uicolorFromHex(0xF1F1F1)
         ViewUtils.bottomBorderView(summaryView, borderWidth: 1.0, borderColor: borderColor, offset: 0)
         ViewUtils.bottomBorderView(nextTimeView, borderWidth: 1.0, borderColor: borderColor, offset: -1.0)
@@ -291,10 +289,6 @@ class PostCallNewViewController: PandaViewController, FloatRatingViewDelegate, U
         
     }
     
-    
-    @IBAction func back(sender: AnyObject) {
-        self.navigationController?.popViewControllerAnimated(true)
-    }
     /*
     
     override func shouldAutorotate() -> Bool {
