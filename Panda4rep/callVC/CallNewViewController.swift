@@ -347,7 +347,7 @@ class CallNewViewController: UIViewController, UIGestureRecognizerDelegate, OTSe
         var embedHTML = "<html><head>"
         embedHTML += "<style type=\"text/css\">"
         embedHTML += "body {"
-        embedHTML +=    "background-color: transparent;color: white;}\\</style>\\</head><body style=\"margin:0; position:absolute; top:50%; left:50%; -webkit-transform: translate(-50%, -50%);\">\\<embed webkit-playsinline id=\"yt\" src=\"\(url)\" type=\"application/x-shockwave-flash\" \\width=\"\(320)\" height=\"\(300)\"></embed>\\</body></html>"
+        embedHTML += "background-color: transparent;color: white;}</style></head><body style=\"margin:0; position:absolute; top:50%; left:50%; -webkit-transform: translate(-50%, -50%);\"><embed webkit-playsinline id=\"yt\" src=\"\(url)\" type=\"application/x-shockwave-flash\"width=\"\(320)\" height=\"\(300)\"></embed></body></html>"
         
         self.presentationWebView!.loadHTMLString(embedHTML, baseURL:nil)
         self.presentationWebView!.hidden = false
@@ -570,7 +570,6 @@ class CallNewViewController: UIViewController, UIGestureRecognizerDelegate, OTSe
         } else {
             self.navigationController?.navigationBarHidden = false
             if CallUtils.subscriber?.stream.streamId == stream.streamId {
-                //self.activeChatView.text = (self.activeChatView.text + "Remote side stopped video stream\n")
                 CallUtils.doUnsubscribe()
             }
         }
@@ -579,14 +578,12 @@ class CallNewViewController: UIViewController, UIGestureRecognizerDelegate, OTSe
     func session(session: OTSession, connectionCreated connection : OTConnection) {
         NSLog("session connectionCreated (\(connection.connectionId))")
         if connection.connectionId != CallUtils.session?.connection.connectionId {
-            //self.activeChatView.text = (self.activeChatView.text + "Remote side connected to session\n")
             CallUtils.remoteSideConnected()
         }
     }
     
     func session(session: OTSession, connectionDestroyed connection : OTConnection) {
         NSLog("session connectionDestroyed (\(connection.connectionId))")
-        //self.activeChatView.text = (self.activeChatView.text + "Remote side disconnected from session\n")
     }
     
     func session(session: OTSession, didFailWithError error: OTError) {

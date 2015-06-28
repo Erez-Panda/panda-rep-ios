@@ -168,14 +168,14 @@ struct CallUtils{
     }
     
     static func doScreenPublish(view: UIView) {
-        screenPublisher = OTPublisher(delegate: self.publisherDelegate)
+        screenPublisher = OTPublisher(delegate: self.publisherDelegate, name: "", audioTrack: false, videoTrack: false)
         screenPublisher?.videoType = OTPublisherKitVideoType.Screen
         screenPublisher?.audioFallbackEnabled = false
-        
         screenPublisher?.videoCapture = TBScreenCapture(view: view)
-        
+        screenPublisher?.publishVideo = true
         var maybeError : OTError?
         session?.publish(screenPublisher, error: &maybeError)
+        
         
         if let error = maybeError {
             showAlert(error.localizedDescription)
@@ -260,7 +260,7 @@ struct CallUtils{
                 showAlert(error.localizedDescription)
             }
             
-            screenPublisher.view.removeFromSuperview()
+            //screenPublisher.view.removeFromSuperview()
             self.screenPublisher = nil
         }
     }

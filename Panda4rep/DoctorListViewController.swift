@@ -44,6 +44,9 @@ class DoctorListViewController: UIViewController, MPGTextFieldDelegate, UITextFi
     var selectedDoctor : NSDictionary?
     var editMode = false
     
+    var doctorUsers : NSArray = []
+    var filteredDoctorUsers = []
+    
     var parentVC : UIViewController?
     
     override func viewDidLoad() {
@@ -61,9 +64,16 @@ class DoctorListViewController: UIViewController, MPGTextFieldDelegate, UITextFi
                 }
             }
         })
+        ServerAPI.getRepDoctors { (result) -> Void in
+            self.doctorUsers = result
+            self.filteredDoctorUsers = self.doctorUsers
+            dispatch_async(dispatch_get_main_queue()){
+                self.tableView.reloadData()
+            }
+        }
         doctors = NSMutableArray(array: StorageUtils.getItems(StorageUtils.DataType.DoctorContact))
         filteredDoctors = doctors
-        presnetDoctorAtIndex(0)
+        presnetDoctorAtIndexPath(NSIndexPath(forRow: 0,inSection: 0))
 
         
         self.refreshControl = UIRefreshControl()
@@ -79,7 +89,7 @@ class DoctorListViewController: UIViewController, MPGTextFieldDelegate, UITextFi
             self.filteredDoctors = self.doctors
             dispatch_async(dispatch_get_main_queue()){
                 self.refreshControl.endRefreshing()
-                self.presnetDoctorAtIndex(0)
+                self.presnetDoctorAtIndexPath(NSIndexPath(forRow:0,inSection: 0))
                 self.tableView.reloadData()
             }
         })
@@ -250,18 +260,30 @@ class DoctorListViewController: UIViewController, MPGTextFieldDelegate, UITextFi
     }
     
     func numberOfSectionsInTableView(tableView: UITableView) -> Int{
-        return 1
+        return 2
     }
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return self.filteredDoctors.count
+        if section == 0{
+            return self.filteredDoctors.count
+        } else {
+            return self.filteredDoctorUsers.count
+        }
     }
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier("doctorCell") as! UITableViewCell
-        if let doctor = filteredDoctors[indexPath.row] as? NSDictionary {
-            let firstName = doctor["first_name"] as! String
-            let lastName = doctor["last_name"] as! String
-            cell.textLabel?.text = "\(firstName) \(lastName)"
+        let doctorsArray = (indexPath.section == 0) ? filteredDoctors : filteredDoctorUsers
+        if var doctor = doctorsArray[indexPath.row] as? NSDictionary {
+            if let user = doctor["user"] as? NSDictionary {
+                doctor = user
+            }
+            let firstName = doctor["first_name"] as? String
+            let lastName = doctor["last_name"] as? String
+            if firstName != nil && lastName != nil {
+                cell.textLabel?.text = "\(firstName!) \(lastName!)"
+            } else {
+                 cell.textLabel?.text = doctor["email"] as? String
+            }
         }
         cell.layoutMargins = UIEdgeInsetsZero
         return cell
@@ -269,22 +291,54 @@ class DoctorListViewController: UIViewController, MPGTextFieldDelegate, UITextFi
     }
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        presnetDoctorAtIndex(indexPath.row)
+        presnetDoctorAtIndexPath(indexPath)
         if (editMode){
             editContact(UIButton())
         }
     }
     
-    func presnetDoctorAtIndex(index: Int){
-        if filteredDoctors.count > index{
-            if let doctor = filteredDoctors[index] as? NSDictionary {
-                let firstName = doctor["first_name"] as! String
-                let lastName = doctor["last_name"] as! String
-                presentedName.text = "\(firstName) \(lastName)"
+    func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        if section == 0{
+            if self.filteredDoctors.count > 0 {
+                return " Contacts"
+            } else {
+                return nil
+            }
+        } else {
+            if self.filteredDoctorUsers.count > 0 {
+                return " Registered Users"
+            } else {
+                return nil
+            }
+        }
+    }
+    
+    
+    func presnetDoctorAtIndexPath(indexPath: NSIndexPath){
+        let doctorsArray = (indexPath.section == 0) ? filteredDoctors : filteredDoctorUsers
+        if doctorsArray.count > indexPath.row{
+            if var doctor = doctorsArray[indexPath.row] as? NSDictionary {
+                if let user = doctor["user"] as? NSDictionary {
+                    selectedDoctor = doctor
+                    editDoctorButton.hidden = true
+                    if editMode {
+                        cancelNewContact(UIButton())
+                    }
+                    doctor = user
+                }
+                let firstName = doctor["first_name"] as? String
+                let lastName = doctor["last_name"] as? String
+                if firstName != nil && lastName != nil {
+                    presentedName.text = "\(firstName!) \(lastName!)"
+                } else {
+                    presentedName.text = "Unknown"
+                }
                 presentedEmail.text = doctor["email"] as? String
-                selectedDoctor = doctor
+                if indexPath.section == 0 {
+                    selectedDoctor = doctor
+                    editDoctorButton.hidden = false
+                }
                 selectDoctorButton.hidden = false
-                editDoctorButton.hidden = false
             }
         } else {
             presentedName.text = ""
@@ -298,9 +352,16 @@ class DoctorListViewController: UIViewController, MPGTextFieldDelegate, UITextFi
     func searchBar(searchBar: UISearchBar, textDidChange searchText: String) {
         if searchText.isEmpty {
             filteredDoctors = doctors
+            filteredDoctorUsers = doctorUsers
         } else {
-            let resultPredicate = NSPredicate(format: "first_name contains[c] %@ OR last_name contains[c] %@", argumentArray:[searchText, searchText] )
-            filteredDoctors = self.doctors.filteredArrayUsingPredicate(resultPredicate)
+            if doctors.count > 0 {
+                let resultPredicate = NSPredicate(format: "first_name contains[c] %@ OR last_name contains[c] %@", argumentArray:[searchText, searchText] )
+                filteredDoctors = self.doctors.filteredArrayUsingPredicate(resultPredicate)
+            }
+            if  doctorUsers.count > 0 {
+                let resultPredicate = NSPredicate(format: "user.first_name contains[c] %@ OR user.last_name contains[c] %@", argumentArray:[searchText, searchText] )
+                filteredDoctorUsers = self.doctorUsers.filteredArrayUsingPredicate(resultPredicate)
+            }
         }
         self.tableView.reloadData()
     }

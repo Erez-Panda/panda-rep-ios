@@ -191,8 +191,16 @@ class CreateCallViewController: UIViewController, UITableViewDelegate, UITableVi
     }
     
     func selectDoctor(doctor: NSDictionary){
-        let lastName = doctor["last_name"] as! String
-        doctorLabel.text = "Dr. \(lastName)"
+        var doc = doctor
+        if let user = doctor["user"] as? NSDictionary {
+            doc = user
+        }
+        let lastName = doc["last_name"] as? String
+        if lastName != nil {
+            doctorLabel.text = "Dr. \(lastName!)"
+        } else {
+            doctorLabel.text = "Unknown"
+        }
         doctorLabel.textColor = UIColor.blackColor()
         selectedDoctor = doctor
     }
@@ -210,25 +218,40 @@ class CreateCallViewController: UIViewController, UITableViewDelegate, UITableVi
         if let doc = selectedDoctor{
             if let prod = selectedProduct{
                 if let date = selectedDate{
-                    let callData = [
+                    var callData = [
                         "caller": userId,
-                        "guest_callee": doc["id"] as! NSNumber,
                         "title": "Call created by rep",
                         "start": TimeUtils.dateToServerString(date),
                         "end": TimeUtils.dateToServerString(date.dateByAddingTimeInterval(20*60)),
                         "product": prod["id"] as! NSNumber
                         ] as Dictionary<String,AnyObject>
-                    ServerAPI.newGuestCall(callData, completion: { (result) -> Void in
+                    var newCall = ServerAPI.newGuestCall
+                    if let user = doc["user"] as? NSDictionary { //Real user
+                        callData["callee"] = doc["id"] as! NSNumber
+                        newCall = ServerAPI.newCall
+                    } else { // Guest user
+                        callData["guest_callee"] = doc["id"] as! NSNumber
+                    }
+                    newCall(callData, completion: { (result) -> Void in
                         dispatch_async(dispatch_get_main_queue()){
                             self.activity.stopAnimating()
-                        }
-                        // check if call was created
-                        dispatch_async(dispatch_get_main_queue()){
+                            if let error = result["error"] as? String{
+                                ViewUtils.showSimpleError(error)
+                            }
                             self.cancel(UIButton())
                         }
                     })
+                } else {
+                    self.activity.stopAnimating()
+                    ViewUtils.showSimpleError("Please select date")
                 }
+            } else {
+                self.activity.stopAnimating()
+                ViewUtils.showSimpleError("Please select product")
             }
+        } else {
+            self.activity.stopAnimating()
+            ViewUtils.showSimpleError("Please select callee")
         }
 
     }
