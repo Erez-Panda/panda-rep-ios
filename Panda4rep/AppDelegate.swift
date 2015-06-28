@@ -47,15 +47,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate, LoginDelegate, UIAlertVie
             
         } 
         if let launchOpts = launchOptions {
-            var notificationPayload: NSDictionary = launchOpts[UIApplicationLaunchOptionsRemoteNotificationKey] as! NSDictionary
-            if ((notificationPayload["offer_id"]) != nil){
-                dispatch_async(dispatch_get_main_queue()){
-                    self.showAcceprCallAlert(notificationPayload)
+            if let notificationPayload = launchOpts[UIApplicationLaunchOptionsRemoteNotificationKey] as? NSDictionary{
+                if ((notificationPayload["offer_id"]) != nil){
+                    dispatch_async(dispatch_get_main_queue()){
+                        self.showAcceprCallAlert(notificationPayload)
+                    }
                 }
             }
         }
        
-        //showAcceprCallAlert(["product": "koko", "start":"2014-22-12 22:00:00", "ofer_id": 100])
         
         //DROP_BOX
         let dbSession = DBSession(appKey: "l6c99wtstnvvhuq", appSecret: "a4hgzua2blamg7u", root: kDBRootDropbox)
