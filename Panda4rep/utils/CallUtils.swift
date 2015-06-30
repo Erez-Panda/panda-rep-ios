@@ -168,11 +168,11 @@ struct CallUtils{
     }
     
     static func doScreenPublish(view: UIView) {
-        screenPublisher = OTPublisher(delegate: self.publisherDelegate, name: "", audioTrack: false, videoTrack: false)
+        screenPublisher = OTPublisher(delegate: self.publisherDelegate, name: "", audioTrack: false, videoTrack: true)
         screenPublisher?.videoType = OTPublisherKitVideoType.Screen
         screenPublisher?.audioFallbackEnabled = false
         screenPublisher?.videoCapture = TBScreenCapture(view: view)
-        screenPublisher?.publishVideo = true
+        //screenPublisher?.publishVideo = true
         var maybeError : OTError?
         session?.publish(screenPublisher, error: &maybeError)
         

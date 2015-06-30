@@ -123,16 +123,18 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
             let time: NSDate  = TimeUtils.serverDateTimeStrToDate(calls[index]["start"] as! String)
             let endTime: NSDate  = TimeUtils.serverDateTimeStrToDate(calls[index]["end"] as! String)
             var callee : NSDictionary = [:]
-            if let user = calls[index]["callee"] as? NSDictionary {
-                callee = user
-            } else if let guest = calls[index]["guest_callee"] as? NSDictionary {
-                callee = guest
-            }
+
             
             let product = calls[index]["product"] as! NSDictionary
             let resources = calls[index]["resources"] as! NSArray
             let id = calls[index]["id"] as! NSNumber
             var item = ["start": time, "product": product, "end": endTime, "id": id, "resources": resources] as Dictionary<String,AnyObject>
+            if let user = calls[index]["callee"] as? NSDictionary {
+                callee = user
+            } else if let guest = calls[index]["guest_callee"] as? NSDictionary {
+                callee = guest
+                item["guest_callee"] = callee
+            }
             if callee.count > 0 {
                 item["callee"] = callee
             }

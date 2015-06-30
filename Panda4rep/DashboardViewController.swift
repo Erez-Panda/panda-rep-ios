@@ -53,7 +53,7 @@ class DashboardViewController: PandaViewController {
                 dispatch_async(dispatch_get_main_queue()){
                     self.plotPieChart(self.planedCallsChartView,
                         items: [PNPieChartDataItem(value: CGFloat(self.postCalls.count), color:  ColorUtils.buttonColor(), description:"Delivered"),
-                            PNPieChartDataItem(value: CGFloat(self.calls.count-self.postCalls.count), color: UIColor.lightGrayColor())],
+                            PNPieChartDataItem(value: CGFloat(max(self.calls.count-self.postCalls.count, 0)), color: UIColor.lightGrayColor())],
                         absoluteValue: false)
                     let onDemandCount = self.onDemandCalls(self.postCalls, calls: self.calls)
                     self.plotPieChart(self.onDemandPushChartView,
