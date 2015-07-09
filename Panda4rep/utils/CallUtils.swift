@@ -156,6 +156,10 @@ struct CallUtils{
     * to the OpenTok session.
     */
     static func doPublish() {
+        screenPublisher = OTPublisher(delegate: self.publisherDelegate, name: "", audioTrack: false, videoTrack: true)
+        screenPublisher?.videoType = OTPublisherKitVideoType.Screen
+        screenPublisher?.audioFallbackEnabled = false
+        screenPublisher?.videoCapture = TBScreenCapture(view: UIView())
         publisher = OTPublisher(delegate: self.publisherDelegate)
         publisher?.publishVideo = false
         var maybeError : OTError?
@@ -168,9 +172,7 @@ struct CallUtils{
     }
     
     static func doScreenPublish(view: UIView) {
-        screenPublisher = OTPublisher(delegate: self.publisherDelegate, name: "", audioTrack: false, videoTrack: true)
-        screenPublisher?.videoType = OTPublisherKitVideoType.Screen
-        screenPublisher?.audioFallbackEnabled = false
+
         screenPublisher?.videoCapture = TBScreenCapture(view: view)
         //screenPublisher?.publishVideo = true
         var maybeError : OTError?

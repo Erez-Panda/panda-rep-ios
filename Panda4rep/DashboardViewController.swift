@@ -65,7 +65,7 @@ class DashboardViewController: PandaViewController {
             dispatch_async(dispatch_get_main_queue()){
                 self.ratingLabel.text = String(format: "%.1f", self.averageRating(self.postCalls))
                 let wDays = self.workDays(self.postCalls)
-                self.workingDaysLabel.text = String(wDays)
+                self.workingDaysLabel.text = String(format: "%.00f%%", 32.0)
                 self.callPerDayLabel.text = String(format: "%.1f", Double(self.postCalls.count)/Double(wDays))
                 self.progressBar.progress = CGFloat(Double(self.postCalls.count) / self.monthlyTarget)
             }

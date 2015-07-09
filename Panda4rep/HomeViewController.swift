@@ -227,7 +227,7 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
                     firstName = callee["first_name"] as! String
                     lastName = callee["last_name"] as! String
                 }
-                cell.rep.text = "\(firstName) \(lastName)"
+                cell.rep.text = "Dr. \(lastName)"
             } else {
                 cell.rep.text = "Unknown user"
             }
