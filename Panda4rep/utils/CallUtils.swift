@@ -112,6 +112,7 @@ struct CallUtils{
     static func pauseCall(){
         doUnsubscribe()
         doUnpublish()
+        doScreenUnpublish()
         var maybeError : OTError?
         session?.disconnect(&maybeError)
         session = nil
@@ -146,6 +147,11 @@ struct CallUtils{
             session.connectWithToken(self.token, error: &maybeError)
             if let error = maybeError {
                 showAlert(error.localizedDescription)
+            } else {
+                screenPublisher = OTPublisher(delegate: self.publisherDelegate, name: "", audioTrack: false, videoTrack: true)
+                screenPublisher?.videoType = OTPublisherKitVideoType.Screen
+                screenPublisher?.audioFallbackEnabled = false
+                //screenPublisher?.videoCapture.releaseCapture()
             }
         }
     }
@@ -156,10 +162,6 @@ struct CallUtils{
     * to the OpenTok session.
     */
     static func doPublish() {
-        screenPublisher = OTPublisher(delegate: self.publisherDelegate, name: "", audioTrack: false, videoTrack: true)
-        screenPublisher?.videoType = OTPublisherKitVideoType.Screen
-        screenPublisher?.audioFallbackEnabled = false
-        screenPublisher?.videoCapture = TBScreenCapture(view: UIView())
         publisher = OTPublisher(delegate: self.publisherDelegate)
         publisher?.publishVideo = false
         var maybeError : OTError?

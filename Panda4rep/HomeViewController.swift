@@ -67,10 +67,15 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
         self.tableView.addSubview(refreshControl)
         // Do any additional setup after loading the view.
         
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "callOfferOffered", name: "CallOfferOffered", object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "callOfferOffered:", name: "CallOfferOffered", object: nil)
     }
     
-    func callOfferOffered(){
+    func callOfferOffered(notification: NSNotification){
+        if let offer = notification.object as? NSDictionary{
+            if let start = offer["start"] as? String{
+                filterResults(TimeUtils.serverDateTimeStrToDate(start))
+            }
+        }
         pullRefresh(nil)
     }
     

@@ -158,7 +158,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, LoginDelegate, UIAlertVie
                             ViewUtils.showSimpleError(error)
                         }
                     }
-                    NSNotificationCenter.defaultCenter().postNotification(NSNotification(name: "CallOfferOffered", object: nil))
+                    NSNotificationCenter.defaultCenter().postNotification(NSNotification(name: "CallOfferOffered", object: (alertView as! UIAlertViewWithData).data))
                 })
             }
         } else if (buttonIndex == 1){ //Cancel
