@@ -316,7 +316,7 @@
                                 <rect key="frame" x="0.0" y="170" width="600" height="340"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <prototypes>
-                                    <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="zoneCallCell" rowHeight="80" id="k5S-88-6Ur" customClass="ZoneCallTableViewCell" customModule="Panda4rep" customModuleProvider="target">
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="zoneCallCell" rowHeight="80" id="k5S-88-6Ur" customClass="ZoneCallTableViewCell" customModule="Panda4rep" customModuleProvider="target">
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="k5S-88-6Ur" id="y2H-fw-9fo">
                                             <autoresizingMask key="autoresizingMask"/>
@@ -2251,7 +2251,7 @@
                                                     <constraint firstAttribute="width" constant="300" id="Dbh-7j-ZVt"/>
                                                 </constraints>
                                                 <userDefinedRuntimeAttributes>
-                                                    <userDefinedRuntimeAttribute type="image" keyPath="emptyImage" value="D62125E5-3758-4BDE-9991-441B2658A712"/>
+                                                    <userDefinedRuntimeAttribute type="image" keyPath="emptyImage" value="E84A6818-3867-4E9B-840D-15D3CAA60A5B"/>
                                                     <userDefinedRuntimeAttribute type="number" keyPath="minRating">
                                                         <integer key="value" value="0"/>
                                                     </userDefinedRuntimeAttribute>
@@ -3227,7 +3227,7 @@ Following our video session, here are the materials you requested:</string>
         </scene>
     </scenes>
     <resources>
-        <image name="D62125E5-3758-4BDE-9991-441B2658A712" width="35" height="33">
+        <image name="E84A6818-3867-4E9B-840D-15D3CAA60A5B" width="35" height="33">
             <mutableData key="keyedArchiveRepresentation">
 YnBsaXN0MDDUAQIDBAUGOzxYJHZlcnNpb25YJG9iamVjdHNZJGFyY2hpdmVyVCR0b3ASAAGGoK0HCBEW
 GxwgISksLzU4VSRudWxs1AkKCwwNDg8QViRjbGFzc1xOU0ltYWdlRmxhZ3NWTlNSZXBzV05TQ29sb3KA

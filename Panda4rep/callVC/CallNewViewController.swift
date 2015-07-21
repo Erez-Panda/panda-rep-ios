@@ -307,11 +307,15 @@ class CallNewViewController: UIViewController, UIGestureRecognizerDelegate, OTSe
     
     
     @IBAction func stopSharing(sender: NIKFontAwesomeButton) {
+        stopSharing()
+    }
+    
+    func stopSharing(){
         CallUtils.doScreenUnpublish()
-        self.presentationWebView!.hidden = true
+        self.presentationWebView?.hidden = true
         var maybeError : OTError?
         CallUtils.session?.signalWithType("unload_video", string: "", connection: nil, error: &maybeError)
-        self.presentationWebView!.loadHTMLString("", baseURL:nil)
+        self.presentationWebView?.loadHTMLString("", baseURL:nil)
     }
     
     @IBAction func toggleDrawingMode(sender: NIKFontAwesomeButton) {
@@ -344,6 +348,7 @@ class CallNewViewController: UIViewController, UIGestureRecognizerDelegate, OTSe
     }
     
     func showVideoItem(url: String){
+        stopSharing()
         var embedHTML = "<html><head>"
         embedHTML += "<style type=\"text/css\">"
         embedHTML += "body {"

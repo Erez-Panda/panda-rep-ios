@@ -73,10 +73,11 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
     func callOfferOffered(notification: NSNotification){
         if let offer = notification.object as? NSDictionary{
             if let start = offer["start"] as? String{
-                filterResults(TimeUtils.serverDateTimeStrToDate(start))
+                selectedDate = NSCalendar.currentCalendar().startOfDayForDate(TimeUtils.serverDateTimeStrToDate(start))
             }
         }
         pullRefresh(nil)
+        
     }
     
     func pullRefresh(sender:AnyObject?){
@@ -89,6 +90,8 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
                 self.filteredCalls = self.calls
                 dispatch_async(dispatch_get_main_queue()){
                     self.filterResults(self.selectedDate)
+                    ViewUtils.stopGlobalLoader()
+                    self.dateSelector.startDate = self.selectedDate
                     self.refreshControl.endRefreshing()
                 }
             })
@@ -161,6 +164,8 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
                     var callee : NSDictionary = [:]
                     if let user = callRequest["creator"] as? NSDictionary {
                         callee = user
+                    } else if let user = callRequest["guest_creator"] as? NSDictionary {
+                        callee = user
                     }
                     var product : NSDictionary = [:]
                     if let p = callRequest["product"] as? NSDictionary{
@@ -228,7 +233,7 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
                 if let user = callee["user"] as? NSDictionary{
                     firstName = user["first_name"] as! String
                     lastName = user["last_name"] as! String
-                } else {
+                } else { // no user == guest
                     firstName = callee["first_name"] as! String
                     lastName = callee["last_name"] as! String
                 }

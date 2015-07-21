@@ -191,6 +191,11 @@
     
     imageSize = [UIScreen mainScreen].bounds.size;
     
+    if (fmod(imageSize.height,16) != 0 || fmod(imageSize.width,16) != 0) {
+        imageSize.height = (int)ceilf(imageSize.height/16)*16;
+        imageSize.width =(int)ceilf(imageSize.width/16)*16;
+    }
+    
     UIGraphicsBeginImageContextWithOptions(imageSize, NO, 0);
     
     if ([self.view respondsToSelector:

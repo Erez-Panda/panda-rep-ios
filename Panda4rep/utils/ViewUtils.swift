@@ -14,6 +14,7 @@
 struct ViewUtils {
     
     static var profileImage: UIImage?
+    static var globalLoader: UIActivityIndicatorView?
     //static var homeViewController: FeatureImageViewController?
     //static var upcomingViewController: UpcomingCallViewController?
     static var delegate:ViewDelegate?
@@ -398,6 +399,31 @@ struct ViewUtils {
             UIBarButtonItem(title: "Done", style: UIBarButtonItemStyle.Done, target: vc, action: "doneButtonClickedDismissKeyboard")]
         doneToolbar.sizeToFit()
         textView.inputAccessoryView = doneToolbar;
+    }
+    
+    static func startGlobalLoader(){
+        globalLoader = UIActivityIndicatorView()
+        globalLoader!.activityIndicatorViewStyle = UIActivityIndicatorViewStyle.Gray
+        
+        if let topView = getTopViewController()?.view{
+            topView.addSubview(globalLoader!)
+            globalLoader!.startAnimating()
+            topView.bringSubviewToFront(globalLoader!)
+            globalLoader!.setTranslatesAutoresizingMaskIntoConstraints(false)
+            let canterXConstraint = NSLayoutConstraint(item: globalLoader!, attribute: NSLayoutAttribute.CenterX, relatedBy: NSLayoutRelation.Equal, toItem: topView, attribute: NSLayoutAttribute.CenterX, multiplier: 1, constant: 0)
+                topView.addConstraint(canterXConstraint)
+            let canterYConstraint = NSLayoutConstraint(item: globalLoader!, attribute: NSLayoutAttribute.CenterY, relatedBy: NSLayoutRelation.Equal, toItem: topView, attribute: NSLayoutAttribute.CenterY, multiplier: 1, constant: 0)
+            topView.addConstraint(canterYConstraint)
+            
+        }
+        
+        
+    }
+    
+    static func stopGlobalLoader(){
+        dispatch_async(dispatch_get_main_queue()){
+            globalLoader?.removeFromSuperview()
+        }
     }
 }
 

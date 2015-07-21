@@ -149,8 +149,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, LoginDelegate, UIAlertVie
     }
     
     func alertView(alertView: UIAlertView, didDismissWithButtonIndex buttonIndex: Int) {
-        println(buttonIndex)
         if (buttonIndex == 0){ //Accept
+            ViewUtils.startGlobalLoader()
             if let offerId: AnyObject = (alertView as! UIAlertViewWithData).data?["offer_id"] {
                 ServerAPI.acceptCallOffer(offerId as! NSNumber, completion: {result -> Void in
                     if let error = result["error"] as? String{
@@ -181,7 +181,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, LoginDelegate, UIAlertVie
         acceptCallAlert.addButtonWithTitle("Accept")
         acceptCallAlert.addButtonWithTitle("Cancel")
         acceptCallAlert.delegate = self
-        acceptCallAlert.data = ["offer_id": offerId]
+        acceptCallAlert.data = ["offer_id": offerId, "start": start]
         acceptCallAlert.show()
         
         //        var rootViewController = self.window!.rootViewController

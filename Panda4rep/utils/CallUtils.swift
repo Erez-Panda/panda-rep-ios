@@ -265,7 +265,7 @@ struct CallUtils{
             }
             
             //screenPublisher.view.removeFromSuperview()
-            self.screenPublisher = nil
+            //self.screenPublisher = nil
         }
     }
     
