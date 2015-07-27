@@ -15,6 +15,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, LoginDelegate, UIAlertVie
 
     var window: UIWindow?
     var token: String?
+    var homeVC: HomeViewController?
+    var preCallId: NSNumber?
 
 
 
@@ -53,6 +55,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate, LoginDelegate, UIAlertVie
                         self.showAcceprCallAlert(notificationPayload)
                     }
                 }
+                if let callId = notificationPayload["call_id"] as? NSNumber{
+                    dispatch_async(dispatch_get_main_queue()){
+                        self.openPreCallScreen(callId)
+                    }
+                }
             }
         }
        
@@ -62,7 +69,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, LoginDelegate, UIAlertVie
         DBSession.setSharedSession(dbSession)
         //DBSession.sharedSession().unlinkAll()
         
-        
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "homeScreenReady:", name: "HomeScreenReady", object: nil)
         
         return true
     }
@@ -134,6 +141,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate, LoginDelegate, UIAlertVie
                 self.showAcceprCallAlert(userInfo)
             }
         }
+        if let callId = userInfo["call_id"] as? NSNumber{
+            dispatch_async(dispatch_get_main_queue()){
+                self.openPreCallScreen(callId)
+            }
+        }
         if let type = userInfo["type"] as? String{
             if type == "new_training"{
                 var rootViewController = self.window!.rootViewController
@@ -188,6 +200,37 @@ class AppDelegate: UIResponder, UIApplicationDelegate, LoginDelegate, UIAlertVie
         //        let alert = UIAlertController(title: "Title", message: "Message", preferredStyle: UIAlertControllerStyle.Alert)
         //        alert.addAction(UIAlertAction(title: "Button", style: UIAlertActionStyle.Default, handler: nil))
         //        rootViewController?.presentViewController(alert, animated: true, completion: nil)
+    }
+    
+    func showIncomingCallAlert(callId: NSNumber){
+        if let topvc = ViewUtils.getTopViewController(){
+            let alert = UIAlertController(title: "Call Time", message: "You have a scheduled call starting now", preferredStyle: UIAlertControllerStyle.Alert)
+            alert.addAction(UIAlertAction(title: "Call Screen", style: UIAlertActionStyle.Default, handler: { (action) -> Void in
+                if let vc = self.homeVC {
+                    vc.navigationController?.popToRootViewControllerAnimated(false)
+                    vc.openPreCallById(callId)
+                }
+            }))
+            alert.addAction(UIAlertAction(title: "Ignore", style: UIAlertActionStyle.Default, handler: nil))
+            topvc.presentViewController(alert, animated: true, completion: nil)
+        }
+    }
+    
+    func homeScreenReady(notification: NSNotification){
+        if let vc = notification.object as? HomeViewController{
+            homeVC = vc
+            if let id = preCallId{
+                openPreCallScreen(id)
+            }
+        }
+    }
+    
+    func openPreCallScreen(id: NSNumber){
+        if let vc = self.homeVC {
+            showIncomingCallAlert(id)
+        } else {
+            preCallId = id
+        }
     }
 
 

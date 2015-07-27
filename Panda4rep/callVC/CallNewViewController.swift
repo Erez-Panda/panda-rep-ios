@@ -28,14 +28,16 @@ class CallNewViewController: UIViewController, UIGestureRecognizerDelegate, OTSe
     @IBOutlet weak var presentaionImage: UIImageView?
     @IBOutlet weak var buttomView: UIView!
     @IBOutlet weak var toggleControllPanelButton: NIKFontAwesomeButton!
-    
+    @IBOutlet weak var scrollView: UIScrollView!
     
     @IBOutlet weak var bottomViewBottomConst: NSLayoutConstraint!
     @IBOutlet weak var sideViewLeadingConst: NSLayoutConstraint!
     @IBOutlet weak var sideView: UIView!
     @IBOutlet weak var toggleToolsButton: NIKFontAwesomeButton!
+    @IBOutlet weak var pointer: NIKFontAwesomeButton!
     
     var isDragging = false
+    var isPointing = false
     var chatViewController: ChatViewController?
     var controlPanelTimer: NSTimer?
     var publisherSizeConst: [NSLayoutConstraint]?
@@ -90,6 +92,7 @@ class CallNewViewController: UIViewController, UIGestureRecognizerDelegate, OTSe
         }
         
     }
+
     
     override func viewDidAppear(animated: Bool) {
         if firstTime{
@@ -178,6 +181,7 @@ class CallNewViewController: UIViewController, UIGestureRecognizerDelegate, OTSe
     func viewForZoomingInScrollView(scrollView: UIScrollView) -> UIView? {
         return presentaionImage
     }
+    
 
     @IBAction func toggleSound(sender: AnyObject) {
         if let pAudio = CallUtils.publisher?.publishAudio{
@@ -339,6 +343,21 @@ class CallNewViewController: UIViewController, UIGestureRecognizerDelegate, OTSe
         }
     }
     
+    @IBAction func togglePointer(sender: NIKFontAwesomeButton) {
+        isPointing = !isPointing
+        if isPointing {
+            scrollView.userInteractionEnabled = false
+            sender.color = UIColor.blueColor()
+        }
+        else {
+            pointer.hidden = true
+            scrollView.userInteractionEnabled = true
+            sender.color = UIColor.whiteColor()
+            var maybeError : OTError?
+            CallUtils.session?.signalWithType("pointer_hide", string: "", connection: nil, error: &maybeError)
+        }
+    }
+    
     func showDropboxItem(url: NSURL!){
         if let data = NSData(contentsOfURL: url){
             self.presentationWebView!.loadData(data, MIMEType: "application/pdf", textEncodingName: "ISO-8859-1", baseURL: nil)
@@ -366,17 +385,27 @@ class CallNewViewController: UIViewController, UIGestureRecognizerDelegate, OTSe
         CallUtils.session?.signalWithType("line_clear", string: "", connection: nil, error: &maybeError)
     }
 
+
     
     override func touchesBegan(touches: Set<NSObject>, withEvent event: UIEvent) {
         super.touchesBegan(touches, withEvent: event)
         if let touch: UITouch = touches.first as? UITouch{
-            ((touch.gestureRecognizers as NSArray)[0] as! UIGestureRecognizer).cancelsTouchesInView = false
+            //((touch.gestureRecognizers as NSArray)[0] as! UIGestureRecognizer).cancelsTouchesInView = false
             let touchLocation = touch.locationInView(self.view) as CGPoint
             
             if drawingMode {
                 var maybeError : OTError?
                 let screenBounds = UIScreen.mainScreen().bounds
                 CallUtils.session?.signalWithType("line_start_point", string: "\(touchLocation.x/screenBounds.width),\(touchLocation.y/screenBounds.height)", connection: nil, error: &maybeError)
+            }
+            
+            if isPointing {
+                let point = CGPointMake(touchLocation.x-(pointer.frame.width/2), touchLocation.y+5)
+                pointer.frame.origin = point
+                pointer.hidden = false
+                var maybeError : OTError?
+                let screenBounds = UIScreen.mainScreen().bounds
+                CallUtils.session?.signalWithType("pointer_position", string: "\(point.x/screenBounds.width),\(point.y/screenBounds.height)", connection: nil, error: &maybeError)
             }
             
             if let subscriberRect = CallUtils.subscriber?.view.frame {
@@ -426,6 +455,13 @@ class CallNewViewController: UIViewController, UIGestureRecognizerDelegate, OTSe
                 var maybeError : OTError?
                 let screenBounds = UIScreen.mainScreen().bounds
                 CallUtils.session?.signalWithType("line_point", string: "\(touchLocation.x/screenBounds.width),\(touchLocation.y/screenBounds.height)", connection: nil, error: &maybeError)
+            }
+            if isPointing {
+                let point = CGPointMake(touchLocation.x-(pointer.frame.width/2), touchLocation.y+5)
+                pointer.frame.origin = point
+                var maybeError : OTError?
+                let screenBounds = UIScreen.mainScreen().bounds
+                CallUtils.session?.signalWithType("pointer_position", string: "\(point.x/screenBounds.width),\(point.y/screenBounds.height)", connection: nil, error: &maybeError)
             }
             if (self.isDragging){
                 if let subscriber = CallUtils.subscriber?.view {

@@ -34,7 +34,7 @@ class LinearInterpView: UIView {
         super.touchesBegan(touches, withEvent: event)
         if (enabled){
             if let touch: UITouch = touches.first as? UITouch{
-                ((touch.gestureRecognizers as NSArray)[0] as! UIGestureRecognizer).cancelsTouchesInView = false
+                //((touch.gestureRecognizers as NSArray)[0] as! UIGestureRecognizer).cancelsTouchesInView = false
                 let touchLocation = touch.locationInView(self) as CGPoint
                 path?.moveToPoint(touchLocation)
             }

@@ -68,6 +68,7 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
         // Do any additional setup after loading the view.
         
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "callOfferOffered:", name: "CallOfferOffered", object: nil)
+        NSNotificationCenter.defaultCenter().postNotification(NSNotification(name: "HomeScreenReady", object: self))
     }
     
     func callOfferOffered(notification: NSNotification){
@@ -264,6 +265,15 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
             }
         }
 
+    }
+    
+    func openPreCallById(id: NSNumber){
+        for call in calls{
+            if call["id"] as? NSNumber == id{
+                selectedCall = call as? NSDictionary
+                self.performSegueWithIdentifier("showPrecallScreen", sender: self)
+            }
+        }
     }
     
     func acceptCall(sender: UIButton){
