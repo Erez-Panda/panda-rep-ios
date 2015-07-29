@@ -116,6 +116,16 @@ class PreCallViewController: PandaViewController, UITableViewDataSource, UITable
         callButton.backgroundColor = ColorUtils.buttonColor()
     }
     
+    func remoteSideDisconnected() {
+        enableReminderButton("Send Reminder")
+        callButton.enabled = false
+        callButton.backgroundColor = UIColor.lightGrayColor()
+    }
+    
+    func remoteSideDecliend() {
+        ViewUtils.showSimpleError("Doctor has declined the call")
+    }
+    
     func numberOfSectionsInTableView(tableView: UITableView) -> Int{
         return 1
     }
@@ -223,6 +233,14 @@ class PreCallViewController: PandaViewController, UITableViewDataSource, UITable
         reminderButton.setTitle(message, forState: UIControlState.Normal)
         reminderButton.color = UIColor.clearColor()
         reminderButton.titleEdgeInsets.left = 0
+    }
+    
+    func enableReminderButton(message: String){
+        reminderButton.enabled = true
+        reminderButton.backgroundColor = ColorUtils.buttonColor()
+        reminderButton.setTitle(message, forState: UIControlState.Normal)
+        reminderButton.color = UIColor.whiteColor()
+        reminderButton.titleEdgeInsets.left = 6
     }
 
 }

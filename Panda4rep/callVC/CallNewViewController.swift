@@ -28,7 +28,7 @@ class CallNewViewController: UIViewController, UIGestureRecognizerDelegate, OTSe
     @IBOutlet weak var presentaionImage: UIImageView?
     @IBOutlet weak var buttomView: UIView!
     @IBOutlet weak var toggleControllPanelButton: NIKFontAwesomeButton!
-    @IBOutlet weak var scrollView: UIScrollView!
+    @IBOutlet weak var scrollView: TouchUIScrollView!
     
     @IBOutlet weak var bottomViewBottomConst: NSLayoutConstraint!
     @IBOutlet weak var sideViewLeadingConst: NSLayoutConstraint!
@@ -36,13 +36,18 @@ class CallNewViewController: UIViewController, UIGestureRecognizerDelegate, OTSe
     @IBOutlet weak var toggleToolsButton: NIKFontAwesomeButton!
     @IBOutlet weak var pointer: NIKFontAwesomeButton!
     
+    @IBOutlet weak var toolsPanelConstraint: NSLayoutConstraint!
+    @IBOutlet weak var controlPanelConstraint: NSLayoutConstraint!
+    
+    @IBOutlet weak var activity: UIActivityIndicatorView!
+    
     var isDragging = false
     var isPointing = false
     var chatViewController: ChatViewController?
     var controlPanelTimer: NSTimer?
     var publisherSizeConst: [NSLayoutConstraint]?
-    var controlPanelHidden = false
-    var toolsPanelHidden = false
+    var controlPanelHidden = true
+    var toolsPanelHidden = true
     var messageQ : NSArray = []
     var currentImage: UIImage?
     var showIncoming = true
@@ -58,6 +63,8 @@ class CallNewViewController: UIViewController, UIGestureRecognizerDelegate, OTSe
     
     var firstTime = true
     var drawingMode = false
+    var preLoadedImages: Array<UIImage?>?
+    var preLoadedImagesUrl: Array<String?>?
     
 
     @IBOutlet weak var drawingView: LinearInterpView!
@@ -68,6 +75,10 @@ class CallNewViewController: UIViewController, UIGestureRecognizerDelegate, OTSe
         super.viewDidLoad()
         if firstTime {
             UIEventRegister.gestureRecognizer(self, rightAction:"prev:", leftAction: "next:", upAction: "up:", downAction: "down:")
+            let longTapReco = UILongPressGestureRecognizer(target: self, action: "longTap:")
+            longTapReco.cancelsTouchesInView = false
+            self.view.addGestureRecognizer(longTapReco)
+            scrollView.parent = self
         }
         
         // Do any additional setup after loading the view.
@@ -127,9 +138,50 @@ class CallNewViewController: UIViewController, UIGestureRecognizerDelegate, OTSe
                             if let dispRes = self.displayResources?[0] as? NSDictionary{
                                 self.loadImage(dispRes["id"] as! NSNumber)
                             }
+                            self.preLoadDisplayResources()
                             
                         })
                     }
+                }
+            }
+        }
+    }
+    
+    func getDataFromUrl(urL:NSURL, completion: ((data: NSData?) -> Void)) {
+        NSURLSession.sharedSession().dataTaskWithURL(urL) { (data, response, error) in
+            completion(data: data)
+            }.resume()
+    }
+    
+    func preLoadImage(imageFile: NSNumber, index: Int){
+        ServerAPI.getFileUrl(imageFile, completion: { (result) -> Void in
+            self.currentImageUrl = result as String
+            let url = NSURL(string: result as String)
+            
+            var maybeError : OTError?
+            CallUtils.session?.signalWithType("preload_res", string: result as String, connection: nil, error: &maybeError)
+            
+            self.getDataFromUrl(url!) { data in
+                self.preLoadedImages?[index] = UIImage(data: data!)
+                self.preLoadedImagesUrl?[index] = result as String
+                dispatch_async(dispatch_get_main_queue()){
+                    if !self.activity.hidden {
+                        self.activity.stopAnimating()
+                        self.next(UISwipeGestureRecognizer())
+                    }
+                    
+                }
+            }
+        })
+    }
+    
+    func preLoadDisplayResources(){
+        if let resources = displayResources {
+            preLoadedImages = [UIImage?](count:resources.count, repeatedValue: nil)
+            preLoadedImagesUrl = [String?](count:resources.count, repeatedValue: nil)
+            for index in 0..<resources.count {
+                if let dispRes = resources[index] as? NSDictionary{
+                    self.preLoadImage(dispRes["id"] as! NSNumber, index: index)
                 }
             }
         }
@@ -140,25 +192,43 @@ class CallNewViewController: UIViewController, UIGestureRecognizerDelegate, OTSe
         if (currentImageIndex+1 == self.displayResources?.count){
             return
         }
-        currentImageIndex++
-        if let dispRes = displayResources?[currentImageIndex] as? NSDictionary{
+        if let image = preLoadedImages?[currentImageIndex+1]{
+            currentImageIndex++
+            self.presentaionImage?.image = image
+            
+            if let urlStr = preLoadedImagesUrl?[currentImageIndex]{
+                var maybeError : OTError?
+                CallUtils.session?.signalWithType("load_res", string: urlStr, connection: nil, error: &maybeError)
+            }
+        } else {
+            activity.startAnimating()
+        }
+        /*else if let dispRes = displayResources?[currentImageIndex] as? NSDictionary{
             if let imgFile = dispRes["id"] as? NSNumber{
                 loadImage(imgFile)
                 
             }
-        }
+        }*/
     }
     func prev(sender: UISwipeGestureRecognizer) {
         if self.isDragging || self.drawingMode {return}
         if currentImageIndex <= 0{
             return
         }
-        currentImageIndex--
-        if let dispRes = displayResources?[currentImageIndex] as? NSDictionary{
+        
+        if let image = preLoadedImages?[currentImageIndex-1]{
+            currentImageIndex--
+            self.presentaionImage?.image = image
+            
+            if let urlStr = preLoadedImagesUrl?[currentImageIndex]{
+                var maybeError : OTError?
+                CallUtils.session?.signalWithType("load_res", string: urlStr, connection: nil, error: &maybeError)
+            }
+        } /*else if let dispRes = displayResources?[currentImageIndex] as? NSDictionary{
             if let imgFile = dispRes["id"] as? NSNumber{
                 loadImage(imgFile)
             }
-        }
+        }*/
     }
     
     func up(sender: UISwipeGestureRecognizer) {
@@ -178,8 +248,23 @@ class CallNewViewController: UIViewController, UIGestureRecognizerDelegate, OTSe
         changeDisplayResource(selectedResIndex)
     }
     
+    func longTap(sender: UILongPressGestureRecognizer){
+        isPointing = true
+        pointer.hidden = false
+    }
+    
     func viewForZoomingInScrollView(scrollView: UIScrollView) -> UIView? {
         return presentaionImage
+    }
+    
+    func scrollViewDidEndZooming(scrollView: UIScrollView, withView view: UIView!, atScale scale: CGFloat) {
+        let screenBounds = UIScreen.mainScreen().bounds
+        var maybeError : OTError?
+        var paramStr = ""
+        paramStr += "\(scale)_"
+        paramStr += "\(scrollView.contentOffset.x/scrollView.contentSize.width),"
+        paramStr += "\(scrollView.contentOffset.y/scrollView.contentSize.height)"
+        CallUtils.session?.signalWithType("zoom_scale", string:paramStr, connection: nil, error: &maybeError)
     }
     
 
@@ -240,75 +325,53 @@ class CallNewViewController: UIViewController, UIGestureRecognizerDelegate, OTSe
         // Dispose of any resources that can be recreated.
     }
     
-    func hideControls(animate: Bool){
-        ViewUtils.slideViewOutVertical(buttomView, animate: animate)
-        ViewUtils.slideViewOutVertical(toggleControllPanelButton, animate: animate, offset: toggleControllPanelButton.frame.height)
-        controlPanelHidden = true
-    }
-    
-    func hideControls(){
-        
-        //self.view.removeConstraint(sideViewLeadingConst)
-        //self.view.removeConstraint(bottomViewBottomConst)
-        if let controls = buttomView {
-            //toggleControllPanelButton.iconHex = "f102"
-            ViewUtils.slideViewOutVertical(controls)
-            ViewUtils.slideViewOutVertical(toggleControllPanelButton, offset: toggleControllPanelButton.frame.height)
-            
-        }
-        controlPanelHidden = true
-    }
     
     @IBAction func endCall(sender: AnyObject) {
         self.performSegueWithIdentifier("showPostCall", sender: AnyObject?())
         CallUtils.stopArchive()
         CallUtils.stopCall()
     }
+    
     func showControlPanel(){
         controlPanelHidden = false
-        if let controls = buttomView {
-            ViewUtils.slideViewinVertical(controls)
-            ViewUtils.slideViewinVertical(toggleControllPanelButton, offset: controls.frame.height)
-            //toggleControllPanelButton.iconHex = "f103"
-        }
-        //controlPanelTimer?.invalidate()
-        //controlPanelTimer = NSTimer.scheduledTimerWithTimeInterval(NSTimeInterval(3), target: self, selector: Selector("hideControls"), userInfo: AnyObject?(), repeats: false)
+        updateControlPanelConstraint(0)
+    }
+    
+    func hideControls(){
+        controlPanelHidden = true
+        toolsPanelHidden = true
+        updateControlPanelConstraint(-80)
+        updateToolsPanelConstraint(60)
     }
     
     @IBAction func toggleControlPanel(sender: NIKFontAwesomeButton) {
-        if (self.presentedViewController == nil){
-            if (controlPanelHidden){
-                showControlPanel()
-            } else {
-                hideControls(true)
-            }
-        }
+        controlPanelHidden = !controlPanelHidden
+        updateControlPanelConstraint((controlPanelHidden ? -80 : 0))
     }
     
-    func showToolsPanel(){
-        ViewUtils.slideViewInFromLeft(sideView)
-        ViewUtils.slideViewInFromLeft(toggleToolsButton, offset: sideView.frame.width)
-        toolsPanelHidden = false
+    func updateControlPanelConstraint(value: CGFloat){
+        UIView.animateWithDuration(0.325, animations: {
+            self.controlPanelConstraint.constant = value
+            self.view.layoutIfNeeded()
+        })
     }
     
-    func hideToolsPanel(){
-        ViewUtils.slideViewOutToLeft(sideView)
-        ViewUtils.slideViewOutToLeft(toggleToolsButton, offset: toggleToolsButton.frame.width)
-        toolsPanelHidden = true
+    func updateToolsPanelConstraint(value: CGFloat){
+        UIView.animateWithDuration(0.325, animations: {
+            self.toolsPanelConstraint.constant = value
+            self.view.layoutIfNeeded()
+        })
     }
     
     @IBAction func toggleToolsPanel(sender: NIKFontAwesomeButton) {
-        if toolsPanelHidden {
-            showToolsPanel()
-        } else {
-            hideToolsPanel()
-        }
+        toolsPanelHidden = !toolsPanelHidden
+        updateToolsPanelConstraint(self.toolsPanelHidden ? 60 : 0)
+
     }
     
     @IBAction func openDropbox(sender: NIKFontAwesomeButton) {
 
     }
-    
     
     @IBAction func stopSharing(sender: NIKFontAwesomeButton) {
         stopSharing()
@@ -342,7 +405,7 @@ class CallNewViewController: UIViewController, UIGestureRecognizerDelegate, OTSe
             //self.view.bringSubviewToFront(drawingView)
         }
     }
-    
+    /*
     @IBAction func togglePointer(sender: NIKFontAwesomeButton) {
         isPointing = !isPointing
         if isPointing {
@@ -357,6 +420,7 @@ class CallNewViewController: UIViewController, UIGestureRecognizerDelegate, OTSe
             CallUtils.session?.signalWithType("pointer_hide", string: "", connection: nil, error: &maybeError)
         }
     }
+    */
     
     func showDropboxItem(url: NSURL!){
         if let data = NSData(contentsOfURL: url){
@@ -398,11 +462,9 @@ class CallNewViewController: UIViewController, UIGestureRecognizerDelegate, OTSe
                 let screenBounds = UIScreen.mainScreen().bounds
                 CallUtils.session?.signalWithType("line_start_point", string: "\(touchLocation.x/screenBounds.width),\(touchLocation.y/screenBounds.height)", connection: nil, error: &maybeError)
             }
-            
             if isPointing {
                 let point = CGPointMake(touchLocation.x-(pointer.frame.width/2), touchLocation.y+5)
                 pointer.frame.origin = point
-                pointer.hidden = false
                 var maybeError : OTError?
                 let screenBounds = UIScreen.mainScreen().bounds
                 CallUtils.session?.signalWithType("pointer_position", string: "\(point.x/screenBounds.width),\(point.y/screenBounds.height)", connection: nil, error: &maybeError)
@@ -442,6 +504,12 @@ class CallNewViewController: UIViewController, UIGestureRecognizerDelegate, OTSe
     override func touchesEnded(touches: Set<NSObject>, withEvent event: UIEvent) {
         super.touchesEnded(touches, withEvent: event)
         self.isDragging = false
+        if isPointing {
+            isPointing = false
+            pointer.hidden = true
+            var maybeError : OTError?
+            CallUtils.session?.signalWithType("pointer_hide", string: "", connection: nil, error: &maybeError)
+        }
     }
     override func touchesCancelled(touches: Set<NSObject>, withEvent event: UIEvent!) {
         super.touchesCancelled(touches, withEvent: event)
@@ -504,7 +572,7 @@ class CallNewViewController: UIViewController, UIGestureRecognizerDelegate, OTSe
     @IBAction func openChat(sender: AnyObject) {
         
 
-        self.hideControls(false)
+        hideControls()
         if let chat = self.chatViewController{
             chat.view.frame.origin.y = self.view.frame.size.height
             chat.view.hidden = false
@@ -625,6 +693,9 @@ class CallNewViewController: UIViewController, UIGestureRecognizerDelegate, OTSe
     
     func session(session: OTSession, connectionDestroyed connection : OTConnection) {
         NSLog("session connectionDestroyed (\(connection.connectionId))")
+        if connection.connectionId != CallUtils.session?.connection.connectionId {
+            CallUtils.remoteSideDisconnected()
+        }
     }
     
     func session(session: OTSession, didFailWithError error: OTError) {
@@ -646,6 +717,14 @@ class CallNewViewController: UIViewController, UIGestureRecognizerDelegate, OTSe
             } else if (type == "send_current_res"){
                 var maybeError : OTError?
                 CallUtils.session?.signalWithType("load_res", string: self.currentImageUrl, connection: nil, error: &maybeError)
+                
+                if preLoadedImagesUrl != nil {
+                    for url in self.preLoadedImagesUrl! {
+                        CallUtils.session?.signalWithType("preload_res", string: url, connection: nil, error: &maybeError)
+                    }
+                }
+            } else if type == "decline_call" {
+                CallUtils.remoteSideDeclined()
             }
         }
     }

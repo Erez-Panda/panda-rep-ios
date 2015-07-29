@@ -13,6 +13,8 @@ let ApiKey = "45145512"
 
 @objc protocol CallDelegate{
     optional func remoteSideConnected()
+    optional func remoteSideDisconnected()
+    optional func remoteSideDecliend()
 }
 
 
@@ -66,8 +68,19 @@ struct CallUtils{
     
     static func remoteSideConnected(){
         remoteSideConnect = true
-        self.delegate?.remoteSideConnected!()
+        self.delegate?.remoteSideConnected?()
     }
+    
+    static func remoteSideDisconnected(){
+        remoteSideConnect = false
+        self.delegate?.remoteSideDisconnected?()
+    }
+    
+    static func remoteSideDeclined(){
+        remoteSideConnect = false
+        self.delegate?.remoteSideDecliend?()
+    }
+    
     static func getCallViewController() -> CallNewViewController?{
         return callViewController as? CallNewViewController
     }
