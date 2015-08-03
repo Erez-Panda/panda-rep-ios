@@ -203,16 +203,18 @@ class AppDelegate: UIResponder, UIApplicationDelegate, LoginDelegate, UIAlertVie
     }
     
     func showIncomingCallAlert(callId: NSNumber){
-        if let topvc = ViewUtils.getTopViewController(){
-            let alert = UIAlertController(title: "Call Time", message: "You have a scheduled call starting now", preferredStyle: UIAlertControllerStyle.Alert)
-            alert.addAction(UIAlertAction(title: "Call Screen", style: UIAlertActionStyle.Default, handler: { (action) -> Void in
-                if let vc = self.homeVC {
-                    vc.navigationController?.popToRootViewControllerAnimated(false)
-                    vc.openPreCallById(callId)
-                }
-            }))
-            alert.addAction(UIAlertAction(title: "Ignore", style: UIAlertActionStyle.Default, handler: nil))
-            topvc.presentViewController(alert, animated: true, completion: nil)
+        if (CallUtils.session?.sessionConnectionStatus == OTSessionConnectionStatus.NotConnected || CallUtils.session == nil){
+            if let topvc = ViewUtils.getTopViewController(){
+                let alert = UIAlertController(title: "Call Time", message: "You have a scheduled call starting now", preferredStyle: UIAlertControllerStyle.Alert)
+                alert.addAction(UIAlertAction(title: "Call Screen", style: UIAlertActionStyle.Default, handler: { (action) -> Void in
+                    if let vc = self.homeVC {
+                        vc.navigationController?.popToRootViewControllerAnimated(false)
+                        vc.openPreCallById(callId)
+                    }
+                }))
+                alert.addAction(UIAlertAction(title: "Ignore", style: UIAlertActionStyle.Default, handler: nil))
+                topvc.presentViewController(alert, animated: true, completion: nil)
+            }
         }
     }
     

@@ -257,6 +257,7 @@ class CallNewViewController: UIViewController, UIGestureRecognizerDelegate, OTSe
         return presentaionImage
     }
     
+    
     func scrollViewDidEndZooming(scrollView: UIScrollView, withView view: UIView!, atScale scale: CGFloat) {
         let screenBounds = UIScreen.mainScreen().bounds
         var maybeError : OTError?
@@ -463,7 +464,7 @@ class CallNewViewController: UIViewController, UIGestureRecognizerDelegate, OTSe
                 CallUtils.session?.signalWithType("line_start_point", string: "\(touchLocation.x/screenBounds.width),\(touchLocation.y/screenBounds.height)", connection: nil, error: &maybeError)
             }
             if isPointing {
-                let point = CGPointMake(touchLocation.x-(pointer.frame.width/2), touchLocation.y+5)
+                let point = CGPointMake(touchLocation.x-(pointer.frame.width/2), touchLocation.y-55)
                 pointer.frame.origin = point
                 var maybeError : OTError?
                 let screenBounds = UIScreen.mainScreen().bounds
@@ -525,7 +526,7 @@ class CallNewViewController: UIViewController, UIGestureRecognizerDelegate, OTSe
                 CallUtils.session?.signalWithType("line_point", string: "\(touchLocation.x/screenBounds.width),\(touchLocation.y/screenBounds.height)", connection: nil, error: &maybeError)
             }
             if isPointing {
-                let point = CGPointMake(touchLocation.x-(pointer.frame.width/2), touchLocation.y+5)
+                let point = CGPointMake(touchLocation.x-(pointer.frame.width/2), touchLocation.y-55)
                 pointer.frame.origin = point
                 var maybeError : OTError?
                 let screenBounds = UIScreen.mainScreen().bounds
