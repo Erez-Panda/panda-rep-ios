@@ -2251,7 +2251,7 @@
                                                     <constraint firstAttribute="width" constant="300" id="Dbh-7j-ZVt"/>
                                                 </constraints>
                                                 <userDefinedRuntimeAttributes>
-                                                    <userDefinedRuntimeAttribute type="image" keyPath="emptyImage" value="A8124CB4-1126-4B50-8222-02A91B82FDC5"/>
+                                                    <userDefinedRuntimeAttribute type="image" keyPath="emptyImage" value="C7FF51F3-AF6E-4BC4-93A5-4992D2005EC0"/>
                                                     <userDefinedRuntimeAttribute type="number" keyPath="minRating">
                                                         <integer key="value" value="0"/>
                                                     </userDefinedRuntimeAttribute>
@@ -2724,9 +2724,9 @@ Following our video session, here are the materials you requested:</string>
                                         <rect key="frame" x="0.0" y="0.0" width="60" height="392"/>
                                         <subviews>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fky-Fa-ljP" userLabel="dropbox" customClass="NIKFontAwesomeButton">
-                                                <rect key="frame" x="0.0" y="0.0" width="60" height="40"/>
+                                                <rect key="frame" x="10" y="0.0" width="40" height="40"/>
                                                 <constraints>
-                                                    <constraint firstAttribute="width" constant="60" id="wAE-7l-YeR"/>
+                                                    <constraint firstAttribute="width" constant="40" id="wAE-7l-YeR"/>
                                                     <constraint firstAttribute="height" constant="40" id="wJr-OD-cp4"/>
                                                 </constraints>
                                                 <state key="normal">
@@ -2748,16 +2748,16 @@ Following our video session, here are the materials you requested:</string>
                                                     </segue>
                                                 </connections>
                                             </button>
-                                            <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="alz-37-w9b" userLabel="pencil" customClass="NIKFontAwesomeButton">
-                                                <rect key="frame" x="0.0" y="48" width="60" height="40"/>
+                                            <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="JIR-yE-gy5" userLabel="pointer" customClass="NIKFontAwesomeButton">
+                                                <rect key="frame" x="10" y="48" width="40" height="40"/>
                                                 <constraints>
-                                                    <constraint firstAttribute="height" constant="50" id="lOh-bd-sO9"/>
+                                                    <constraint firstAttribute="height" constant="50" id="LkD-UC-elo"/>
                                                 </constraints>
                                                 <state key="normal">
                                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                                 </state>
                                                 <userDefinedRuntimeAttributes>
-                                                    <userDefinedRuntimeAttribute type="string" keyPath="iconHex" value="f040"/>
+                                                    <userDefinedRuntimeAttribute type="string" keyPath="iconHex" value=" f0a6"/>
                                                     <userDefinedRuntimeAttribute type="color" keyPath="color">
                                                         <color key="value" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                     </userDefinedRuntimeAttribute>
@@ -2767,41 +2767,12 @@ Following our video session, here are the materials you requested:</string>
                                                 </userDefinedRuntimeAttributes>
                                                 <variation key="default">
                                                     <mask key="constraints">
-                                                        <exclude reference="lOh-bd-sO9"/>
+                                                        <exclude reference="LkD-UC-elo"/>
                                                     </mask>
                                                 </variation>
-                                                <connections>
-                                                    <action selector="toggleDrawingMode:" destination="AAc-q3-yJb" eventType="touchUpInside" id="7gP-07-Deb"/>
-                                                </connections>
-                                            </button>
-                                            <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="HwK-ij-s3s" userLabel="eraser" customClass="NIKFontAwesomeButton">
-                                                <rect key="frame" x="0.0" y="96" width="60" height="40"/>
-                                                <constraints>
-                                                    <constraint firstAttribute="height" constant="50" id="Moi-NM-qrt"/>
-                                                </constraints>
-                                                <state key="normal">
-                                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                                </state>
-                                                <userDefinedRuntimeAttributes>
-                                                    <userDefinedRuntimeAttribute type="string" keyPath="iconHex" value="f12d"/>
-                                                    <userDefinedRuntimeAttribute type="color" keyPath="color">
-                                                        <color key="value" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                                    </userDefinedRuntimeAttribute>
-                                                    <userDefinedRuntimeAttribute type="number" keyPath="size">
-                                                        <real key="value" value="20"/>
-                                                    </userDefinedRuntimeAttribute>
-                                                </userDefinedRuntimeAttributes>
-                                                <variation key="default">
-                                                    <mask key="constraints">
-                                                        <exclude reference="Moi-NM-qrt"/>
-                                                    </mask>
-                                                </variation>
-                                                <connections>
-                                                    <action selector="cleanDrawing:" destination="AAc-q3-yJb" eventType="touchUpInside" id="w4p-rH-jdR"/>
-                                                </connections>
                                             </button>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="BBu-2Y-zfU" userLabel="video" customClass="NIKFontAwesomeButton">
-                                                <rect key="frame" x="0.0" y="48" width="60" height="40"/>
+                                                <rect key="frame" x="10" y="48" width="40" height="40"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="50" id="ELX-no-Kbd"/>
                                                 </constraints>
@@ -2828,16 +2799,16 @@ Following our video session, here are the materials you requested:</string>
                                                     </segue>
                                                 </connections>
                                             </button>
-                                            <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="JIR-yE-gy5" userLabel="pointer" customClass="NIKFontAwesomeButton">
-                                                <rect key="frame" x="0.0" y="96" width="60" height="40"/>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="alz-37-w9b" userLabel="pencil" customClass="NIKFontAwesomeButton">
+                                                <rect key="frame" x="10" y="96" width="40" height="40"/>
                                                 <constraints>
-                                                    <constraint firstAttribute="height" constant="50" id="LkD-UC-elo"/>
+                                                    <constraint firstAttribute="height" constant="50" id="lOh-bd-sO9"/>
                                                 </constraints>
                                                 <state key="normal">
                                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                                 </state>
                                                 <userDefinedRuntimeAttributes>
-                                                    <userDefinedRuntimeAttribute type="string" keyPath="iconHex" value=" f0a6"/>
+                                                    <userDefinedRuntimeAttribute type="string" keyPath="iconHex" value="f040"/>
                                                     <userDefinedRuntimeAttribute type="color" keyPath="color">
                                                         <color key="value" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                     </userDefinedRuntimeAttribute>
@@ -2847,16 +2818,47 @@ Following our video session, here are the materials you requested:</string>
                                                 </userDefinedRuntimeAttributes>
                                                 <variation key="default">
                                                     <mask key="constraints">
-                                                        <exclude reference="LkD-UC-elo"/>
+                                                        <exclude reference="lOh-bd-sO9"/>
                                                     </mask>
                                                 </variation>
+                                                <connections>
+                                                    <action selector="toggleDrawingMode:" destination="AAc-q3-yJb" eventType="touchUpInside" id="7gP-07-Deb"/>
+                                                </connections>
+                                            </button>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="HwK-ij-s3s" userLabel="eraser" customClass="NIKFontAwesomeButton">
+                                                <rect key="frame" x="10" y="144" width="40" height="40"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="height" constant="50" id="Moi-NM-qrt"/>
+                                                </constraints>
+                                                <state key="normal">
+                                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                                </state>
+                                                <userDefinedRuntimeAttributes>
+                                                    <userDefinedRuntimeAttribute type="string" keyPath="iconHex" value="f12d"/>
+                                                    <userDefinedRuntimeAttribute type="color" keyPath="color">
+                                                        <color key="value" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                    </userDefinedRuntimeAttribute>
+                                                    <userDefinedRuntimeAttribute type="number" keyPath="size">
+                                                        <real key="value" value="20"/>
+                                                    </userDefinedRuntimeAttribute>
+                                                </userDefinedRuntimeAttributes>
+                                                <variation key="default">
+                                                    <mask key="constraints">
+                                                        <exclude reference="Moi-NM-qrt"/>
+                                                    </mask>
+                                                </variation>
+                                                <connections>
+                                                    <action selector="cleanDrawing:" destination="AAc-q3-yJb" eventType="touchUpInside" id="w4p-rH-jdR"/>
+                                                </connections>
                                             </button>
                                         </subviews>
                                         <constraints>
                                             <constraint firstItem="HwK-ij-s3s" firstAttribute="top" secondItem="alz-37-w9b" secondAttribute="bottom" constant="8" id="1D3-yn-Y1L"/>
+                                            <constraint firstAttribute="bottom" secondItem="HwK-ij-s3s" secondAttribute="bottom" constant="8" id="1oc-ju-Kya"/>
                                             <constraint firstItem="fky-Fa-ljP" firstAttribute="trailing" secondItem="HwK-ij-s3s" secondAttribute="trailing" id="2Bz-yc-Ffb"/>
                                             <constraint firstItem="fky-Fa-ljP" firstAttribute="height" secondItem="HwK-ij-s3s" secondAttribute="height" id="821-JQ-rej"/>
-                                            <constraint firstItem="fky-Fa-ljP" firstAttribute="leading" secondItem="rHI-QO-eVU" secondAttribute="leading" id="QNg-SU-xLT"/>
+                                            <constraint firstItem="alz-37-w9b" firstAttribute="top" secondItem="BBu-2Y-zfU" secondAttribute="bottom" constant="8" id="Idj-Qd-XV8"/>
+                                            <constraint firstItem="fky-Fa-ljP" firstAttribute="leading" secondItem="rHI-QO-eVU" secondAttribute="leading" constant="10" id="QNg-SU-xLT"/>
                                             <constraint firstItem="JIR-yE-gy5" firstAttribute="height" secondItem="fky-Fa-ljP" secondAttribute="height" id="QqT-JN-oLW"/>
                                             <constraint firstItem="fky-Fa-ljP" firstAttribute="leading" secondItem="HwK-ij-s3s" secondAttribute="leading" id="T73-u2-tTf"/>
                                             <constraint firstItem="fky-Fa-ljP" firstAttribute="leading" secondItem="BBu-2Y-zfU" secondAttribute="leading" id="Ty1-mL-dMs"/>
@@ -2868,12 +2870,25 @@ Following our video session, here are the materials you requested:</string>
                                             <constraint firstItem="JIR-yE-gy5" firstAttribute="leading" secondItem="fky-Fa-ljP" secondAttribute="leading" id="aMq-Uw-Y9a"/>
                                             <constraint firstItem="fky-Fa-ljP" firstAttribute="height" secondItem="BBu-2Y-zfU" secondAttribute="height" id="hC8-iX-Dxi"/>
                                             <constraint firstItem="fky-Fa-ljP" firstAttribute="top" secondItem="rHI-QO-eVU" secondAttribute="top" id="hJh-YY-Pmb"/>
-                                            <constraint firstAttribute="trailing" secondItem="fky-Fa-ljP" secondAttribute="trailing" id="hnR-1h-iK3"/>
+                                            <constraint firstAttribute="trailing" secondItem="fky-Fa-ljP" secondAttribute="trailing" constant="10" id="hnR-1h-iK3"/>
                                             <constraint firstItem="alz-37-w9b" firstAttribute="height" secondItem="fky-Fa-ljP" secondAttribute="height" id="i7h-0D-zYL"/>
                                             <constraint firstItem="alz-37-w9b" firstAttribute="trailing" secondItem="fky-Fa-ljP" secondAttribute="trailing" id="kMD-Ew-VJ7"/>
+                                            <constraint firstItem="JIR-yE-gy5" firstAttribute="top" secondItem="HwK-ij-s3s" secondAttribute="bottom" constant="8" id="sDY-OP-eZg"/>
                                             <constraint firstItem="JIR-yE-gy5" firstAttribute="trailing" secondItem="fky-Fa-ljP" secondAttribute="trailing" id="tHi-fS-3co"/>
+                                            <constraint firstItem="JIR-yE-gy5" firstAttribute="top" secondItem="fky-Fa-ljP" secondAttribute="bottom" constant="8" id="ubS-Sy-Cl2"/>
                                             <constraint firstItem="alz-37-w9b" firstAttribute="top" secondItem="fky-Fa-ljP" secondAttribute="bottom" constant="8" id="xYz-SC-5rD"/>
                                         </constraints>
+                                        <variation key="default">
+                                            <mask key="constraints">
+                                                <exclude reference="xYz-SC-5rD"/>
+                                                <exclude reference="VOD-g4-ROh"/>
+                                                <exclude reference="W4Y-od-XE6"/>
+                                                <exclude reference="sDY-OP-eZg"/>
+                                            </mask>
+                                        </variation>
+                                        <connections>
+                                            <outlet property="delegate" destination="AAc-q3-yJb" id="Hqg-BP-zUV"/>
+                                        </connections>
                                     </scrollView>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="FUc-Rc-Hp5" userLabel="stop sharing" customClass="NIKFontAwesomeButton">
                                         <rect key="frame" x="0.0" y="400" width="60" height="40"/>
@@ -3041,7 +3056,7 @@ Following our video session, here are the materials you requested:</string>
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <userDefinedRuntimeAttributes>
-                                    <userDefinedRuntimeAttribute type="string" keyPath="iconHex" value="f0a7"/>
+                                    <userDefinedRuntimeAttribute type="string" keyPath="iconHex" value="f0a6"/>
                                     <userDefinedRuntimeAttribute type="color" keyPath="color">
                                         <color key="value" red="0.93725490199999995" green="0.93725490199999995" blue="0.95686274510000002" alpha="1" colorSpace="calibratedRGB"/>
                                     </userDefinedRuntimeAttribute>
@@ -3295,7 +3310,7 @@ Following our video session, here are the materials you requested:</string>
         </scene>
     </scenes>
     <resources>
-        <image name="A8124CB4-1126-4B50-8222-02A91B82FDC5" width="35" height="33">
+        <image name="C7FF51F3-AF6E-4BC4-93A5-4992D2005EC0" width="35" height="33">
             <mutableData key="keyedArchiveRepresentation">
 YnBsaXN0MDDUAQIDBAUGOzxYJHZlcnNpb25YJG9iamVjdHNZJGFyY2hpdmVyVCR0b3ASAAGGoK0HCBEW
 GxwgISksLzU4VSRudWxs1AkKCwwNDg8QViRjbGFzc1xOU0ltYWdlRmxhZ3NWTlNSZXBzV05TQ29sb3KA

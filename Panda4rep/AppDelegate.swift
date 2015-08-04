@@ -183,13 +183,19 @@ class AppDelegate: UIResponder, UIApplicationDelegate, LoginDelegate, UIAlertVie
         let start = userInfo["start"] as! String
         let offerId = userInfo["offer_id"] as! NSNumber
         
+        
 
         let date = TimeUtils.serverDateTimeStrToDate(start)
         var readableTime = TimeUtils.dateToReadableStr(date)
         var acceptCallAlert = UIAlertViewWithData()
-        
         acceptCallAlert.title = "New Call Offer"
         acceptCallAlert.message = "Call about \(product) will take place on \(readableTime), Would you like to accept it?"
+        if let reschedule = userInfo["reschedule"] as? Bool{
+            if reschedule {
+                acceptCallAlert.title = "Call Reschedule Offer"
+                acceptCallAlert.message = "Call about \(product) will take place on \(readableTime), Would you like to accept it?"
+            }
+        }
         acceptCallAlert.addButtonWithTitle("Accept")
         acceptCallAlert.addButtonWithTitle("Cancel")
         acceptCallAlert.delegate = self

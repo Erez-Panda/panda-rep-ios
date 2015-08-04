@@ -123,7 +123,7 @@ class PreCallViewController: PandaViewController, UITableViewDataSource, UITable
     }
     
     func remoteSideDecliend() {
-        ViewUtils.showSimpleError("Doctor has declined the call")
+        //ViewUtils.showSimpleError("Doctor has declined the call")
     }
     
     func numberOfSectionsInTableView(tableView: UITableView) -> Int{

@@ -390,6 +390,7 @@ class CallNewViewController: UIViewController, UIGestureRecognizerDelegate, OTSe
         if self.drawingMode {
             drawingMode = false
             drawingView.enabled = false
+            drawingView.userInteractionEnabled = false
             sender.color = UIColor.whiteColor()
             //self.view.sendSubviewToBack(drawingView)
             if (self.view.subviews[3] as! NSObject == drawingView){
@@ -399,6 +400,7 @@ class CallNewViewController: UIViewController, UIGestureRecognizerDelegate, OTSe
         } else {
             drawingMode = true
             drawingView.enabled = true
+            drawingView.userInteractionEnabled = true
             sender.color = UIColor.blueColor()
             if (self.view.subviews[2] as! NSObject == drawingView){
                 self.view.exchangeSubviewAtIndex(2, withSubviewAtIndex: 3)
@@ -726,6 +728,7 @@ class CallNewViewController: UIViewController, UIGestureRecognizerDelegate, OTSe
                 }
             } else if type == "decline_call" {
                 CallUtils.remoteSideDeclined()
+                ViewUtils.showSimpleError("Doctor has declined the call")
             }
         }
     }
