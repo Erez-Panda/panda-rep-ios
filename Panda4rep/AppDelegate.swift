@@ -17,6 +17,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, LoginDelegate, UIAlertVie
     var token: String?
     var homeVC: HomeViewController?
     var preCallId: NSNumber?
+    var inquiryId: NSNumber?
 
 
 
@@ -60,6 +61,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate, LoginDelegate, UIAlertVie
                         self.openPreCallScreen(callId)
                     }
                 }
+                if let inquiry = notificationPayload["inquiry"] as? NSNumber{
+                    dispatch_async(dispatch_get_main_queue()){
+                        self.openInquiryScreen(inquiry)
+                    }
+                }
+                
+                
             }
         }
        
@@ -146,6 +154,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate, LoginDelegate, UIAlertVie
                 self.openPreCallScreen(callId)
             }
         }
+        if let inquiry = userInfo["inquiry"] as? NSNumber{
+            self.openInquiryScreen(inquiry)
+        }
         if let type = userInfo["type"] as? String{
             if type == "new_training"{
                 var rootViewController = self.window!.rootViewController
@@ -230,6 +241,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate, LoginDelegate, UIAlertVie
             if let id = preCallId{
                 openPreCallScreen(id)
             }
+            if let id = inquiryId{
+                openInquiryScreen(id)
+            }
         }
     }
     
@@ -238,6 +252,38 @@ class AppDelegate: UIResponder, UIApplicationDelegate, LoginDelegate, UIAlertVie
             showIncomingCallAlert(id)
         } else {
             preCallId = id
+        }
+    }
+    
+    func openInquiryScreen(id: NSNumber){
+        if let vc = self.homeVC {
+            if (CallUtils.session?.sessionConnectionStatus == OTSessionConnectionStatus.NotConnected || CallUtils.session == nil){
+                if let topvc = ViewUtils.getTopViewController(){
+                    let alert = UIAlertController(title: "New Medical Inquiry", message: "Would you like to responde?", preferredStyle: UIAlertControllerStyle.Alert)
+                    alert.addAction(UIAlertAction(title: "Yes", style: UIAlertActionStyle.Default, handler: { (action) -> Void in
+                        ServerAPI.respondtoMedicalInquiry(id, data: ["active":false], completion: { (result) -> Void in
+                            if let error = result["error"] as? String{
+                                dispatch_async(dispatch_get_main_queue()){
+                                    ViewUtils.showSimpleError(error)
+                                }
+                            } else if let vc = self.homeVC {
+                                dispatch_async(dispatch_get_main_queue()){
+                                    vc.navigationController?.popToRootViewControllerAnimated(false)
+                                    let inqVc = vc.storyboard?.instantiateViewControllerWithIdentifier("inquiryDisplay") as! InquiryDisplayViewController
+                                    inqVc.inquiry = result
+                                    vc.navigationController?.pushViewController(inqVc, animated: true)
+                                }
+                            }
+                        })
+                        
+                    }))
+                    alert.addAction(UIAlertAction(title: "No", style: UIAlertActionStyle.Default, handler: nil))
+                    topvc.presentViewController(alert, animated: true, completion: nil)
+                }
+            }
+            
+        } else {
+            inquiryId = id
         }
     }
 

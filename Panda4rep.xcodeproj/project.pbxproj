@@ -10,6 +10,7 @@
 		0C174E9F00BE3FB1E9D9FB73 /* Pods.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AE634FD644A9D08072DB1C42 /* Pods.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		A8074D691AF1655200A25655 /* AKPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8074D681AF1655200A25655 /* AKPickerView.swift */; };
 		A8074D6B1AF2B1F700A25655 /* AttachmentTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8074D6A1AF2B1F700A25655 /* AttachmentTableViewCell.swift */; };
+		A818129B1B72390E0052545C /* InquiryDisplayViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A818129A1B72390E0052545C /* InquiryDisplayViewController.swift */; };
 		A822CB5B1AE99F3900CE8CD9 /* universal.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A822CB5A1AE99F3900CE8CD9 /* universal.storyboard */; };
 		A822CB781AE9BD6700CE8CD9 /* CallOfferViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A822CB601AE9BD6700CE8CD9 /* CallOfferViewController.swift */; };
 		A822CB7A1AE9BD6700CE8CD9 /* CallViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A822CB621AE9BD6700CE8CD9 /* CallViewController.swift */; };
@@ -128,6 +129,7 @@
 		8A183BC194C9A944FA3C1B3E /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
 		A8074D681AF1655200A25655 /* AKPickerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AKPickerView.swift; path = components/AKPickerView.swift; sourceTree = "<group>"; };
 		A8074D6A1AF2B1F700A25655 /* AttachmentTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AttachmentTableViewCell.swift; path = UIExtensions/AttachmentTableViewCell.swift; sourceTree = "<group>"; };
+		A818129A1B72390E0052545C /* InquiryDisplayViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InquiryDisplayViewController.swift; sourceTree = "<group>"; };
 		A822CB5A1AE99F3900CE8CD9 /* universal.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = universal.storyboard; sourceTree = "<group>"; };
 		A822CB601AE9BD6700CE8CD9 /* CallOfferViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CallOfferViewController.swift; path = old/CallOfferViewController.swift; sourceTree = "<group>"; };
 		A822CB621AE9BD6700CE8CD9 /* CallViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CallViewController.swift; path = old/CallViewController.swift; sourceTree = "<group>"; };
@@ -454,6 +456,7 @@
 				A8E0DF6F1AF85CA10014CE59 /* DashboardViewController.swift */,
 				A8D7DAE21AFD8F0E008E2D29 /* LinearInterpView.swift */,
 				A8D7DAEA1B040D33008E2D29 /* DoctorListViewController.swift */,
+				A818129A1B72390E0052545C /* InquiryDisplayViewController.swift */,
 			);
 			path = Panda4rep;
 			sourceTree = "<group>";
@@ -728,6 +731,7 @@
 				A822CB801AE9BD6700CE8CD9 /* PostCallViewController.swift in Sources */,
 				A8E0DF6E1AF4417B0014CE59 /* TableViewCellWithLabelAndButton.swift in Sources */,
 				A822CBF61AE9D70A00CE8CD9 /* EditProfileViewController.swift in Sources */,
+				A818129B1B72390E0052545C /* InquiryDisplayViewController.swift in Sources */,
 				A822CB7E1AE9BD6700CE8CD9 /* NotApprovedViewController.swift in Sources */,
 				A822CBFA1AE9D70A00CE8CD9 /* SettingsViewController.swift in Sources */,
 				A8E0DF701AF85CA10014CE59 /* DashboardViewController.swift in Sources */,

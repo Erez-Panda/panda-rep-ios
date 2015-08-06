@@ -425,6 +425,24 @@ struct ServerAPI {
             completion(result: true)
         })
     }
+    
+    static func sendMedicalInquiryResponse(data: Dictionary<String, AnyObject>,completion: (result: Bool) -> Void) -> Void{
+        self.post("/products/medical_letter_responses/", message: data, completion: {result -> Void in
+            completion(result: true)
+        })
+    }
+    
+    static func getMedicalInquiry(id: NSNumber, completion: (result: NSDictionary) -> Void) -> Void{
+        self.get("/products/medical_letter_requests/\(id)/", completion: {result -> Void in
+            completion(result: self.getDictionaryResult(result))
+        })
+    }
+    
+    static func respondtoMedicalInquiry(id: NSNumber, data: Dictionary<String, AnyObject>, completion: (result: NSDictionary) -> Void) -> Void{
+        self.post("/products/medical_letter_requests/\(id)/", message: data,  method: "PATCH", completion: {result -> Void in
+            completion(result: self.getDictionaryResult(result))
+        })
+    }
 
     
     static func post(url: String, message: Dictionary<String, AnyObject>, method: String = "POST", completion: (result: AnyObject) -> Void) -> Void{
