@@ -18,6 +18,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, LoginDelegate, UIAlertVie
     var homeVC: HomeViewController?
     var preCallId: NSNumber?
     var inquiryId: NSNumber?
+    var inquiry: NSDictionary?
 
 
 
@@ -63,6 +64,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, LoginDelegate, UIAlertVie
                 }
                 if let inquiry = notificationPayload["inquiry"] as? NSNumber{
                     dispatch_async(dispatch_get_main_queue()){
+                        self.inquiry = notificationPayload
                         self.openInquiryScreen(inquiry)
                     }
                 }
@@ -155,6 +157,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, LoginDelegate, UIAlertVie
             }
         }
         if let inquiry = userInfo["inquiry"] as? NSNumber{
+            self.inquiry = userInfo
             self.openInquiryScreen(inquiry)
         }
         if let type = userInfo["type"] as? String{
@@ -259,7 +262,22 @@ class AppDelegate: UIResponder, UIApplicationDelegate, LoginDelegate, UIAlertVie
         if let vc = self.homeVC {
             if (CallUtils.session?.sessionConnectionStatus == OTSessionConnectionStatus.NotConnected || CallUtils.session == nil){
                 if let topvc = ViewUtils.getTopViewController(){
-                    let alert = UIAlertController(title: "New Medical Inquiry", message: "Would you like to responde?", preferredStyle: UIAlertControllerStyle.Alert)
+                    var title = "New Medical Inquiry"
+                    var message = "Would you like to respond?"
+                    if let inquiry = self.inquiry {
+                        if let product = inquiry["product_name"] as? String{
+                            title += " about \(product)"
+                        }
+                        if let creator = inquiry["creator_name"] as? String{
+                            if var text = inquiry["inquiry_text"] as? String{
+                                text = text.stringByReplacingOccurrencesOfString("\n", withString: " ", options: nil, range: nil)
+                                message = "Dr. \(creator):\n\"\(text)\"\n\n" + message
+                                
+                            }
+                        }
+                        
+                    }
+                    let alert = UIAlertController(title: title, message: message, preferredStyle: UIAlertControllerStyle.Alert)
                     alert.addAction(UIAlertAction(title: "Yes", style: UIAlertActionStyle.Default, handler: { (action) -> Void in
                         ServerAPI.respondtoMedicalInquiry(id, data: ["active":false], completion: { (result) -> Void in
                             if let error = result["error"] as? String{

@@ -7,12 +7,15 @@
 //
 
 import UIKit
+import FontAwesomeIconFactory
 
 class ZoneCallTableViewCell: UITableViewCell {
 
     @IBOutlet weak var rep: UILabel!
     @IBOutlet weak var time: UILabel!
     @IBOutlet weak var drug: UILabel!
+    @IBOutlet weak var status: NIKFontAwesomeButton!
+    
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code

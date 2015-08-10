@@ -14,7 +14,8 @@ class InquiryDisplayViewController: PandaViewController, UITextViewDelegate {
     @IBOutlet weak var productTitleLabel: UILabel!
     @IBOutlet weak var inquiryTextView: UITextView!
     @IBOutlet weak var responseTextView: UITextView!
-    
+    @IBOutlet weak var scrollView: UIScrollView!
+    @IBOutlet weak var responseLabel: UILabel!
     var inquiry : NSDictionary?
     let responseDefaultText = "Write your response here"
     
@@ -43,9 +44,13 @@ class InquiryDisplayViewController: PandaViewController, UITextViewDelegate {
         let info: NSDictionary = sender.userInfo!
         let value: NSValue = info.valueForKey(UIKeyboardFrameEndUserInfoKey) as! NSValue
         let keyboardSize: CGSize = value.CGRectValue().size
+        let screenHeight = UIScreen.mainScreen().bounds.height
         UIView.animateWithDuration(0.1, animations: { () -> Void in
-            self.view.frame.origin.y  = 0.0 //-(keyboardSize.height )
+            let frame = self.responseTextView.layer.presentationLayer().frame
+            self.view.frame.origin.y  -= max(0,(keyboardSize.height+frame.origin.y+frame.height) - screenHeight)
+            self.scrollView.contentOffset.y = 0
         })
+        
     }
     
     func keyboardWillHide(sender: NSNotification){
@@ -54,6 +59,7 @@ class InquiryDisplayViewController: PandaViewController, UITextViewDelegate {
         let keyboardSize: CGSize = value.CGRectValue().size
         UIView.animateWithDuration(0.1, animations: { () -> Void in
             self.view.frame.origin.y  = 0.0
+            self.scrollView.contentOffset.y = 0
         })
     }
     

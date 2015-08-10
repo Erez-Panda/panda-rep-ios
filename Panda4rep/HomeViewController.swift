@@ -147,6 +147,12 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
             if callee.count > 0 {
                 item["callee"] = callee
             }
+            if let status = calls[index]["status"] as? String{
+                item["status"] = status
+            }
+            if let type = calls[index]["type"] as? String{
+                item["type"] = type
+            }
             timedCalls[index] = item
         }
         
@@ -242,6 +248,23 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
             } else {
                 cell.rep.text = "Unknown user"
             }
+            if let status = call["status"] as? String{
+                cell.status.setTitle(status, forState: UIControlState.Normal)
+                if status == "new" {
+                    cell.status.color = UIColor.grayColor()
+                } else  if status == "accepted" {
+                    cell.status.color = ColorUtils.buttonColor()
+                } else {
+                    cell.status.color = ColorUtils.uicolorFromHex(0xFDB606)
+                }
+            }
+            if let type = call["type"] as? String{
+                if type == "on-demand"{
+                    cell.status.setTitle(type, forState: UIControlState.Normal)
+                    cell.status.color = ColorUtils.buttonColor()
+                }
+            }
+            
         }
         cell.layoutMargins = UIEdgeInsetsZero
         return cell
