@@ -123,7 +123,8 @@ class PreCallViewController: PandaViewController, UITableViewDataSource, UITable
     }
     
     func remoteSideDecliend() {
-        //ViewUtils.showSimpleError("Doctor has declined the call")
+        self.navigationController?.popToRootViewControllerAnimated(true)
+        ViewUtils.showSimpleError("Doctor has declined the call")
     }
     
     func numberOfSectionsInTableView(tableView: UITableView) -> Int{

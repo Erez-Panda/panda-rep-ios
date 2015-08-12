@@ -728,7 +728,7 @@ class CallNewViewController: UIViewController, UIGestureRecognizerDelegate, OTSe
                 }
             } else if type == "decline_call" {
                 CallUtils.remoteSideDeclined()
-                ViewUtils.showSimpleError("Doctor has declined the call")
+                
             }
         }
     }

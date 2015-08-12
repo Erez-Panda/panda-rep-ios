@@ -282,13 +282,15 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
                 cell.status.color = UIColor.grayColor()
             } else  if status == "accepted" {
                 cell.status.color = ColorUtils.buttonColor()
+            } else if status == "declined" {
+                cell.status.color = UIColor.redColor()
             } else {
                 cell.status.color = ColorUtils.uicolorFromHex(0xFDB606)
             }
         }
         if let type = call["type"] as? String{
-            if type == "on demand"{
-                cell.status.setTitle(type, forState: UIControlState.Normal)
+            if type == "on-demand"{
+                cell.status.setTitle("on demand", forState: UIControlState.Normal)
                 cell.status.color = ColorUtils.buttonColor()
             }
         }

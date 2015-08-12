@@ -168,7 +168,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, LoginDelegate, UIAlertVie
         if let canceled = userInfo["canceled_call_id"] as? NSNumber{
             if let topvc = ViewUtils.getTopViewController(){
                 if let pName = userInfo["product_name"] as? String{
-                    let alert = UIAlertController(title: "Call Canceled", message: "A call about \(pName) was canceled", preferredStyle: UIAlertControllerStyle.Alert)
+                    let alert = UIAlertController(title: "Call Cancelled", message: "A call about \(pName) was cancelled", preferredStyle: UIAlertControllerStyle.Alert)
                     alert.addAction(UIAlertAction(title: "Ok", style: UIAlertActionStyle.Default, handler: nil))
                     topvc.presentViewController(alert, animated: true, completion: nil)
                 }
