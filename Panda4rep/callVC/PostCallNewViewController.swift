@@ -29,6 +29,8 @@ class PostCallNewViewController: PandaViewController, FloatRatingViewDelegate, U
     
     @IBOutlet weak var sendFollowupButton: NIKFontAwesomeButton!
     
+    @IBOutlet weak var scrollView: UIScrollView!
+    
     var call: NSDictionary?
     
     var startTime : NSDate?
@@ -37,8 +39,8 @@ class PostCallNewViewController: PandaViewController, FloatRatingViewDelegate, U
     
     var attachments : NSMutableArray = []
     
-    let summaryDefaultText = "Key insights"
-    let nextTimeDefaultText = "Where to start next call"
+    let summaryDefaultText = "please write down a short summary of the call"
+    let nextTimeDefaultText = "please specify what should be discussed on the next call with the doctor"
     
     var updatePostData = false
     
@@ -93,8 +95,20 @@ class PostCallNewViewController: PandaViewController, FloatRatingViewDelegate, U
                 lastName = callee["last_name"] as! String
             }
             callerNameLabel.text =  callerNameLabel.text! + "\(firstName) \(lastName)"
-            
+            self.followupTextView.text = self.followupTextView.text.stringByReplacingOccurrencesOfString("DOCTOR_NAME", withString: "\(lastName)", options: nil, range: nil)
+        } else {
+            self.followupTextView.text = self.followupTextView.text.stringByReplacingOccurrencesOfString("DOCTOR_NAME", withString: "", options: nil, range: nil)
         }
+        let user = StorageUtils.getUserData(StorageUtils.DataType.User)
+        let firstName = user["first_name"] as! String
+        let lastName = user["last_name"] as! String
+        self.followupTextView.text = self.followupTextView.text.stringByReplacingOccurrencesOfString("REP_NAME", withString: "\(firstName) \(lastName)", options: nil, range: nil)
+        if let product = call?["product"] as? NSDictionary{
+            if let name = product["name"] as? String{
+                self.followupTextView.text = self.followupTextView.text.stringByReplacingOccurrencesOfString("PRODUCT_NAME", withString: "\(name)", options: nil, range: nil)
+            }
+        }
+        
 
         // Do any additional setup after loading the view.
         NSNotificationCenter.defaultCenter().addObserver(self, selector: Selector("keyboardWillShown:"), name: UIKeyboardWillShowNotification, object: nil)
@@ -114,6 +128,7 @@ class PostCallNewViewController: PandaViewController, FloatRatingViewDelegate, U
         let borderColor = ColorUtils.uicolorFromHex(0xF1F1F1)
         ViewUtils.bottomBorderView(summaryView, borderWidth: 1.0, borderColor: borderColor, offset: 0)
         ViewUtils.bottomBorderView(nextTimeView, borderWidth: 1.0, borderColor: borderColor, offset: -1.0)
+        ViewUtils.topBorderView(summaryView, borderWidth: 1.0, borderColor: borderColor, offset: 0)
     }
     
     func textViewDidBeginEditing(textView: UITextView) {
@@ -147,7 +162,11 @@ class PostCallNewViewController: PandaViewController, FloatRatingViewDelegate, U
         let value: NSValue = info.valueForKey(UIKeyboardFrameEndUserInfoKey) as! NSValue
         let keyboardSize: CGSize = value.CGRectValue().size
         UIView.animateWithDuration(0.1, animations: { () -> Void in
-            self.view.frame.origin.y  = 0.0 //-(keyboardSize.height )
+            if self.nextTimeTextView.isFirstResponder(){
+                self.scrollView.contentOffset.y  = 200
+            } else if self.followupTextView.isFirstResponder() {
+                self.scrollView.contentOffset.y  = 350
+            }
         })
     }
     
@@ -157,6 +176,7 @@ class PostCallNewViewController: PandaViewController, FloatRatingViewDelegate, U
         let keyboardSize: CGSize = value.CGRectValue().size
         UIView.animateWithDuration(0.1, animations: { () -> Void in
             self.view.frame.origin.y  = 0.0
+            self.scrollView.contentOffset.y = 0
         })
     }
     

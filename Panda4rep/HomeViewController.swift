@@ -21,10 +21,10 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
     }
     
     var selectedCall : NSDictionary?
-    var calls: NSArray = []
-    var filteredCalls : NSArray = []
-    var offers: NSArray = []
-    var filteredOffers : NSArray = []
+    var calls: Array<Dictionary<String,AnyObject>> = []
+    var filteredCalls : Array<Dictionary<String,AnyObject>> = []
+    var offers: Array<Dictionary<String,AnyObject>> = []
+    var filteredOffers : Array<Dictionary<String,AnyObject>> = []
 
     
     @IBOutlet weak var dateSelector: DateSelectorView!
@@ -51,8 +51,7 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
         ServerAPI.getUserCallOffers { (result) -> Void in
             self.offers = self.generateCallOffersArray(result)
             ServerAPI.getUserCalls({ (result) -> Void in
-                self.calls = result
-                self.calls = self.updateStartDate(self.calls)
+                self.calls = self.updateStartDate(result)
                 self.filteredCalls = self.calls
                 dispatch_async(dispatch_get_main_queue()){
                     self.activityIndicator.stopAnimating()
@@ -68,7 +67,12 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
         // Do any additional setup after loading the view.
         
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "callOfferOffered:", name: "CallOfferOffered", object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "callOfferOffered:", name: "CallCreated", object: nil)
         NSNotificationCenter.defaultCenter().postNotification(NSNotification(name: "HomeScreenReady", object: self))
+    }
+    
+    override func viewDidAppear(animated: Bool) {
+        pullRefresh(nil)
     }
     
     func callOfferOffered(notification: NSNotification){
@@ -78,7 +82,6 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
             }
         }
         pullRefresh(nil)
-        
     }
     
     func pullRefresh(sender:AnyObject?){
@@ -86,8 +89,7 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
             self.offers = self.generateCallOffersArray(result)
         
             ServerAPI.getUserCalls({ (result) -> Void in
-                self.calls = result
-                self.calls = self.updateStartDate(self.calls)
+                self.calls = self.updateStartDate(result)
                 self.filteredCalls = self.calls
                 dispatch_async(dispatch_get_main_queue()){
                     self.filterResults(self.selectedDate)
@@ -99,19 +101,45 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
         }
     }
     
+    func updateCallStatus(id: NSNumber, status: String){
+        for index in 0..<calls.count {
+            if calls[index]["id"] as? NSNumber == id {
+                calls[index]["status"] = status
+                self.filterResults(self.selectedDate)
+                return
+            }
+        }
+    }
+    
     func dateSelectorView(dateSelectorView: DateSelectorView, didSelecetDate date: NSDate) {
         selectedDate = date
         filterResults(date)
     }
     
+    func isCallInDay(call: Dictionary<String, AnyObject>, dayStart: NSDate) -> Bool{
+        if let start = call["start"] as? NSDate{
+            let dayEnd = dayStart.dateByAddingTimeInterval(60*60*24)
+            if start.laterDate(dayStart) == start && start.laterDate(dayEnd) == dayEnd{
+                return true
+            }
+            else {
+                return false
+            }
+        }
+        return false
+    }
+    
     func filterResults(date: NSDate){
-
-        let resultPredicate = NSPredicate(format: "start >= %@ AND start <= %@", argumentArray:[date, date.dateByAddingTimeInterval(60*60*24)])
         if calls.count > 0 || offers.count > 0{
-            filteredCalls = self.calls.filteredArrayUsingPredicate(resultPredicate)
-            filteredOffers = self.offers.filteredArrayUsingPredicate(resultPredicate)
+            filteredCalls = self.calls.filter({ (call) -> Bool in
+                return self.isCallInDay(call, dayStart: date)
+            })
+            filteredOffers = self.offers.filter({ (call) -> Bool in
+                return self.isCallInDay(call, dayStart: date)
+            })
+
             if (filteredOffers.count > 0){
-                filteredCalls = filteredCalls.arrayByAddingObjectsFromArray(filteredOffers as [AnyObject])
+                filteredCalls = filteredCalls + filteredOffers
             }
             if (filteredCalls.count == 0){
                 noCallsLabel.hidden = false
@@ -126,41 +154,41 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
         }
     }
     
-    func updateStartDate(arr: NSArray) -> NSArray{
-        var timedCalls : NSMutableArray = []
+    func updateStartDate(arr: NSArray) -> Array<Dictionary<String,AnyObject>>{
+        var timedCalls : Array<Dictionary<String,AnyObject>> = []
         for (var index = 0; index < arr.count; ++index){
-            let time: NSDate  = TimeUtils.serverDateTimeStrToDate(calls[index]["start"] as! String)
-            let endTime: NSDate  = TimeUtils.serverDateTimeStrToDate(calls[index]["end"] as! String)
+            let time: NSDate  = TimeUtils.serverDateTimeStrToDate(arr[index]["start"] as! String)
+            let endTime: NSDate  = TimeUtils.serverDateTimeStrToDate(arr[index]["end"] as! String)
             var callee : NSDictionary = [:]
 
             
-            let product = calls[index]["product"] as! NSDictionary
-            let resources = calls[index]["resources"] as! NSArray
-            let id = calls[index]["id"] as! NSNumber
+            let product = arr[index]["product"] as! NSDictionary
+            let resources = arr[index]["resources"] as! NSArray
+            let id = arr[index]["id"] as! NSNumber
             var item = ["start": time, "product": product, "end": endTime, "id": id, "resources": resources] as Dictionary<String,AnyObject>
-            if let user = calls[index]["callee"] as? NSDictionary {
+            if let user = arr[index]["callee"] as? NSDictionary {
                 callee = user
-            } else if let guest = calls[index]["guest_callee"] as? NSDictionary {
+            } else if let guest = arr[index]["guest_callee"] as? NSDictionary {
                 callee = guest
                 item["guest_callee"] = callee
             }
             if callee.count > 0 {
                 item["callee"] = callee
             }
-            if let status = calls[index]["status"] as? String{
+            if let status = arr[index]["status"] as? String{
                 item["status"] = status
             }
-            if let type = calls[index]["type"] as? String{
+            if let type = arr[index]["type"] as? String{
                 item["type"] = type
             }
-            timedCalls[index] = item
+            timedCalls.append(item)
         }
         
         return timedCalls
     }
     
-    func generateCallOffersArray(arr: NSArray) -> NSArray{
-        var callOffers : NSMutableArray = []
+    func generateCallOffersArray(arr: NSArray) -> Array<Dictionary<String,AnyObject>>{
+        var callOffers : Array<Dictionary<String,AnyObject>> = []
         for (var index = 0; index < arr.count; ++index){
             
             if let callRequest = arr[index]["call_request"] as? NSDictionary {
@@ -183,7 +211,7 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
                     if callee.count > 0 {
                         item["callee"] = callee
                     }
-                    callOffers.addObject(item)
+                    callOffers.append(item)
                 }
             }
         }
@@ -221,70 +249,68 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
     }
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         var cell : ZoneCallTableViewCell = ZoneCallTableViewCell()
-        if let call = filteredCalls[indexPath.row] as? NSDictionary {
-            if let isOffer = call["offer"] as? Bool{
-                cell = tableView.dequeueReusableCellWithIdentifier("acceptCallCell") as! AcceptCallTableViewCell
-                (cell as! AcceptCallTableViewCell).acceptButton.addTarget(self, action: "acceptCall:", forControlEvents: UIControlEvents.TouchUpInside)
-                (cell as! AcceptCallTableViewCell).acceptButton.tag = indexPath.row
-            } else {
-                cell = tableView.dequeueReusableCellWithIdentifier("zoneCallCell") as! ZoneCallTableViewCell
-            }
-            if let product = call["product"] as? NSDictionary{
-                cell.drug.text = product["name"] as? String
-            }
-
-            cell.time.text = TimeUtils.dateToReadableTimeStr(call["start"] as! NSDate)
-            if let callee = call["callee"] as? NSDictionary{
-                var firstName = ""
-                var lastName = ""
-                if let user = callee["user"] as? NSDictionary{
-                    firstName = user["first_name"] as! String
-                    lastName = user["last_name"] as! String
-                } else { // no user == guest
-                    firstName = callee["first_name"] as! String
-                    lastName = callee["last_name"] as! String
-                }
-                cell.rep.text = "Dr. \(lastName)"
-            } else {
-                cell.rep.text = "Unknown user"
-            }
-            if let status = call["status"] as? String{
-                cell.status.setTitle(status, forState: UIControlState.Normal)
-                if status == "new" {
-                    cell.status.color = UIColor.grayColor()
-                } else  if status == "accepted" {
-                    cell.status.color = ColorUtils.buttonColor()
-                } else {
-                    cell.status.color = ColorUtils.uicolorFromHex(0xFDB606)
-                }
-            }
-            if let type = call["type"] as? String{
-                if type == "on-demand"{
-                    cell.status.setTitle(type, forState: UIControlState.Normal)
-                    cell.status.color = ColorUtils.buttonColor()
-                }
-            }
-            
+        let call = filteredCalls[indexPath.row]
+        if let isOffer = call["offer"] as? Bool{
+            cell = tableView.dequeueReusableCellWithIdentifier("acceptCallCell") as! AcceptCallTableViewCell
+            (cell as! AcceptCallTableViewCell).acceptButton.addTarget(self, action: "acceptCall:", forControlEvents: UIControlEvents.TouchUpInside)
+            (cell as! AcceptCallTableViewCell).acceptButton.tag = indexPath.row
+        } else {
+            cell = tableView.dequeueReusableCellWithIdentifier("zoneCallCell") as! ZoneCallTableViewCell
         }
+        if let product = call["product"] as? NSDictionary{
+            cell.drug.text = product["name"] as? String
+        }
+
+        cell.time.text = TimeUtils.dateToReadableTimeStr(call["start"] as! NSDate)
+        if let callee = call["callee"] as? NSDictionary{
+            var firstName = ""
+            var lastName = ""
+            if let user = callee["user"] as? NSDictionary{
+                firstName = user["first_name"] as! String
+                lastName = user["last_name"] as! String
+            } else { // no user == guest
+                firstName = callee["first_name"] as! String
+                lastName = callee["last_name"] as! String
+            }
+            cell.rep.text = "Dr. \(lastName)"
+        } else {
+            cell.rep.text = "Unknown user"
+        }
+        if let status = call["status"] as? String{
+            cell.status.setTitle(status, forState: UIControlState.Normal)
+            if status == "new" {
+                cell.status.color = UIColor.grayColor()
+            } else  if status == "accepted" {
+                cell.status.color = ColorUtils.buttonColor()
+            } else {
+                cell.status.color = ColorUtils.uicolorFromHex(0xFDB606)
+            }
+        }
+        if let type = call["type"] as? String{
+            if type == "on demand"{
+                cell.status.setTitle(type, forState: UIControlState.Normal)
+                cell.status.color = ColorUtils.buttonColor()
+            }
+        }
+    
         cell.layoutMargins = UIEdgeInsetsZero
         return cell
         
     }
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        if let call = filteredCalls[indexPath.row] as? NSDictionary {
-            if let isOffer = call["offer"] as? Bool{
-                return
-            }
-            selectedCall = call
-            
-            if let endTime = call["end"] as? NSDate {
-                let now  = NSDate()
-                if (endTime.compare(now)) == NSComparisonResult.OrderedDescending{
-                    self.performSegueWithIdentifier("showPrecallScreen", sender: self)
-                } else {
-                    self.performSegueWithIdentifier("showPostCallScreen", sender: self)
-                }
+        let call = filteredCalls[indexPath.row]
+        if let isOffer = call["offer"] as? Bool{
+            return
+        }
+        selectedCall = call
+        
+        if let endTime = call["end"] as? NSDate {
+            let now  = NSDate()
+            if (endTime.compare(now)) == NSComparisonResult.OrderedDescending{
+                self.performSegueWithIdentifier("showPrecallScreen", sender: self)
+            } else {
+                self.performSegueWithIdentifier("showPostCallScreen", sender: self)
             }
         }
 
@@ -293,28 +319,29 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
     func openPreCallById(id: NSNumber){
         for call in calls{
             if call["id"] as? NSNumber == id{
-                selectedCall = call as? NSDictionary
+                selectedCall = call
                 self.performSegueWithIdentifier("showPrecallScreen", sender: self)
             }
         }
     }
     
     func acceptCall(sender: UIButton){
-        if let call = filteredCalls[sender.tag] as? NSDictionary {
-            let cell = tableView.cellForRowAtIndexPath(NSIndexPath(forItem: sender.tag, inSection: 0)) as! AcceptCallTableViewCell
-            cell.activity.startAnimating()
-            ViewUtils.slideViewOutToRight(sender)
-            if let id = call["id"] as? NSNumber{
-                ServerAPI.acceptCallOffer(id, completion: {result -> Void in
-                    if let error = result["error"] as? String{
-                        dispatch_async(dispatch_get_main_queue()){
-                            ViewUtils.showSimpleError(error)
-                        }
+        let call = filteredCalls[sender.tag]
+        let cell = tableView.cellForRowAtIndexPath(NSIndexPath(forItem: sender.tag, inSection: 0)) as! AcceptCallTableViewCell
+        cell.activity.startAnimating()
+        ViewUtils.slideViewOutToRight(sender)
+        if let id = call["id"] as? NSNumber{
+            ServerAPI.acceptCallOffer(id, completion: {result -> Void in
+                if let error = result["error"] as? String{
+                    dispatch_async(dispatch_get_main_queue()){
+                        ViewUtils.showSimpleError(error)
                     }
+                }
+                dispatch_async(dispatch_get_main_queue()){
                     cell.activity.stopAnimating()
-                    self.pullRefresh(sender)
-                })
-            }
+                }
+                self.pullRefresh(sender)
+            })
         }
     }
     

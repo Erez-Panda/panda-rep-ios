@@ -99,16 +99,17 @@ struct LoginUtils {
             if (result) {
                 ServerAPI.getUser({result -> Void in
                     if result["type"] as! String == "MEDREP" {
-                            StorageUtils.saveUserData(result)
-                            self.isLoggedIn = true
-                            dispatch_async(dispatch_get_main_queue()){
-                                sender.performSegueWithIdentifier(successSegue, sender: AnyObject?())
-                            }
+                        StorageUtils.saveUserData(result)
+                        self.isLoggedIn = true
+                        dispatch_async(dispatch_get_main_queue()){
+                            sender.performSegueWithIdentifier(successSegue, sender: AnyObject?())
+                        }
+                        completion(result: true)
                     } else {
                         //not a doctor, don't login
                         self.showLoginError()
+                        completion(result: false)
                     }
-                    completion(result: true)
                 })
             }else {
                 self.showLoginError()

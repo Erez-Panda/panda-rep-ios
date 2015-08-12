@@ -16,6 +16,7 @@ class InquiryDisplayViewController: PandaViewController, UITextViewDelegate {
     @IBOutlet weak var responseTextView: UITextView!
     @IBOutlet weak var scrollView: UIScrollView!
     @IBOutlet weak var responseLabel: UILabel!
+    @IBOutlet weak var inquiryLabel: UILabel!
     var inquiry : NSDictionary?
     let responseDefaultText = "Write your response here"
     
@@ -36,6 +37,18 @@ class InquiryDisplayViewController: PandaViewController, UITextViewDelegate {
                 productTitleLabel.text = name
             }
         }
+        
+        if let text = inquiry?["inquiry"] as? String {
+            inquiryTextView.text = text
+        }
+        
+        if let creator = inquiry?["creator"] as? NSDictionary{
+            if let user = creator["user"] as? NSDictionary{
+                if let name = user["last_name"] as? String{
+                    inquiryLabel.text = "Inquiry from Dr. \(name):"
+                }
+            }
+        }
 
         // Do any additional setup after loading the view.
     }
@@ -46,9 +59,11 @@ class InquiryDisplayViewController: PandaViewController, UITextViewDelegate {
         let keyboardSize: CGSize = value.CGRectValue().size
         let screenHeight = UIScreen.mainScreen().bounds.height
         UIView.animateWithDuration(0.1, animations: { () -> Void in
-            let frame = self.responseTextView.layer.presentationLayer().frame
-            self.view.frame.origin.y  -= max(0,(keyboardSize.height+frame.origin.y+frame.height) - screenHeight)
-            self.scrollView.contentOffset.y = 0
+            let frame = self.responseLabel.layer.presentationLayer().frame
+            //self.view.frame.origin.y  -= max(0,(keyboardSize.height+frame.origin.y+frame.height) - screenHeight)
+            if (keyboardSize.height+frame.origin.y+frame.height > screenHeight){
+                self.scrollView.contentOffset.y = frame.origin.y
+            }
         })
         
     }

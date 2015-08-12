@@ -45,7 +45,6 @@ class CreateCallViewController: UIViewController, UITableViewDelegate, UITableVi
         
         datePicker.hidden = true
         datePicker.minimumDate = NSDate()
-        datePicker.minuteInterval = 30
         
         ServerAPI.getAssignedProducts { (result) -> Void in
             self.products = result
@@ -237,6 +236,8 @@ class CreateCallViewController: UIViewController, UITableViewDelegate, UITableVi
                             self.activity.stopAnimating()
                             if let error = result["error"] as? String{
                                 ViewUtils.showSimpleError(error)
+                            } else {
+                                NSNotificationCenter.defaultCenter().postNotification(NSNotification(name: "CallCreated", object: result))
                             }
                             self.cancel(UIButton())
                         }

@@ -8,7 +8,7 @@
 
 var SERVER_URL = "http://livemed.co"
 //var SERVER_URL = "http://127.0.0.1:8000"
-//var SERVER_URL = "http://10.0.0.12:8000"
+//var SERVER_URL = "http://10.0.0.6:8000"
 //var SERVER_URL = "http://172.22.22.117:8000"
 
 @objc protocol LoginDelegate{

@@ -68,6 +68,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate, LoginDelegate, UIAlertVie
                         self.openInquiryScreen(inquiry)
                     }
                 }
+                if let canceled = notificationPayload["canceled_call_id"] as? NSNumber{
+                    self.updateHomeScreen()
+                }
                 
                 
             }
@@ -117,6 +120,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, LoginDelegate, UIAlertVie
         let app = UIApplication.sharedApplication()
         app.applicationIconBadgeNumber = 0
         app.cancelAllLocalNotifications()
+        homeVC?.pullRefresh(nil)
     }
 
     func applicationWillTerminate(application: UIApplication) {
@@ -160,6 +164,22 @@ class AppDelegate: UIResponder, UIApplicationDelegate, LoginDelegate, UIAlertVie
             self.inquiry = userInfo
             self.openInquiryScreen(inquiry)
         }
+        
+        if let canceled = userInfo["canceled_call_id"] as? NSNumber{
+            if let topvc = ViewUtils.getTopViewController(){
+                if let pName = userInfo["product_name"] as? String{
+                    let alert = UIAlertController(title: "Call Canceled", message: "A call about \(pName) was canceled", preferredStyle: UIAlertControllerStyle.Alert)
+                    alert.addAction(UIAlertAction(title: "Ok", style: UIAlertActionStyle.Default, handler: nil))
+                    topvc.presentViewController(alert, animated: true, completion: nil)
+                }
+            }
+            self.updateHomeScreen()
+        }
+        
+        if let callUpdate = userInfo["call_update"] as? NSNumber{
+            self.updateHomeScreen(updatedCall: userInfo)
+        }
+        
         if let type = userInfo["type"] as? String{
             if type == "new_training"{
                 var rootViewController = self.window!.rootViewController
@@ -258,6 +278,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate, LoginDelegate, UIAlertVie
         }
     }
     
+    func updateHomeScreen(updatedCall: NSDictionary? = nil){
+        if let vc = self.homeVC {
+            if let info = updatedCall {
+                vc.updateCallStatus(info["call_update"] as! NSNumber, status: info["status"] as! String)
+            } else {
+                vc.pullRefresh(UIButton())
+            }
+        }
+    }
+    
     func openInquiryScreen(id: NSNumber){
         if let vc = self.homeVC {
             if (CallUtils.session?.sessionConnectionStatus == OTSessionConnectionStatus.NotConnected || CallUtils.session == nil){
@@ -272,14 +302,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate, LoginDelegate, UIAlertVie
                             if var text = inquiry["inquiry_text"] as? String{
                                 text = text.stringByReplacingOccurrencesOfString("\n", withString: " ", options: nil, range: nil)
                                 message = "Dr. \(creator):\n\"\(text)\"\n\n" + message
-                                
                             }
                         }
-                        
                     }
                     let alert = UIAlertController(title: title, message: message, preferredStyle: UIAlertControllerStyle.Alert)
                     alert.addAction(UIAlertAction(title: "Yes", style: UIAlertActionStyle.Default, handler: { (action) -> Void in
+                        ViewUtils.startGlobalLoader()
                         ServerAPI.respondtoMedicalInquiry(id, data: ["active":false], completion: { (result) -> Void in
+                            ViewUtils.stopGlobalLoader()
                             if let error = result["error"] as? String{
                                 dispatch_async(dispatch_get_main_queue()){
                                     ViewUtils.showSimpleError(error)
@@ -295,7 +325,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate, LoginDelegate, UIAlertVie
                         })
                         
                     }))
-                    alert.addAction(UIAlertAction(title: "No", style: UIAlertActionStyle.Default, handler: nil))
+                    alert.addAction(UIAlertAction(title: "No", style: UIAlertActionStyle.Default, handler: { (result) -> Void in
+                        //Decline
+                    }))
                     topvc.presentViewController(alert, animated: true, completion: nil)
                 }
             }
