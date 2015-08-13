@@ -63,7 +63,7 @@ class PreCallViewController: PandaViewController, UITableViewDataSource, UITable
                         }
                         var details = result["details"] as? String
                         if (details == nil){
-                            details = "N/A"
+                            details = ""
                         }
                         dispatch_async(dispatch_get_main_queue()){
                             self.sessionLabel.text = self.sessionLabel.text! + " \(self.sessionNumber!)"

@@ -216,10 +216,14 @@ class PostCallNewViewController: PandaViewController, FloatRatingViewDelegate, U
     
     @IBAction func save(sender: UIButton) {
         if let callId = call?["id"] as? NSNumber{
+            var summaryText = summaryTextView.text
+            if  summaryText == summaryDefaultText {
+                summaryText = ""
+            }
             if updatePostData{
                 let data = ["call":  callId,
                     "rating": self.floatRatingView.rating,
-                    "details": self.summaryTextView.text] as Dictionary<String, AnyObject>
+                    "details": summaryText] as Dictionary<String, AnyObject>
                 ServerAPI.newPostCall(data, completion: { (result) -> Void in
                     //
                 })
@@ -231,7 +235,7 @@ class PostCallNewViewController: PandaViewController, FloatRatingViewDelegate, U
                         if let sNumber = sessionNumber{
                             let data = ["call":  callId,
                                 "rating": self.floatRatingView.rating,
-                                "details": self.summaryTextView.text,
+                                "details": summaryText,
                                 "callLength": callLength,
                                 "start": TimeUtils.dateToServerString(startTime!),
                                 "sessionNumber" : Int(sNumber) + 1] as Dictionary<String, AnyObject>

@@ -1485,22 +1485,22 @@
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Bzl-c2-6r8" userLabel="summary">
-                                        <rect key="frame" x="0.0" y="149" width="600" height="136"/>
+                                        <rect key="frame" x="0.0" y="149" width="600" height="200"/>
                                         <subviews>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Session" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4jt-Vk-psA">
+                                            <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Session" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4jt-Vk-psA">
                                                 <rect key="frame" x="15" y="8" width="61" height="20.5"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                 <color key="textColor" red="0.37254901959999998" green="0.37254901959999998" blue="0.37254901959999998" alpha="1" colorSpace="calibratedRGB"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Summary:" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="J0h-wn-j1p">
-                                                <rect key="frame" x="15" y="36" width="78.5" height="20.5"/>
+                                                <rect key="frame" x="15" y="8" width="78.5" height="20.5"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                 <color key="textColor" red="0.37254901959999998" green="0.37254901959999998" blue="0.37254901959999998" alpha="1" colorSpace="calibratedRGB"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
-                                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" text="summary text" selectable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cZP-LV-lDJ">
-                                                <rect key="frame" x="15" y="64" width="535" height="68"/>
+                                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" selectable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cZP-LV-lDJ">
+                                                <rect key="frame" x="15" y="36" width="535" height="160"/>
                                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
@@ -1513,14 +1513,20 @@
                                             <constraint firstItem="4jt-Vk-psA" firstAttribute="leading" secondItem="Bzl-c2-6r8" secondAttribute="leading" constant="15" id="Oaf-dc-Cg9"/>
                                             <constraint firstItem="cZP-LV-lDJ" firstAttribute="leading" secondItem="J0h-wn-j1p" secondAttribute="leading" id="XBn-ON-nlV"/>
                                             <constraint firstAttribute="trailing" secondItem="cZP-LV-lDJ" secondAttribute="trailing" constant="50" id="ayG-Bg-PaH"/>
+                                            <constraint firstItem="J0h-wn-j1p" firstAttribute="top" secondItem="Bzl-c2-6r8" secondAttribute="top" constant="8" id="l8W-6o-OhU"/>
                                             <constraint firstItem="cZP-LV-lDJ" firstAttribute="top" secondItem="J0h-wn-j1p" secondAttribute="bottom" constant="7.5" id="m2H-sF-v1c"/>
                                             <constraint firstItem="J0h-wn-j1p" firstAttribute="leading" secondItem="4jt-Vk-psA" secondAttribute="leading" id="tJk-2N-i3e"/>
                                             <constraint firstItem="J0h-wn-j1p" firstAttribute="top" secondItem="4jt-Vk-psA" secondAttribute="bottom" constant="7.5" id="vMh-S9-lI4"/>
-                                            <constraint firstAttribute="height" constant="136" id="vzF-v6-OvG"/>
+                                            <constraint firstAttribute="height" constant="200" id="vzF-v6-OvG"/>
                                         </constraints>
+                                        <variation key="default">
+                                            <mask key="constraints">
+                                                <exclude reference="vMh-S9-lI4"/>
+                                            </mask>
+                                        </variation>
                                     </view>
-                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="kvr-Zx-6c8" userLabel="agenda">
-                                        <rect key="frame" x="0.0" y="286" width="600" height="80"/>
+                                    <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="kvr-Zx-6c8" userLabel="agenda">
+                                        <rect key="frame" x="0.0" y="350" width="600" height="0.0"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Agenda:" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ihG-dl-Oa3">
                                                 <rect key="frame" x="18" y="8" width="64" height="20.5"/>
@@ -1532,11 +1538,11 @@
                                         <constraints>
                                             <constraint firstItem="ihG-dl-Oa3" firstAttribute="top" secondItem="kvr-Zx-6c8" secondAttribute="topMargin" id="1sj-kr-759"/>
                                             <constraint firstItem="ihG-dl-Oa3" firstAttribute="leading" secondItem="kvr-Zx-6c8" secondAttribute="leadingMargin" constant="10" id="dNP-Ha-Tdp"/>
-                                            <constraint firstAttribute="height" constant="80" id="q78-25-NcL"/>
+                                            <constraint firstAttribute="height" id="q78-25-NcL"/>
                                         </constraints>
                                     </view>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="fEX-LN-bck" userLabel="attachments">
-                                        <rect key="frame" x="0.0" y="367" width="600" height="200"/>
+                                        <rect key="frame" x="0.0" y="351" width="600" height="200"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Attachments" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="pyQ-DE-XiW">
                                                 <rect key="frame" x="18" y="8" width="97.5" height="20.5"/>
@@ -2530,7 +2536,7 @@
                                                     <constraint firstAttribute="width" constant="300" id="Dbh-7j-ZVt"/>
                                                 </constraints>
                                                 <userDefinedRuntimeAttributes>
-                                                    <userDefinedRuntimeAttribute type="image" keyPath="emptyImage" value="71D44557-4C90-47D4-ABB2-ECF1251515CC"/>
+                                                    <userDefinedRuntimeAttribute type="image" keyPath="emptyImage" value="022075EE-99AC-4C32-BAD5-2C69E92A12A0"/>
                                                     <userDefinedRuntimeAttribute type="number" keyPath="minRating">
                                                         <integer key="value" value="0"/>
                                                     </userDefinedRuntimeAttribute>
@@ -2646,13 +2652,13 @@ PRODUCT_NAME Rep</string>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="GYX-8F-6Li" userLabel="attachments">
                                                 <rect key="frame" x="0.0" y="216" width="595" height="134"/>
                                                 <subviews>
-                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Attachments (these attachment will be added to follow up email and sent to the doctor once you click on “save”)" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="M54-Tj-RFT">
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Attachments (these attachments will be added to the follow up email and sent to the doctor once you click on “save”)" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="M54-Tj-RFT">
                                                         <rect key="frame" x="18" y="8" width="509" height="41"/>
                                                         <fontDescription key="fontDescription" name="OpenSans" family="Open Sans" pointSize="15"/>
                                                         <color key="textColor" red="0.37254901959999998" green="0.37254901959999998" blue="0.37254901959999998" alpha="1" colorSpace="calibratedRGB"/>
                                                         <nil key="highlightedColor"/>
                                                     </label>
-                                                    <tableView clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" allowsSelection="NO" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="lNb-Nz-j9g">
+                                                    <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" allowsSelection="NO" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="lNb-Nz-j9g">
                                                         <rect key="frame" x="0.0" y="57" width="595" height="76.5"/>
                                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                         <prototypes>
@@ -2706,7 +2712,7 @@ PRODUCT_NAME Rep</string>
                                                             <outlet property="delegate" destination="mPd-3V-O8b" id="ITp-at-fKR"/>
                                                         </connections>
                                                     </tableView>
-                                                    <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1tF-4O-kru" customClass="NIKFontAwesomeButton">
+                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1tF-4O-kru" customClass="NIKFontAwesomeButton">
                                                         <rect key="frame" x="535" y="0.0" width="60" height="56.5"/>
                                                         <constraints>
                                                             <constraint firstAttribute="width" constant="60" id="29g-gR-EaR"/>
@@ -3601,7 +3607,7 @@ PRODUCT_NAME Rep</string>
         </scene>
     </scenes>
     <resources>
-        <image name="71D44557-4C90-47D4-ABB2-ECF1251515CC" width="35" height="33">
+        <image name="022075EE-99AC-4C32-BAD5-2C69E92A12A0" width="35" height="33">
             <mutableData key="keyedArchiveRepresentation">
 YnBsaXN0MDDUAQIDBAUGOzxYJHZlcnNpb25YJG9iamVjdHNZJGFyY2hpdmVyVCR0b3ASAAGGoK0HCBEW
 GxwgISksLzU4VSRudWxs1AkKCwwNDg8QViRjbGFzc1xOU0ltYWdlRmxhZ3NWTlNSZXBzV05TQ29sb3KA
