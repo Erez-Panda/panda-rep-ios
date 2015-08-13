@@ -2536,7 +2536,7 @@
                                                     <constraint firstAttribute="width" constant="300" id="Dbh-7j-ZVt"/>
                                                 </constraints>
                                                 <userDefinedRuntimeAttributes>
-                                                    <userDefinedRuntimeAttribute type="image" keyPath="emptyImage" value="022075EE-99AC-4C32-BAD5-2C69E92A12A0"/>
+                                                    <userDefinedRuntimeAttribute type="image" keyPath="emptyImage" value="51E43376-DBA7-47CE-BD6A-1999AE549026"/>
                                                     <userDefinedRuntimeAttribute type="number" keyPath="minRating">
                                                         <integer key="value" value="0"/>
                                                     </userDefinedRuntimeAttribute>
@@ -3607,7 +3607,7 @@ PRODUCT_NAME Rep</string>
         </scene>
     </scenes>
     <resources>
-        <image name="022075EE-99AC-4C32-BAD5-2C69E92A12A0" width="35" height="33">
+        <image name="51E43376-DBA7-47CE-BD6A-1999AE549026" width="35" height="33">
             <mutableData key="keyedArchiveRepresentation">
 YnBsaXN0MDDUAQIDBAUGOzxYJHZlcnNpb25YJG9iamVjdHNZJGFyY2hpdmVyVCR0b3ASAAGGoK0HCBEW
 GxwgISksLzU4VSRudWxs1AkKCwwNDg8QViRjbGFzc1xOU0ltYWdlRmxhZ3NWTlNSZXBzV05TQ29sb3KA

@@ -59,10 +59,9 @@ class InquiryDisplayViewController: PandaViewController, UITextViewDelegate {
         let keyboardSize: CGSize = value.CGRectValue().size
         let screenHeight = UIScreen.mainScreen().bounds.height
         UIView.animateWithDuration(0.1, animations: { () -> Void in
-            let frame = self.responseLabel.layer.presentationLayer().frame
-            //self.view.frame.origin.y  -= max(0,(keyboardSize.height+frame.origin.y+frame.height) - screenHeight)
-            if (keyboardSize.height+frame.origin.y+frame.height > screenHeight){
-                self.scrollView.contentOffset.y = frame.origin.y
+            let frame = self.responseTextView.layer.presentationLayer().frame
+            if (keyboardSize.height+frame.origin.y+frame.height+50 > screenHeight){
+                self.scrollView.contentOffset.y = frame.origin.y - 35
             }
         })
         
