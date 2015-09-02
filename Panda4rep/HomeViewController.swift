@@ -48,17 +48,7 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
         tableView.layoutMargins = UIEdgeInsetsZero
         tableView.separatorInset = UIEdgeInsetsZero
         
-        ServerAPI.getUserCallOffers { (result) -> Void in
-            self.offers = self.generateCallOffersArray(result)
-            ServerAPI.getUserCalls({ (result) -> Void in
-                self.calls = self.updateStartDate(result)
-                self.filteredCalls = self.calls
-                dispatch_async(dispatch_get_main_queue()){
-                    self.activityIndicator.stopAnimating()
-                    self.filterResults(self.selectedDate)
-                }
-            })
-        }
+        updateCallsAndOffers()
         
         self.refreshControl = UIRefreshControl()
         self.refreshControl.attributedTitle = NSAttributedString(string: "Pull to refresh")
@@ -72,7 +62,8 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
     }
     
     override func viewDidAppear(animated: Bool) {
-        pullRefresh(nil)
+        updateCallsAndOffers()
+        dateSelector.selectDate(selectedDate)
     }
     
     func callOfferOffered(notification: NSNotification){
@@ -81,23 +72,52 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
                 selectedDate = NSCalendar.currentCalendar().startOfDayForDate(TimeUtils.serverDateTimeStrToDate(start))
             }
         }
-        pullRefresh(nil)
+        dateSelector.selectDate(selectedDate)
+        updateCallsAndOffers(scrollToLast: true)
     }
     
-    func pullRefresh(sender:AnyObject?){
+    func updateCallsAndOffers(scrollToLast: Bool = false){
         ServerAPI.getUserCallOffers { (result) -> Void in
             self.offers = self.generateCallOffersArray(result)
-        
+            self.updateBadges()
             ServerAPI.getUserCalls({ (result) -> Void in
                 self.calls = self.updateStartDate(result)
                 self.filteredCalls = self.calls
                 dispatch_async(dispatch_get_main_queue()){
                     self.filterResults(self.selectedDate)
                     ViewUtils.stopGlobalLoader()
-                    self.dateSelector.startDate = self.selectedDate
+                    self.activityIndicator.stopAnimating()
+                    //self.dateSelector.startDate = self.selectedDate
                     self.refreshControl.endRefreshing()
+                    if scrollToLast {
+                        self.tableView.scrollToRowAtIndexPath(NSIndexPath(forRow: self.filteredCalls.count-1, inSection: 0), atScrollPosition: UITableViewScrollPosition.Middle, animated: true)
+                    }
                 }
             })
+        }
+    }
+    func pullRefresh(sender:AnyObject?){
+        updateCallsAndOffers()
+    }
+    
+    func updateBadges(){
+        var badges : Dictionary<NSDate, Int> = [:]
+        for offer in offers{
+            if let start = offer["start"] as? NSDate{
+                let day = NSCalendar.currentCalendar().startOfDayForDate(start)
+                if badges[day] == nil {
+                    badges[day] = 1
+                } else {
+                    badges[day]!++
+                }
+                
+            }
+        }
+        for (date, value) in badges {
+            if !date.isEqualToDate(selectedDate) {
+                dateSelector.setBadgeForDate(date, value: value)
+            }
+            
         }
     }
     
@@ -130,6 +150,7 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
     }
     
     func filterResults(date: NSDate){
+        dateSelector.setBadgeForDate(date, value: 0)
         if calls.count > 0 || offers.count > 0{
             filteredCalls = self.calls.filter({ (call) -> Bool in
                 return self.isCallInDay(call, dayStart: date)
@@ -148,6 +169,16 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
                 noCallsLabel.hidden = true
                 //self.tableView.hidden = false
             }
+            filteredCalls.sort({ (call, nextCall) -> Bool in
+                if let start = call["start"] as? NSDate {
+                    if let nextStart = nextCall["start"] as? NSDate {
+                        if start.laterDate(nextStart) == nextStart{
+                            return true
+                        }
+                    }
+                }
+                return false
+            })
             self.tableView.reloadData()
         } else {
             noCallsLabel.hidden = false
@@ -342,7 +373,7 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
                 dispatch_async(dispatch_get_main_queue()){
                     cell.activity.stopAnimating()
                 }
-                self.pullRefresh(sender)
+                self.updateCallsAndOffers()
             })
         }
     }

@@ -53,6 +53,15 @@ class InquiryDisplayViewController: PandaViewController, UITextViewDelegate {
         // Do any additional setup after loading the view.
     }
     
+    override func back() {
+        if let id = inquiry?["id"] as? NSNumber{
+            ServerAPI.respondtoMedicalInquiry(id, data: ["active": true]) { (result) -> Void in
+                super.back()
+            }
+        }
+        
+    }
+    
     func keyboardWillShown(sender: NSNotification){
         let info: NSDictionary = sender.userInfo!
         let value: NSValue = info.valueForKey(UIKeyboardFrameEndUserInfoKey) as! NSValue

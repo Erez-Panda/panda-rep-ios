@@ -17,12 +17,12 @@ class MenuViewController: UIViewController, UITableViewDelegate, UITableViewData
     @IBOutlet weak var containerView: UIView!
     @IBOutlet weak var userNameLabel: UILabel!
     var user: NSDictionary?
-    var menuItems = ["About", "Logout"]
+    var menuItems = ["Inbox", "About", "Logout"]
     //var menuItems = ["Home", "Profile", "Settings", "Support", "About", "Logout"]
     //var subMenuItems = ["Video Calls", "Articles", "Promotional Materials", "Medical Inquiries"]
     //var subMenuImages = ["menu_icon_video_call", "menu_icon_articles", "menu_icon_promotional", "menu_icon_medical_letters"]
     //var menuIcons = ["home_icon", "profile_icon", "settings_icon", "support_icon" ,"about_icon","logout_icon"]
-    var menuIcons = ["about_icon","logout_icon"]
+    var menuIcons = ["menu_icon_medical_letters", "about_icon","logout_icon"]
     var menuOpen = false
     var tableCellNumber = 0
     var selectedIndex: Int?
@@ -171,6 +171,8 @@ class MenuViewController: UIViewController, UITableViewDelegate, UITableViewData
         }
 */
         if (index == 0){
+            closeMenuAndShowViewController("inboxViewController")
+        } else if (index == 1){
             let nsObject: AnyObject? = NSBundle.mainBundle().infoDictionary!["CFBundleShortVersionString"]
             let version = nsObject as! String
             var alert = UIAlertView()
@@ -178,7 +180,7 @@ class MenuViewController: UIViewController, UITableViewDelegate, UITableViewData
             alert.message = "Version: \(version)"
             alert.addButtonWithTitle("Ok")
             alert.show()
-        } else if (index == 1){
+        } else if (index == 2){
             ServerAPI.loginout({result -> Void in
                 StorageUtils.cleanUserData()
                 let vc = self.storyboard?.instantiateViewControllerWithIdentifier("LoginViewController") as! LoginViewController

@@ -53,6 +53,7 @@ class CallNewViewController: UIViewController, UIGestureRecognizerDelegate, OTSe
     var showIncoming = true
     
     var resources: NSArray?
+    var videoResources: NSArray?
     var selectedResIndex = 0
     var displayResources: NSArray?
     var currentImageIndex = 0
@@ -63,8 +64,10 @@ class CallNewViewController: UIViewController, UIGestureRecognizerDelegate, OTSe
     
     var firstTime = true
     var drawingMode = false
-    var preLoadedImages: Array<UIImage?>?
-    var preLoadedImagesUrl: Array<String?>?
+    var preLoadedImages: Array<Array<UIImage?>?>?
+    var preLoadedImagesUrl: Array<Array<String?>?>?
+    var isChangingPresentation = false
+    var showNextSlide = false
     
 
     @IBOutlet weak var drawingView: LinearInterpView!
@@ -79,6 +82,10 @@ class CallNewViewController: UIViewController, UIGestureRecognizerDelegate, OTSe
             longTapReco.cancelsTouchesInView = false
             self.view.addGestureRecognizer(longTapReco)
             scrollView.parent = self
+            var resultPredicate = NSPredicate(format: "type == %d", 2)
+            videoResources = resources?.filteredArrayUsingPredicate(resultPredicate)
+            resultPredicate = NSPredicate(format: "type == %d", 1)
+            resources = resources?.filteredArrayUsingPredicate(resultPredicate)
         }
         
         // Do any additional setup after loading the view.
@@ -121,6 +128,8 @@ class CallNewViewController: UIViewController, UIGestureRecognizerDelegate, OTSe
             if let data = NSData(contentsOfURL: url!){
                 dispatch_async(dispatch_get_main_queue()){
                     self.presentaionImage?.image = UIImage(data: data)
+                    self.isChangingPresentation = false
+                    self.activity.stopAnimating()
                 }
             }
             var maybeError : OTError?
@@ -129,47 +138,58 @@ class CallNewViewController: UIViewController, UIGestureRecognizerDelegate, OTSe
     }
     
     func changeDisplayResource(index: Int) {
-        if self.resources?.count > 0{
-            if let resource = self.resources?[index] as? NSDictionary{
-                if (resource["type"] as! NSNumber == 1){
-                    if let resourceId = resource["id"] as? NSNumber {
-                        ServerAPI.getResourceDisplay(resourceId, completion: { (result) -> Void in
-                            self.displayResources = result
-                            if let dispRes = self.displayResources?[0] as? NSDictionary{
-                                self.loadImage(dispRes["id"] as! NSNumber)
+        if preLoadedImages?[index] == nil{
+            if !isChangingPresentation{
+                if self.resources?.count > 0{
+                    if let resource = self.resources?[index] as? NSDictionary{
+                        if (resource["type"] as! NSNumber == 1){
+                            if let resourceId = resource["id"] as? NSNumber {
+                                isChangingPresentation = true
+                                activity.startAnimating()
+                                ServerAPI.getResourceDisplay(resourceId, completion: { (result) -> Void in
+                                    self.displayResources = result
+                                    if let dispRes = self.displayResources?[0] as? NSDictionary{
+                                        self.loadImage(dispRes["id"] as! NSNumber)
+                                    }
+                                    self.preLoadDisplayResources()
+                                })
                             }
-                            self.preLoadDisplayResources()
-                            
-                        })
+                        }
                     }
                 }
             }
+        } else {
+            self.next(UISwipeGestureRecognizer())
         }
     }
     
-    func getDataFromUrl(urL:NSURL, completion: ((data: NSData?) -> Void)) {
-        NSURLSession.sharedSession().dataTaskWithURL(urL) { (data, response, error) in
+    func getDataFromUrl(url:NSURL, completion: ((data: NSData?) -> Void)) {
+        NSURLSession.sharedSession().dataTaskWithURL(url) { (data, response, error) in
             completion(data: data)
             }.resume()
     }
     
     func preLoadImage(imageFile: NSNumber, index: Int){
         ServerAPI.getFileUrl(imageFile, completion: { (result) -> Void in
+            let scopeIndex = index
+            let scopeSelectedResIndex = self.selectedResIndex
             self.currentImageUrl = result as String
             let url = NSURL(string: result as String)
             
             var maybeError : OTError?
             CallUtils.session?.signalWithType("preload_res", string: result as String, connection: nil, error: &maybeError)
-            
-            self.getDataFromUrl(url!) { data in
-                self.preLoadedImages?[index] = UIImage(data: data!)
-                self.preLoadedImagesUrl?[index] = result as String
-                dispatch_async(dispatch_get_main_queue()){
-                    if !self.activity.hidden {
-                        self.activity.stopAnimating()
-                        self.next(UISwipeGestureRecognizer())
+            if url != nil {
+                self.getDataFromUrl(url!) { data in
+                    self.preLoadedImages?[scopeSelectedResIndex]?[scopeIndex] = UIImage(data: data!)
+                    self.preLoadedImagesUrl?[scopeSelectedResIndex]?[scopeIndex] = result as String
+                    dispatch_async(dispatch_get_main_queue()){
+                        if self.showNextSlide {
+                            self.activity.stopAnimating()
+                            self.showNextSlide = false
+                            self.next(UISwipeGestureRecognizer())
+                        }
+                        
                     }
-                    
                 }
             }
         })
@@ -177,11 +197,21 @@ class CallNewViewController: UIViewController, UIGestureRecognizerDelegate, OTSe
     
     func preLoadDisplayResources(){
         if let resources = displayResources {
-            preLoadedImages = [UIImage?](count:resources.count, repeatedValue: nil)
-            preLoadedImagesUrl = [String?](count:resources.count, repeatedValue: nil)
-            for index in 0..<resources.count {
-                if let dispRes = resources[index] as? NSDictionary{
-                    self.preLoadImage(dispRes["id"] as! NSNumber, index: index)
+            if let allResources = self.resources {
+                if preLoadedImages == nil {
+                    preLoadedImages = [Array<UIImage?>?](count:allResources.count, repeatedValue: nil)
+                }
+                if preLoadedImagesUrl == nil {
+                    preLoadedImagesUrl = [Array<String?>?](count:allResources.count, repeatedValue: nil)
+                }
+                if preLoadedImages?[selectedResIndex] == nil {
+                    preLoadedImages?[selectedResIndex] = [UIImage?](count:resources.count, repeatedValue: nil)
+                    preLoadedImagesUrl?[selectedResIndex] = [String?](count:resources.count, repeatedValue: nil)
+                    for index in 0..<resources.count {
+                        if let dispRes = resources[index] as? NSDictionary{
+                            self.preLoadImage(dispRes["id"] as! NSNumber, index: index)
+                        }
+                    }
                 }
             }
         }
@@ -192,15 +222,16 @@ class CallNewViewController: UIViewController, UIGestureRecognizerDelegate, OTSe
         if (currentImageIndex+1 == self.displayResources?.count){
             return
         }
-        if let image = preLoadedImages?[currentImageIndex+1]{
+        if let image = preLoadedImages?[selectedResIndex]?[currentImageIndex+1]{
             currentImageIndex++
             self.presentaionImage?.image = image
             
-            if let urlStr = preLoadedImagesUrl?[currentImageIndex]{
+            if let urlStr = preLoadedImagesUrl?[selectedResIndex]?[currentImageIndex]{
                 var maybeError : OTError?
                 CallUtils.session?.signalWithType("load_res", string: urlStr, connection: nil, error: &maybeError)
             }
         } else {
+            showNextSlide = true
             activity.startAnimating()
         }
         /*else if let dispRes = displayResources?[currentImageIndex] as? NSDictionary{
@@ -216,11 +247,11 @@ class CallNewViewController: UIViewController, UIGestureRecognizerDelegate, OTSe
             return
         }
         
-        if let image = preLoadedImages?[currentImageIndex-1]{
+        if let image = preLoadedImages?[selectedResIndex]?[currentImageIndex-1]{
             currentImageIndex--
             self.presentaionImage?.image = image
             
-            if let urlStr = preLoadedImagesUrl?[currentImageIndex]{
+            if let urlStr = preLoadedImagesUrl?[selectedResIndex]?[currentImageIndex]{
                 var maybeError : OTError?
                 CallUtils.session?.signalWithType("load_res", string: urlStr, connection: nil, error: &maybeError)
             }
@@ -232,20 +263,28 @@ class CallNewViewController: UIViewController, UIGestureRecognizerDelegate, OTSe
     }
     
     func up(sender: UISwipeGestureRecognizer) {
+        let old = selectedResIndex
         if self.isDragging || self.drawingMode {return}
         if (selectedResIndex+1 >= self.resources?.count){
             selectedResIndex = -1
         }
         selectedResIndex++
-        changeDisplayResource(selectedResIndex)
+        if old != selectedResIndex{
+            currentImageIndex = -1
+            changeDisplayResource(selectedResIndex)
+        }
     }
     func down(sender: UISwipeGestureRecognizer) {
+        let old = selectedResIndex
         if self.isDragging || self.drawingMode {return}
         if selectedResIndex <= 0{
             selectedResIndex = self.resources!.count
         }
         selectedResIndex--
-        changeDisplayResource(selectedResIndex)
+        if old != selectedResIndex{
+            currentImageIndex = -1
+            changeDisplayResource(selectedResIndex)
+        }
     }
     
     func longTap(sender: UILongPressGestureRecognizer){
@@ -616,9 +655,7 @@ class CallNewViewController: UIViewController, UIGestureRecognizerDelegate, OTSe
         } else if (segue.identifier == "presentVideoResources"){
             var svc = segue.destinationViewController as! VideoResourceViewController
             svc.parentVC = self
-            let resultPredicate = NSPredicate(format: "type == %d", 2)
-            var callVideos = resources
-            svc.videoDocuments = callVideos?.filteredArrayUsingPredicate(resultPredicate)
+            svc.videoDocuments = videoResources
         }
         
         
@@ -721,8 +758,8 @@ class CallNewViewController: UIViewController, UIGestureRecognizerDelegate, OTSe
                 var maybeError : OTError?
                 CallUtils.session?.signalWithType("load_res", string: self.currentImageUrl, connection: nil, error: &maybeError)
                 
-                if preLoadedImagesUrl != nil {
-                    for url in self.preLoadedImagesUrl! {
+                if preLoadedImagesUrl?[selectedResIndex] != nil {
+                    for url in self.preLoadedImagesUrl![selectedResIndex]! {
                         CallUtils.session?.signalWithType("preload_res", string: url, connection: nil, error: &maybeError)
                     }
                 }

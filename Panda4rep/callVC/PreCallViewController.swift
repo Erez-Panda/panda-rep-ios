@@ -61,7 +61,7 @@ class PreCallViewController: PandaViewController, UITableViewDataSource, UITable
                         if (self.sessionNumber == nil){
                             self.sessionNumber = 0
                         }
-                        var details = result["details"] as? String
+                        var details = result["next_call_text"] as? String
                         if (details == nil){
                             details = ""
                         }

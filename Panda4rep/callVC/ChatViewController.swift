@@ -15,7 +15,7 @@ class ChatViewController: UIViewController, UITextFieldDelegate {
     var lastChatBox: UIView?
     var bottomConstraint: NSLayoutConstraint?
 
-
+    @IBOutlet weak var sendButton: UIButton!
     @IBOutlet weak var scrollView: UIScrollView!
     @IBOutlet weak var chatText: UITextField!
     
@@ -32,12 +32,17 @@ class ChatViewController: UIViewController, UITextFieldDelegate {
         NSNotificationCenter.defaultCenter().addObserver(self, selector: Selector("keyboardWillHide:"), name: UIKeyboardWillHideNotification, object: nil)
         
         
-        UIEventRegister.tapRecognizer(self, action: "closeKeyboard")
+        UIEventRegister.tapRecognizer(self, action: "closeKeyboard:")
         // Do any additional setup after loading the view.
     }
     
-    func closeKeyboard(){
-        chatText.resignFirstResponder()
+    func closeKeyboard(tap: UITapGestureRecognizer){
+        let location = tap.locationInView(self.view)
+        if CGRectContainsPoint(sendButton.frame, location){
+            sendMessage(tap)
+        } else {
+            chatText.resignFirstResponder()
+        }
     }
 
     @IBAction func close(sender: AnyObject) {
@@ -76,7 +81,7 @@ class ChatViewController: UIViewController, UITextFieldDelegate {
         let screenSize: CGRect = UIScreen.mainScreen().bounds
 
         if (lastChatBox == nil){
-            ViewUtils.addConstraintsToSuper(chatBox, superView: scrollView, top: 150.0, left: nil , bottom: nil, right: nil)
+            ViewUtils.addConstraintsToSuper(chatBox, superView: scrollView, top: screenSize.height/2, left: nil , bottom: nil, right: nil)
         } else {
             let vConst = NSLayoutConstraint(item: chatBox, attribute: NSLayoutAttribute.Top, relatedBy: NSLayoutRelation.Equal, toItem: lastChatBox, attribute: NSLayoutAttribute.Bottom, multiplier: 1, constant: 10.0)
             scrollView.addConstraint(vConst)
@@ -84,9 +89,6 @@ class ChatViewController: UIViewController, UITextFieldDelegate {
         
         ViewUtils.addConstraintsToSuper(chatBox, superView: scrollView, top: nil, left: isSelf ? screenSize.width-chatBox.frame.width : 20 , bottom: nil, right: nil)
 
-        
-        
-        
         lastChatBox = chatBox
         
         if let bc = bottomConstraint {

@@ -13,6 +13,8 @@ class MedicalInquiryTableViewCell: UITableViewCell {
     @IBOutlet weak var button: UIButton!
     @IBOutlet weak var time: UILabel!
     @IBOutlet weak var drug: UILabel!
+    @IBOutlet weak var doctor: UILabel!
+    
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code

@@ -223,13 +223,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate, LoginDelegate, UIAlertVie
         var readableTime = TimeUtils.dateToReadableStr(date)
         var acceptCallAlert = UIAlertViewWithData()
         acceptCallAlert.title = "New Call Offer"
-        acceptCallAlert.message = "Call about \(product) will take place on \(readableTime), Would you like to accept it?"
+        if let creator = userInfo["creator_name"] as? String{
+            acceptCallAlert.message = "\(creator) has requested a call about \(product) on \(readableTime).\nWould you like to accept it?"
+        } else {
+            acceptCallAlert.message = "Call about \(product) will take place on \(readableTime), Would you like to accept it?"
+        }
         if let reschedule = userInfo["reschedule"] as? Bool{
             if reschedule {
                 acceptCallAlert.title = "Call Reschedule Offer"
-                acceptCallAlert.message = "Call about \(product) will take place on \(readableTime), Would you like to accept it?"
             }
         }
+        
         acceptCallAlert.addButtonWithTitle("Accept")
         acceptCallAlert.addButtonWithTitle("Cancel")
         acceptCallAlert.delegate = self

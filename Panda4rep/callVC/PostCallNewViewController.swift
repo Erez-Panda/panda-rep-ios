@@ -78,6 +78,12 @@ class PostCallNewViewController: PandaViewController, FloatRatingViewDelegate, U
                                     self.summaryTextView.textColor = UIColor.blackColor()
                                 }
                             }
+                            if let next = result["next_call_text"] as? String{
+                                if count(next) > 0 {
+                                    self.nextTimeTextView.text = next
+                                    self.nextTimeTextView.textColor = UIColor.blackColor()
+                                }
+                            }
                         }
                     }
                 })
@@ -121,6 +127,18 @@ class PostCallNewViewController: PandaViewController, FloatRatingViewDelegate, U
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
+    }
+    
+    override func viewWillAppear(animated: Bool) {
+        switch UIDevice.currentDevice().orientation{
+        case .Portrait:
+            //Fixing strange keybord layout bug
+            UIDevice.currentDevice().setValue(UIDeviceOrientation.LandscapeLeft.rawValue, forKey: "orientation")
+            UIDevice.currentDevice().setValue(UIDeviceOrientation.Portrait.rawValue, forKey: "orientation")
+            break
+        default:
+            break
+        }
     }
     
     override func viewDidLayoutSubviews() {
@@ -220,9 +238,14 @@ class PostCallNewViewController: PandaViewController, FloatRatingViewDelegate, U
             if  summaryText == summaryDefaultText {
                 summaryText = ""
             }
+            var nextCallText = nextTimeTextView.text
+            if  nextCallText == nextTimeDefaultText {
+                nextCallText = ""
+            }
             if updatePostData{
                 let data = ["call":  callId,
                     "rating": self.floatRatingView.rating,
+                    "next_call_text" :nextCallText,
                     "details": summaryText] as Dictionary<String, AnyObject>
                 ServerAPI.newPostCall(data, completion: { (result) -> Void in
                     //
@@ -231,11 +254,12 @@ class PostCallNewViewController: PandaViewController, FloatRatingViewDelegate, U
             } else {
                 if let end = endTime {
                     if let start = startTime{
-                        let callLength = (end.timeIntervalSince1970 - start.timeIntervalSince1970) * 1000 //to milisec
+                        let callLength = Int((end.timeIntervalSince1970 - start.timeIntervalSince1970) * 1000) //to milisec
                         if let sNumber = sessionNumber{
                             let data = ["call":  callId,
                                 "rating": self.floatRatingView.rating,
                                 "details": summaryText,
+                                "next_call_text" :nextCallText,
                                 "callLength": callLength,
                                 "start": TimeUtils.dateToServerString(startTime!),
                                 "sessionNumber" : Int(sNumber) + 1] as Dictionary<String, AnyObject>

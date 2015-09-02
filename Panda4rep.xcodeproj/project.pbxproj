@@ -78,6 +78,7 @@
 		A822CBF91AE9D70A00CE8CD9 /* ProfileUIViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A822CBF21AE9D70A00CE8CD9 /* ProfileUIViewController.swift */; };
 		A822CBFA1AE9D70A00CE8CD9 /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A822CBF31AE9D70A00CE8CD9 /* SettingsViewController.swift */; };
 		A822CBFB1AE9D70A00CE8CD9 /* SupportViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A822CBF41AE9D70A00CE8CD9 /* SupportViewController.swift */; };
+		A82E95DE1B8B4B6500BE6C7C /* InboxViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A82E95DD1B8B4B6500BE6C7C /* InboxViewController.swift */; };
 		A85AE7641AF0701700B537D4 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = A85AE7621AF0701700B537D4 /* LaunchScreen.xib */; };
 		A87D64C51B650C7C0047EF9D /* ring.caf in Resources */ = {isa = PBXBuildFile; fileRef = A87D64C41B650C7C0047EF9D /* ring.caf */; };
 		A87D64C71B679FE50047EF9D /* TouchUIScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A87D64C61B679FE50047EF9D /* TouchUIScrollView.swift */; };
@@ -197,6 +198,7 @@
 		A822CBF21AE9D70A00CE8CD9 /* ProfileUIViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ProfileUIViewController.swift; path = "menu&menu-itemsVC/ProfileUIViewController.swift"; sourceTree = "<group>"; };
 		A822CBF31AE9D70A00CE8CD9 /* SettingsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SettingsViewController.swift; path = "menu&menu-itemsVC/SettingsViewController.swift"; sourceTree = "<group>"; };
 		A822CBF41AE9D70A00CE8CD9 /* SupportViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SupportViewController.swift; path = "menu&menu-itemsVC/SupportViewController.swift"; sourceTree = "<group>"; };
+		A82E95DD1B8B4B6500BE6C7C /* InboxViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InboxViewController.swift; sourceTree = "<group>"; };
 		A85AE7631AF0701700B537D4 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
 		A87D64C41B650C7C0047EF9D /* ring.caf */ = {isa = PBXFileReference; lastKnownFileType = file; name = ring.caf; path = resources/ring.caf; sourceTree = "<group>"; };
 		A87D64C61B679FE50047EF9D /* TouchUIScrollView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TouchUIScrollView.swift; path = UIExtensions/TouchUIScrollView.swift; sourceTree = "<group>"; };
@@ -452,6 +454,7 @@
 				A822CB991AE9BDD800CE8CD9 /* UIEventRegister.swift */,
 				BA226D4D1A404D9D00059267 /* Supporting Files */,
 				A822CB5A1AE99F3900CE8CD9 /* universal.storyboard */,
+				A82E95DD1B8B4B6500BE6C7C /* InboxViewController.swift */,
 				A822CBEA1AE9D48000CE8CD9 /* HomeViewController.swift */,
 				A8E0DF6F1AF85CA10014CE59 /* DashboardViewController.swift */,
 				A8D7DAE21AFD8F0E008E2D29 /* LinearInterpView.swift */,
@@ -670,6 +673,7 @@
 				A822CBC91AE9D06700CE8CD9 /* TableViewCellWithButtonAndTitle.swift in Sources */,
 				A822CBA11AE9BDD800CE8CD9 /* TimeUtils.swift in Sources */,
 				A822CBF81AE9D70A00CE8CD9 /* MenuViewController.swift in Sources */,
+				A82E95DE1B8B4B6500BE6C7C /* InboxViewController.swift in Sources */,
 				A822CB8A1AE9BD6700CE8CD9 /* TrainingViewController.swift in Sources */,
 				A8DD82EC1AF00AE70098B8C6 /* PostCallNewViewController.swift in Sources */,
 				A8D7DAE91B040CD0008E2D29 /* MPGTextField-Swift.swift in Sources */,
