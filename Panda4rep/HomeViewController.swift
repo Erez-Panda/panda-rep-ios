@@ -263,6 +263,11 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
         if (segue.identifier == "showPostCallScreen"){
             var svc = segue.destinationViewController as! PostCallNewViewController
             svc.call = self.selectedCall
+            if let callVC = sender as? CallNewViewController{
+                svc.startTime = callVC.callStartTime
+                svc.endTime = NSDate()
+                svc.sessionNumber = callVC.sessionNumber
+            }
         }
         if (segue.identifier == "presentCreateCall"){
             var svc = segue.destinationViewController as! CreateCallViewController

@@ -6,11 +6,11 @@
 //  Copyright (c) 2014 Erez. All rights reserved.
 //
 
-//var SERVER_URL = "http://livemed.co"
+var SERVER_URL = "http://livemed.co"
 //var SERVER_URL = "http://127.0.0.1:8000"
 //var SERVER_URL = "http://10.0.0.6:8000"
 //var SERVER_URL = "http://172.22.22.117:8000"
-var SERVER_URL = "http://192.168.1.204:8000"
+//var SERVER_URL = "http://192.168.1.244:8000"
 
 import AFNetworking
 

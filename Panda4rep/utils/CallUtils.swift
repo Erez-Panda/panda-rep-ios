@@ -34,7 +34,7 @@ struct CallUtils{
     static var callViewController: UIViewController?
     static var incomingViewController : UIViewController?
 //    static var upcomingViewController : UpcomingCallViewController?
-    static var rootViewController: UIViewController?
+    static var rootViewController: HomeViewController?
     static var fakeStream: OTStream?
     static var isFakeCall = false
     static var currentCall: NSDictionary?

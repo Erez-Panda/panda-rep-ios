@@ -147,7 +147,11 @@ class CallNewViewController: UIViewController, UIGestureRecognizerDelegate, OTSe
                                 isChangingPresentation = true
                                 activity.startAnimating()
                                 ServerAPI.getResourceDisplay(resourceId, completion: { (result) -> Void in
-                                    self.displayResources = result
+                                    if result.count > 0 {
+                                        self.displayResources = result
+                                    } else {
+                                        self.displayResources = nil
+                                    }
                                     if let dispRes = self.displayResources?[0] as? NSDictionary{
                                         self.loadImage(dispRes["id"] as! NSNumber)
                                     }
@@ -367,7 +371,10 @@ class CallNewViewController: UIViewController, UIGestureRecognizerDelegate, OTSe
     
     
     @IBAction func endCall(sender: AnyObject) {
-        self.performSegueWithIdentifier("showPostCall", sender: AnyObject?())
+        //self.performSegueWithIdentifier("showPostCall", sender: AnyObject?())
+        dismissViewControllerAnimated(false, completion: nil)
+        CallUtils.rootViewController?.selectedCall = nil
+        CallUtils.rootViewController?.performSegueWithIdentifier("showPostCallScreen", sender: self)
         CallUtils.stopArchive()
         CallUtils.stopCall()
     }

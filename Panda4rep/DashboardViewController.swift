@@ -51,15 +51,7 @@ class DashboardViewController: PandaViewController {
             ServerAPI.getUserCallsInTimeFrame(now.dateByAddingTimeInterval(-30*24*60*60), end: now) { (result) -> Void in
                 self.calls = result
                 dispatch_async(dispatch_get_main_queue()){
-                    self.plotPieChart(self.planedCallsChartView,
-                        items: [PNPieChartDataItem(value: CGFloat(self.postCalls.count), color:  ColorUtils.buttonColor(), description:"Delivered"),
-                            PNPieChartDataItem(value: CGFloat(max(self.calls.count-self.postCalls.count, 0)), color: UIColor.lightGrayColor())],
-                        absoluteValue: false)
-                    let onDemandCount = self.onDemandCalls(self.postCalls, calls: self.calls)
-                    self.plotPieChart(self.onDemandPushChartView,
-                        items: [PNPieChartDataItem(value: CGFloat(onDemandCount), color: ColorUtils.buttonColor() , description:"On Demand"),
-                            PNPieChartDataItem(value: CGFloat(self.postCalls.count-onDemandCount), color: UIColor.lightGrayColor(), description:"Push")],
-                        absoluteValue: false)
+                    self.plotCharts()
                 }
             }
             dispatch_async(dispatch_get_main_queue()){
@@ -79,10 +71,12 @@ class DashboardViewController: PandaViewController {
                 }
             }
         }
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "rotated", name: UIDeviceOrientationDidChangeNotification, object: nil)
         
 
         // Do any additional setup after loading the view.
     }
+    
     
     func averageRating(postCalls: NSArray) -> Double{
         var totalRating = 0
@@ -171,6 +165,28 @@ class DashboardViewController: PandaViewController {
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
+    }
+    
+    func plotCharts(){
+        for view in planedCallsChartView.subviews {
+            view.removeFromSuperview()
+        }
+        for view in onDemandPushChartView.subviews {
+            view.removeFromSuperview()
+        }
+        self.plotPieChart(self.planedCallsChartView,
+            items: [PNPieChartDataItem(value: CGFloat(self.postCalls.count), color:  ColorUtils.buttonColor(), description:"Delivered"),
+                PNPieChartDataItem(value: CGFloat(max(self.calls.count-self.postCalls.count, 0)), color: UIColor.lightGrayColor())],
+            absoluteValue: false)
+        let onDemandCount = self.onDemandCalls(self.postCalls, calls: self.calls)
+        self.plotPieChart(self.onDemandPushChartView,
+            items: [PNPieChartDataItem(value: CGFloat(onDemandCount), color: ColorUtils.buttonColor() , description:"On Demand"),
+                PNPieChartDataItem(value: CGFloat(self.postCalls.count-onDemandCount), color: UIColor.lightGrayColor(), description:"Push")],
+            absoluteValue: false)
+    }
+    
+    func rotated(){
+        plotCharts()
     }
     
 

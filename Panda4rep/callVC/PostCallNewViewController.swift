@@ -133,8 +133,8 @@ class PostCallNewViewController: PandaViewController, FloatRatingViewDelegate, U
         switch UIDevice.currentDevice().orientation{
         case .Portrait:
             //Fixing strange keybord layout bug
-            UIDevice.currentDevice().setValue(UIDeviceOrientation.LandscapeLeft.rawValue, forKey: "orientation")
-            UIDevice.currentDevice().setValue(UIDeviceOrientation.Portrait.rawValue, forKey: "orientation")
+            //UIDevice.currentDevice().setValue(UIDeviceOrientation.LandscapeLeft.rawValue, forKey: "orientation")
+            //UIDevice.currentDevice().setValue(UIDeviceOrientation.Portrait.rawValue, forKey: "orientation")
             break
         default:
             break
@@ -269,9 +269,7 @@ class PostCallNewViewController: PandaViewController, FloatRatingViewDelegate, U
                         }
                     }
                 }
-                CallUtils.getCallViewController()?.presentingViewController?.dismissViewControllerAnimated(true, completion: { () -> Void in
-                    CallUtils.callViewController = nil
-                })
+                self.navigationController?.popViewControllerAnimated(true)
             }
             if sendFollowupButton.selected {
                 let data = ["text":  self.followupTextView.text,
