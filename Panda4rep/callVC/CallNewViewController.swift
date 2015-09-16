@@ -68,6 +68,7 @@ class CallNewViewController: UIViewController, UIGestureRecognizerDelegate, OTSe
     var preLoadedImagesUrl: Array<Array<String?>?>?
     var isChangingPresentation = false
     var showNextSlide = false
+    var remoteSignatureView : PassiveLinearInterpView?
     
 
     @IBOutlet weak var drawingView: LinearInterpView!
@@ -146,6 +147,7 @@ class CallNewViewController: UIViewController, UIGestureRecognizerDelegate, OTSe
                             if let resourceId = resource["id"] as? NSNumber {
                                 isChangingPresentation = true
                                 activity.startAnimating()
+                                remoteSignatureView?.removeFromSuperview()
                                 ServerAPI.getResourceDisplay(resourceId, completion: { (result) -> Void in
                                     if result.count > 0 {
                                         self.displayResources = result
@@ -227,6 +229,7 @@ class CallNewViewController: UIViewController, UIGestureRecognizerDelegate, OTSe
             return
         }
         if let image = preLoadedImages?[selectedResIndex]?[currentImageIndex+1]{
+            remoteSignatureView?.removeFromSuperview()
             currentImageIndex++
             self.presentaionImage?.image = image
             
@@ -252,6 +255,7 @@ class CallNewViewController: UIViewController, UIGestureRecognizerDelegate, OTSe
         }
         
         if let image = preLoadedImages?[selectedResIndex]?[currentImageIndex-1]{
+            remoteSignatureView?.removeFromSuperview()
             currentImageIndex--
             self.presentaionImage?.image = image
             
@@ -773,8 +777,52 @@ class CallNewViewController: UIViewController, UIGestureRecognizerDelegate, OTSe
             } else if type == "decline_call" {
                 CallUtils.remoteSideDeclined()
                 
+            } else if type == "signature_points"{
+                let data = getKeyVals(string)
+                let screen =  UIScreen.mainScreen().bounds
+                let zoom = CGFloat((data!["zoom"] as NSString?)!.floatValue)
+                let x = CGFloat((data!["originX"] as NSString?)!.floatValue) * screen.width
+                let y = CGFloat((data!["originY"] as NSString?)!.floatValue) * screen.height
+                let width = CGFloat((data!["width"] as NSString?)!.floatValue) / zoom
+                let height = CGFloat((data!["height"] as NSString?)!.floatValue) / zoom
+                remoteSignatureView = PassiveLinearInterpView(frame: CGRectMake(x,y,width,height))
+                var points : Array<CGPoint> = []
+                var pointsStr = split(string){$0 == "-"}
+                for i in 0..<pointsStr.count {
+                    if let p = getPointFromPointStr(pointsStr[i], zoom: zoom){
+                        if i == 0{
+                            remoteSignatureView!.moveToPoint(p)
+                        } else {
+                            remoteSignatureView!.addPoint(p)
+                        }
+                    }
+                }
+                presentaionImage?.addSubview(remoteSignatureView!)
             }
+            
         }
+    }
+        
+    func getPointFromPointStr(pointStr: String, zoom: CGFloat)-> CGPoint?{
+        var coordsStr = split(pointStr){$0 == ","}
+        let x = (coordsStr[0] as NSString).floatValue
+        let y = (coordsStr[1] as NSString).floatValue
+        return CGPoint(x: CGFloat(x)/zoom ,y: CGFloat(y)/zoom)
+    }
+    
+    func getKeyVals(string: String) -> Dictionary<String, String>? {
+        var results = [String:String]()
+        var keyValues = string.componentsSeparatedByString("&")
+        if keyValues.count > 0 {
+            for pair in keyValues {
+                let kv = pair.componentsSeparatedByString("=")
+                if kv.count > 1 {
+                    results.updateValue(kv[1], forKey: kv[0])
+                }
+            }
+            
+        }
+        return results
     }
     
     // MARK: - OTSubscriber delegate callbacks
