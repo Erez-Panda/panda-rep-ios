@@ -225,7 +225,7 @@ class CallNewViewController: UIViewController, UIGestureRecognizerDelegate, OTSe
     
     func next(sender: UISwipeGestureRecognizer) {
         if self.isDragging || self.drawingMode {return}
-        if (currentImageIndex+1 == self.displayResources?.count){
+        if (currentImageIndex+1 == preLoadedImages?[selectedResIndex]?.count){
             return
         }
         if let image = preLoadedImages?[selectedResIndex]?[currentImageIndex+1]{

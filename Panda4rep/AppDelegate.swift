@@ -7,7 +7,7 @@
 //
 
 import UIKit
-import Dropbox_iOS_SDK
+//import Dropbox_iOS_SDK
 
 
 @UIApplicationMain
@@ -120,7 +120,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, LoginDelegate, UIAlertVie
         let app = UIApplication.sharedApplication()
         app.applicationIconBadgeNumber = 0
         app.cancelAllLocalNotifications()
-        homeVC?.pullRefresh(nil)
+        homeVC?.updateCallsAndOffers()
     }
 
     func applicationWillTerminate(application: UIApplication) {

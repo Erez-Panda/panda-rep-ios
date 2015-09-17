@@ -63,7 +63,6 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
     
     override func viewDidAppear(animated: Bool) {
         updateCallsAndOffers()
-        dateSelector.selectDate(selectedDate)
     }
     
     func callOfferOffered(notification: NSNotification){
@@ -72,7 +71,6 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
                 selectedDate = NSCalendar.currentCalendar().startOfDayForDate(TimeUtils.serverDateTimeStrToDate(start))
             }
         }
-        dateSelector.selectDate(selectedDate)
         updateCallsAndOffers(scrollToLast: true)
     }
     
@@ -150,6 +148,7 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
     }
     
     func filterResults(date: NSDate){
+        dateSelector.selectDate(selectedDate)
         dateSelector.setBadgeForDate(date, value: 0)
         if calls.count > 0 || offers.count > 0{
             filteredCalls = self.calls.filter({ (call) -> Bool in
