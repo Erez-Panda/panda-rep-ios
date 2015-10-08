@@ -34,22 +34,22 @@ struct LoginUtils {
                 else{
                     // If authentication failed then show a message to the console with a short description.
                     // In case that the error is a user fallback, then show the password alert view.
-                    println(evalPolicyError?.localizedDescription)
+                    print(evalPolicyError?.localizedDescription)
                     
                     switch evalPolicyError!.code {
                         
                     case LAError.SystemCancel.rawValue:
-                        println("Authentication was cancelled by the system")
+                        print("Authentication was cancelled by the system")
                         
                     case LAError.UserCancel.rawValue:
-                        println("Authentication was cancelled by the user")
+                        print("Authentication was cancelled by the user")
                         
                     case LAError.UserFallback.rawValue:
-                        println("User selected to enter custom password")
+                        print("User selected to enter custom password")
                         self.showPasswordAlert()
                         
                     default:
-                        println("Authentication failed")
+                        print("Authentication failed")
                         self.showPasswordAlert()
                     }
                     completion(result: false)
@@ -62,18 +62,18 @@ struct LoginUtils {
             switch error!.code{
                 
             case LAError.TouchIDNotEnrolled.rawValue:
-                println("TouchID is not enrolled")
+                print("TouchID is not enrolled")
                 
             case LAError.PasscodeNotSet.rawValue:
-                println("A passcode has not been set")
+                print("A passcode has not been set")
                 
             default:
                 // The LAError.TouchIDNotAvailable case.
-                println("TouchID not available")
+                print("TouchID not available")
             }
             
             // Optionally the error description can be displayed on the console.
-            println(error?.localizedDescription)
+            print(error?.localizedDescription)
             completion(result: true)
             return
             // Show the custom alert view to allow users to enter the password.

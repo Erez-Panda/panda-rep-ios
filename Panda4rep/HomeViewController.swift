@@ -71,7 +71,7 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
                 selectedDate = NSCalendar.currentCalendar().startOfDayForDate(TimeUtils.serverDateTimeStrToDate(start))
             }
         }
-        updateCallsAndOffers(scrollToLast: true)
+        updateCallsAndOffers(true)
     }
     
     func updateCallsAndOffers(scrollToLast: Bool = false){
@@ -168,7 +168,7 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
                 noCallsLabel.hidden = true
                 //self.tableView.hidden = false
             }
-            filteredCalls.sort({ (call, nextCall) -> Bool in
+            filteredCalls.sortInPlace({ (call, nextCall) -> Bool in
                 if let start = call["start"] as? NSDate {
                     if let nextStart = nextCall["start"] as? NSDate {
                         if start.laterDate(nextStart) == nextStart{
@@ -256,11 +256,11 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
     // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         if (segue.identifier == "showPrecallScreen"){
-            var svc = segue.destinationViewController as! PreCallViewController
+            let svc = segue.destinationViewController as! PreCallViewController
             svc.call = self.selectedCall
         }
         if (segue.identifier == "showPostCallScreen"){
-            var svc = segue.destinationViewController as! PostCallNewViewController
+            let svc = segue.destinationViewController as! PostCallNewViewController
             svc.call = self.selectedCall
             if let callVC = sender as? CallNewViewController{
                 svc.startTime = callVC.callStartTime
@@ -269,7 +269,7 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
             }
         }
         if (segue.identifier == "presentCreateCall"){
-            var svc = segue.destinationViewController as! CreateCallViewController
+            let svc = segue.destinationViewController as! CreateCallViewController
             svc.parent = self
         }
     }

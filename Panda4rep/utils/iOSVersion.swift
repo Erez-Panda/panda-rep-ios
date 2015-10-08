@@ -14,7 +14,7 @@ let iOS8 = floor(NSFoundationVersionNumber) > floor(NSFoundationVersionNumber_iO
 extension NSURL {
     func getKeyVals() -> Dictionary<String, String>? {
         var results = [String:String]()
-        var keyValues = self.query?.componentsSeparatedByString("&")
+        let keyValues = self.query?.componentsSeparatedByString("&")
         if keyValues?.count > 0 {
             for pair in keyValues! {
                 let kv = pair.componentsSeparatedByString("=")

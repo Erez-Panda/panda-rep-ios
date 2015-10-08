@@ -20,7 +20,7 @@ struct ViewUtils {
     static var delegate:ViewDelegate?
     
     static func roundView(view: UIView, borderWidth: CGFloat, borderColor: UIColor){
-        var frame =  view.frame;
+        let frame =  view.frame;
         view.layer.cornerRadius = frame.size.height / 2
         view.clipsToBounds = true
         view.layer.borderWidth = borderWidth;
@@ -43,7 +43,7 @@ struct ViewUtils {
     
     
     static func leftBorderView(view: UIView, borderWidth: CGFloat, borderColor: UIColor, offset: CGFloat) -> CALayer {
-        var leftBorder = CALayer()
+        let leftBorder = CALayer()
         leftBorder.frame = CGRectMake(offset, 0.0 , borderWidth, view.frame.size.height);
         leftBorder.backgroundColor = borderColor.CGColor
         view.layer.addSublayer(leftBorder)
@@ -55,7 +55,7 @@ struct ViewUtils {
     }
     
     static func rightBorderView(view: UIView, borderWidth: CGFloat, borderColor: UIColor) -> CALayer {
-        var leftBorder = CALayer()
+        let leftBorder = CALayer()
         leftBorder.frame = CGRectMake(view.frame.size.width-borderWidth, 0.0, borderWidth, view.frame.size.height);
         leftBorder.backgroundColor = borderColor.CGColor
         view.layer.addSublayer(leftBorder)
@@ -63,7 +63,7 @@ struct ViewUtils {
     }
     
     static func bottomBorderView(view: UIView, borderWidth: CGFloat, borderColor: UIColor, offset: CGFloat) -> CALayer{
-        var bottomBorder = CALayer()
+        let bottomBorder = CALayer()
         bottomBorder.frame = CGRectMake(0.0, view.frame.size.height + offset, view.frame.size.width, borderWidth)
         bottomBorder.backgroundColor = borderColor.CGColor
         view.layer.addSublayer(bottomBorder)
@@ -71,7 +71,7 @@ struct ViewUtils {
     }
     
     static func topBorderView(view: UIView, borderWidth: CGFloat, borderColor: UIColor, offset: CGFloat) -> CALayer{
-        var topBorder = CALayer()
+        let topBorder = CALayer()
         topBorder.frame = CGRectMake(0.0, 0.0 + offset, view.frame.size.width, borderWidth)
         topBorder.backgroundColor = borderColor.CGColor
         view.layer.addSublayer(topBorder)
@@ -96,7 +96,7 @@ struct ViewUtils {
     }
     
     static func addRoundBorderView(view: UIView, borderWidth: CGFloat, borderColor: UIColor, boderSpacing: CGFloat) ->UIView{
-        var roundView = UIView()
+        let roundView = UIView()
         roundView.frame = CGRectMake(view.frame.origin.x-boderSpacing,
                 view.frame.origin.y-boderSpacing,
                 view.frame.size.width+2*boderSpacing,
@@ -206,13 +206,13 @@ struct ViewUtils {
         snapshotView.drawViewHierarchyInRect(view.bounds, afterScreenUpdates: true)
         var imgaa :UIImage = UIGraphicsGetImageFromCurrentImageContext();
  
-        var ciimage :CIImage = CIImage(image: imgaa)
-        var filter : CIFilter = CIFilter(name:"CIGaussianBlur")
+        var ciimage :CIImage = CIImage(image: imgaa)!
+        var filter : CIFilter = CIFilter(name:"CIGaussianBlur")!
         filter.setDefaults()
         filter.setValue(ciimage, forKey: kCIInputImageKey)
         filter.setValue(5, forKey: kCIInputRadiusKey)
-        var outputImage : CIImage = filter.outputImage;
-        var finalImage :UIImage = UIImage(CIImage: outputImage)!
+        var outputImage : CIImage = filter.outputImage!;
+        var finalImage :UIImage = UIImage(CIImage: outputImage)
         return finalImage
         
     }
@@ -238,7 +238,7 @@ struct ViewUtils {
             if let url = NSURL(string: result as String){
                 if let data = NSData(contentsOfURL: url){
                     dispatch_async(dispatch_get_main_queue()){
-                        var image = UIImage(data: data)
+                        let image = UIImage(data: data)
                         completion(result: image!)
                     }
                 }
@@ -295,7 +295,7 @@ struct ViewUtils {
         if (vc.navigationItem.leftBarButtonItem?.tag == 10){
             return
         }
-        var backBtn   = UIButton.buttonWithType(UIButtonType.Custom) as! UIButton
+        let backBtn   = UIButton(type: UIButtonType.Custom)
         backBtn.frame = CGRectMake(0, 0, 18, 16);
         backBtn.setBackgroundImage(UIImage(named: "back_btn"), forState: UIControlState.Normal)
         backBtn.addTarget(vc, action: "back", forControlEvents: UIControlEvents.TouchUpInside)
@@ -308,7 +308,7 @@ struct ViewUtils {
         if (vc.navigationItem.rightBarButtonItem?.tag == 10){
             return
         }
-        var menuBtn   = UIButton.buttonWithType(UIButtonType.Custom) as! UIButton
+        let menuBtn   = UIButton(type: UIButtonType.Custom)
         menuBtn.frame = CGRectMake(0, 0, 20, 15);
         menuBtn.setBackgroundImage(UIImage(named: "menu_btn"), forState: UIControlState.Normal)
         menuBtn.addTarget(vc, action: "menu", forControlEvents: UIControlEvents.TouchUpInside)
@@ -325,17 +325,17 @@ struct ViewUtils {
     }
     
     static func getAttrText(string:String, color: UIColor, size: CGFloat, fontName:String, addShadow: Bool) -> NSMutableAttributedString{
-        var str = NSMutableAttributedString(string: string)
+        let str = NSMutableAttributedString(string: string)
         str.addAttribute(NSForegroundColorAttributeName,
             value: color,
-            range: NSMakeRange(0,count(string)))
-        str.addAttributes([NSFontAttributeName:UIFont(name: fontName, size: size )!], range:  NSMakeRange(0,count(string)) )
+            range: NSMakeRange(0,string.characters.count))
+        str.addAttributes([NSFontAttributeName:UIFont(name: fontName, size: size )!], range:  NSMakeRange(0,string.characters.count) )
         if (addShadow){
-            var shadow = NSShadow()
+            let shadow = NSShadow()
             shadow.shadowBlurRadius = 5;
             shadow.shadowColor = UIColor.whiteColor()
             shadow.shadowOffset = CGSizeMake(0, 0)
-            str.addAttributes([NSShadowAttributeName:shadow], range:  NSMakeRange(0,count(string)))
+            str.addAttributes([NSShadowAttributeName:shadow], range:  NSMakeRange(0,string.characters.count))
         }
         return str
     }
@@ -343,12 +343,12 @@ struct ViewUtils {
     static func addCenterAttr (attrText: NSMutableAttributedString) -> NSMutableAttributedString{
         let p: NSMutableParagraphStyle = NSMutableParagraphStyle()
         p.alignment = NSTextAlignment.Center
-        attrText.addAttribute(NSParagraphStyleAttributeName, value: p, range: NSMakeRange(0,count(attrText.string)))
+        attrText.addAttribute(NSParagraphStyleAttributeName, value: p, range: NSMakeRange(0,attrText.string.characters.count))
         return attrText
     }
     
     static func addSizeConstaints (view: UIView, width: CGFloat?, height: CGFloat?) -> [NSLayoutConstraint]{
-        view.setTranslatesAutoresizingMaskIntoConstraints(false)
+        view.translatesAutoresizingMaskIntoConstraints = false
         var widthConstraint:NSLayoutConstraint = NSLayoutConstraint()
         var hightConstraint:NSLayoutConstraint = NSLayoutConstraint()
         if let w = width {
@@ -363,7 +363,7 @@ struct ViewUtils {
     }
     static func addConstraintsToSuper(view: UIView, superView: UIView, top: CGFloat?, left: CGFloat?, bottom: CGFloat?, right: CGFloat?){
         
-        view.setTranslatesAutoresizingMaskIntoConstraints(false)
+        view.translatesAutoresizingMaskIntoConstraints = false
         if let t = top {
             let topConstraint = NSLayoutConstraint(item: view, attribute: NSLayoutAttribute.Top, relatedBy: NSLayoutRelation.Equal, toItem: superView, attribute: NSLayoutAttribute.Top, multiplier: 1, constant: t)
             superView.addConstraint(topConstraint)
@@ -385,7 +385,7 @@ struct ViewUtils {
     }
     
     static func showSimpleError(message: String){
-        var alert = UIAlertView()
+        let alert = UIAlertView()
         alert.title = "Error"
         alert.message = message
         alert.addButtonWithTitle("Ok")
@@ -393,7 +393,7 @@ struct ViewUtils {
     }
     
     static func addDoneToolBarToKeyboard(textView: UITextView, vc: UIViewController){
-        var doneToolbar = UIToolbar(frame: CGRect(x: 0, y: 0, width: 320, height: 50))
+        let doneToolbar = UIToolbar(frame: CGRect(x: 0, y: 0, width: 320, height: 50))
         doneToolbar.barStyle = UIBarStyle.Default
         doneToolbar.items = [UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.FlexibleSpace, target: nil, action: nil),
             UIBarButtonItem(title: "Done", style: UIBarButtonItemStyle.Done, target: vc, action: "doneButtonClickedDismissKeyboard")]
@@ -409,7 +409,7 @@ struct ViewUtils {
             topView.addSubview(globalLoader!)
             globalLoader!.startAnimating()
             topView.bringSubviewToFront(globalLoader!)
-            globalLoader!.setTranslatesAutoresizingMaskIntoConstraints(false)
+            globalLoader!.translatesAutoresizingMaskIntoConstraints = false
             let canterXConstraint = NSLayoutConstraint(item: globalLoader!, attribute: NSLayoutAttribute.CenterX, relatedBy: NSLayoutRelation.Equal, toItem: topView, attribute: NSLayoutAttribute.CenterX, multiplier: 1, constant: 0)
                 topView.addConstraint(canterXConstraint)
             let canterYConstraint = NSLayoutConstraint(item: globalLoader!, attribute: NSLayoutAttribute.CenterY, relatedBy: NSLayoutRelation.Equal, toItem: topView, attribute: NSLayoutAttribute.CenterY, multiplier: 1, constant: 0)
@@ -431,10 +431,10 @@ extension UIImage {
     func imageWithColor(tintColor: UIColor) -> UIImage {
         UIGraphicsBeginImageContextWithOptions(self.size, false, self.scale)
         
-        let context = UIGraphicsGetCurrentContext() as CGContextRef
+        let context = UIGraphicsGetCurrentContext()!
         CGContextTranslateCTM(context, 0, self.size.height)
         CGContextScaleCTM(context, 1.0, -1.0);
-        CGContextSetBlendMode(context, kCGBlendModeNormal)
+        CGContextSetBlendMode(context, CGBlendMode.Normal)
         
         let rect = CGRectMake(0, 0, self.size.width, self.size.height) as CGRect
         CGContextClipToMask(context, rect, self.CGImage)

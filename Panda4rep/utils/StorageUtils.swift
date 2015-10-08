@@ -42,7 +42,7 @@ struct StorageUtils {
     
     static func updateUser(partiaUserlData: NSDictionary, type:DataType){
         let defaultUser = NSUserDefaults.standardUserDefaults()
-        if var userData : AnyObject = defaultUser.objectForKey(type.rawValue) {
+        if let userData : AnyObject = defaultUser.objectForKey(type.rawValue) {
             var userInfo = userData as! Dictionary<String, AnyObject>
             for (key, value) in partiaUserlData as! Dictionary<String, AnyObject> {
                 userInfo[key] = value
@@ -182,14 +182,14 @@ struct StorageUtils {
             }
         }
         NSUserDefaults.standardUserDefaults().setObject(validDrugs, forKey: "drugs")
-        NSUserDefaults.standardUserDefaults().setObject( Int(NSDate.new().timeIntervalSince1970), forKey: "drugs_last_update")
+        NSUserDefaults.standardUserDefaults().setObject( Int(NSDate().timeIntervalSince1970), forKey: "drugs_last_update")
         NSUserDefaults.standardUserDefaults().synchronize()
     }
     
     static func getAllDrugs()-> NSArray{
         let defaultUser = NSUserDefaults.standardUserDefaults()
         if let lastUpdate = defaultUser.objectForKey("drugs_last_update") as? Int{
-            if ((Int(NSDate.new().timeIntervalSince1970) - lastUpdate) > (60*60*48)){ // Check for new drugs once every two days
+            if ((Int(NSDate().timeIntervalSince1970) - lastUpdate) > (60*60*48)){ // Check for new drugs once every two days
                 return []
             }
         }
@@ -209,12 +209,12 @@ struct StorageUtils {
     
     static func setItems(type: DataType, items: NSArray){
         let defaultUser = NSUserDefaults.standardUserDefaults()
-        var cleanItems : NSMutableArray = []
+        let cleanItems : NSMutableArray = []
         for item in items{
             cleanItems.addObject(cleanDictionaryNil(item as! NSDictionary))
         }
         NSUserDefaults.standardUserDefaults().setObject(cleanItems, forKey: type.rawValue)
-        NSUserDefaults.standardUserDefaults().setObject( Int(NSDate.new().timeIntervalSince1970), forKey: "\(type.rawValue)_last_update")
+        NSUserDefaults.standardUserDefaults().setObject( Int(NSDate().timeIntervalSince1970), forKey: "\(type.rawValue)_last_update")
         NSUserDefaults.standardUserDefaults().synchronize()
     }
     

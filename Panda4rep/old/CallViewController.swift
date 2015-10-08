@@ -73,7 +73,7 @@ class CallViewController:UIViewController ,UITextFieldDelegate, UIGestureRecogni
         CallUtils.resumeCall()
     }
     
-    override func touchesBegan(touches: Set<NSObject>, withEvent event: UIEvent) {
+    override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
         super.touchesBegan(touches, withEvent: event)
         if let touch: UITouch = touches.first as? UITouch{
             ((touch.gestureRecognizers as NSArray)[0] as! UIGestureRecognizer).cancelsTouchesInView = false
@@ -91,20 +91,20 @@ class CallViewController:UIViewController ,UITextFieldDelegate, UIGestureRecogni
         
     }
     
-    override func touchesEnded(touches: Set<NSObject>, withEvent event: UIEvent) {
+    override func touchesEnded(touches: Set<UITouch>, withEvent event: UIEvent?) {
         self.isDragging = false
     }
-    override func touchesCancelled(touches: Set<NSObject>, withEvent event: UIEvent!) {
-        println("CANCEL")
+    override func touchesCancelled(touches: Set<UITouch>?, withEvent event: UIEvent?) {
+        print("CANCEL")
     }
-    override func touchesMoved(touches: Set<NSObject>, withEvent event: UIEvent) {
+    override func touchesMoved(touches: Set<UITouch>, withEvent event: UIEvent?) {
         if let touch: UITouch = touches.first as? UITouch{
             let touchLocation = touch.locationInView(self.view) as CGPoint
             if (self.isDragging){
                 if let subscriber = CallUtils.subscriber?.view {
                     UIView.animateWithDuration(0.0,
                         delay: 0.0,
-                        options: (UIViewAnimationOptions.BeginFromCurrentState|UIViewAnimationOptions.CurveEaseInOut),
+                        options: ([UIViewAnimationOptions.BeginFromCurrentState, UIViewAnimationOptions.CurveEaseInOut]),
                         animations:  {subscriber.center = touchLocation},
                         completion: nil)
                 }
@@ -157,7 +157,7 @@ class CallViewController:UIViewController ,UITextFieldDelegate, UIGestureRecogni
     }
     
     func textFieldShouldReturn(textField: UITextField) -> Bool {
-        print("\(textField.text)")
+        print("\(textField.text)", terminator: "")
         textField.resignFirstResponder()
         return true
     }
@@ -172,15 +172,15 @@ class CallViewController:UIViewController ,UITextFieldDelegate, UIGestureRecogni
             self.activeChatView.hidden = true
             self.chatMessage.hidden = true
             self.sendButton.hidden = true
-            println("landscape")
+            print("landscape")
         }
         
         if(UIDeviceOrientationIsPortrait(UIDevice.currentDevice().orientation)) {
             let screenSize: CGRect = UIScreen.mainScreen().bounds
-            self.presentationImg.frame.rectByUnion(CGRect(x: 0.0, y: 0.0, width: screenSize.width, height: screenSize.height*0.6))
+            self.presentationImg.frame.union(CGRect(x: 0.0, y: 0.0, width: screenSize.width, height: screenSize.height*0.6))
             let imageHeight = self.presentationImg.frame.size.height
             CallUtils.subscriber?.view.frame = CGRect(x: screenSize.width-videoWidth , y: imageHeight+10, width: videoWidth, height: videoHeight)
-            println("portraight")
+            print("portraight")
             self.activeChatView.hidden = false
             self.chatMessage.hidden = false
             self.sendButton.hidden = false
@@ -196,7 +196,7 @@ class CallViewController:UIViewController ,UITextFieldDelegate, UIGestureRecogni
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         if (segue.identifier == "showPostCallSegue"){
-            var svc = segue.destinationViewController as! PostCallViewController
+            let svc = segue.destinationViewController as! PostCallViewController
             let callData = ["callId": self.currentCall["id"] as! NSNumber,
                             "start" : self.callStartTime!,
                             "sessionNumber": self.sessionNumber!] as Dictionary<String, AnyObject>

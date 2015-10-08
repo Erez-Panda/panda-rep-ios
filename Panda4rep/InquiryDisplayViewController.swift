@@ -68,7 +68,7 @@ class InquiryDisplayViewController: PandaViewController, UITextViewDelegate {
         let keyboardSize: CGSize = value.CGRectValue().size
         let screenHeight = UIScreen.mainScreen().bounds.height
         UIView.animateWithDuration(0.1, animations: { () -> Void in
-            let frame = self.responseTextView.layer.presentationLayer().frame
+            let frame = self.responseTextView.layer.presentationLayer()!.frame
             if (keyboardSize.height+frame.origin.y+frame.height+50 > screenHeight){
                 self.scrollView.contentOffset.y = frame.origin.y - 35
             }
@@ -111,8 +111,8 @@ class InquiryDisplayViewController: PandaViewController, UITextViewDelegate {
     
 
     @IBAction func send(sender: AnyObject) {
-        if count(responseTextView.text) > 0 {
-            var data = ["response": responseTextView.text,
+        if responseTextView.text.characters.count > 0 {
+            let data = ["response": responseTextView.text,
             "request": inquiry!["id"] as! NSNumber,
             "product": (inquiry!["product"] as! NSDictionary)["id"] as! NSNumber] as Dictionary<String, AnyObject>
             ServerAPI.sendMedicalInquiryResponse(data, completion: { (result) -> Void in

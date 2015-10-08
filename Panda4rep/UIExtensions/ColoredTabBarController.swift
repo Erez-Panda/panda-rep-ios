@@ -16,7 +16,7 @@ class ColoredTabBarController: UITabBarController {
         //self.tabBar.tintColor = ColorUtils.buttonColor()
         //self.tabBar.backgroundImage = UIImage(named: "zone-video-selected")
         //self.tabBar.backgroundColor = ColorUtils.buttonColor()
-        for item in self.tabBar.items as! [UITabBarItem] {
+        for item in self.tabBar.items! {
             if let image = item.image {
                 item.image = image.imageWithColor(UIColor.lightGrayColor()).imageWithRenderingMode(.AlwaysOriginal)
                 item.selectedImage = image.imageWithColor(ColorUtils.buttonColor()).imageWithRenderingMode(.AlwaysOriginal)

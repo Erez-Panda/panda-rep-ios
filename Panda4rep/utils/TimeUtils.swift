@@ -9,9 +9,9 @@
 struct TimeUtils {
     
     static func serverDateTimeStrToDate(dateTime: String) -> NSDate{
-        var dateFormatter = NSDateFormatter()
+        let dateFormatter = NSDateFormatter()
         dateFormatter.timeZone = NSTimeZone(abbreviation: "UTC");
-        dateFormatter.dateFormat = NSDateFormatter.dateFormatFromTemplate("yyyy-MM-dd'T'HH:mm:ss", options: 0, locale: NSLocale.new())
+        dateFormatter.dateFormat = NSDateFormatter.dateFormatFromTemplate("yyyy-MM-dd'T'HH:mm:ss", options: 0, locale: nil)
         var date = dateFormatter.dateFromString(dateTime)
         if date == nil {
             var str = dateTime.stringByReplacingOccurrencesOfString("T", withString: " ")
@@ -23,65 +23,65 @@ struct TimeUtils {
     }
     
     static func dateToReadableStr(date: NSDate) -> String{
-        var dateFormatter = NSDateFormatter()
+        let dateFormatter = NSDateFormatter()
         dateFormatter.timeZone = NSTimeZone();
         dateFormatter.dateStyle = NSDateFormatterStyle.MediumStyle
         dateFormatter.timeStyle = NSDateFormatterStyle.ShortStyle
-        var readableTime = dateFormatter.stringFromDate(date)
+        let readableTime = dateFormatter.stringFromDate(date)
         return readableTime
     }
     
     static func dateToReadableTimeStr(date: NSDate) -> String{
-        var dateFormatter = NSDateFormatter()
+        let dateFormatter = NSDateFormatter()
         dateFormatter.timeZone = NSTimeZone();
         dateFormatter.timeStyle = NSDateFormatterStyle.ShortStyle
-        var readableTime = dateFormatter.stringFromDate(date)
+        let readableTime = dateFormatter.stringFromDate(date)
         return readableTime
     }
     
     static func dateToDateStr(date: NSDate) -> String{
-        var dateFormatter = NSDateFormatter()
+        let dateFormatter = NSDateFormatter()
         dateFormatter.timeZone = NSTimeZone();
         dateFormatter.dateStyle = NSDateFormatterStyle.MediumStyle
-        var readableTime = dateFormatter.stringFromDate(date)
+        let readableTime = dateFormatter.stringFromDate(date)
         return readableTime
     }
 
     
     static func dateToTimeStr(date: NSDate) -> String{
-        var dateFormatter = NSDateFormatter()
+        let dateFormatter = NSDateFormatter()
         dateFormatter.timeZone = NSTimeZone();
         dateFormatter.timeStyle = NSDateFormatterStyle.ShortStyle
-        var readableTime = dateFormatter.stringFromDate(date)
+        let readableTime = dateFormatter.stringFromDate(date)
         return readableTime
     }
     
     static func dateToServerString(date:NSDate) -> String{
-        var dateFormatter = NSDateFormatter()
+        let dateFormatter = NSDateFormatter()
         dateFormatter.timeZone = NSTimeZone(abbreviation: "UTC")
-        dateFormatter.dateFormat = NSDateFormatter.dateFormatFromTemplate("yyyy-MM-dd'T'HH:mm:ss", options: 0, locale: NSLocale.new())
+        dateFormatter.dateFormat = NSDateFormatter.dateFormatFromTemplate("yyyy-MM-dd'T'HH:mm:ss", options: 0, locale: nil)
         let stringDate = dateFormatter.stringFromDate(date)
         return stringDate
     }
     
     static func getOffsetFromUTC() -> Int{
-        var minutes = NSTimeZone.localTimeZone().secondsFromGMT / 60
+        let minutes = NSTimeZone.localTimeZone().secondsFromGMT / 60
         return minutes/60
     }
     
     static func getDateComponentsFromDate(date: NSDate) ->NSDateComponents{
         let cal = NSCalendar(calendarIdentifier:NSCalendarIdentifierGregorian)!
-        return cal.components(.CalendarUnitYear | .CalendarUnitMonth | .CalendarUnitDay, fromDate: date)
+        return cal.components([.Year, .Month, .Day], fromDate: date)
     }
     
     static func getDayInYear(date: NSDate) ->Int{
         let cal = NSCalendar(calendarIdentifier:NSCalendarIdentifierGregorian)!
-        return cal.ordinalityOfUnit(.CalendarUnitDay, inUnit: .CalendarUnitYear, forDate: date)
+        return cal.ordinalityOfUnit(.Day, inUnit: .Year, forDate: date)
     }
     
     static func getMonthFromDate(date: NSDate) ->Int{
         let cal = NSCalendar(calendarIdentifier:NSCalendarIdentifierGregorian)!
-        return cal.ordinalityOfUnit(.CalendarUnitMonth, inUnit: .CalendarUnitYear, forDate: date)
+        return cal.ordinalityOfUnit(.Month, inUnit: .Year, forDate: date)
     }
     
     static func getDateFromComponents(year: Int, month: Int?, day: Int) -> NSDate{
@@ -98,7 +98,7 @@ struct TimeUtils {
     static func getMonthNumberOfDays(month: Int, year: Int)-> Int{
         let date = self.getDateFromComponents(year, month: month, day: 15)
         let cal = NSCalendar(calendarIdentifier:NSCalendarIdentifierGregorian)!
-        let days = cal.rangeOfUnit(.CalendarUnitDay, inUnit: .CalendarUnitMonth, forDate: date)
+        let days = cal.rangeOfUnit(.Day, inUnit: .Month, forDate: date)
         return days.length
     }
     

@@ -12,7 +12,7 @@ class LaunchViewController: UIViewController {
     //var introViewController: IntroViewController?
 
     
-    required init(coder aDecoder: NSCoder) {
+    required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
 
     }

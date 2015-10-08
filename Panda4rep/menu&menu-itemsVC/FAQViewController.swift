@@ -50,7 +50,7 @@ class FAQViewController: PandaViewController, UITableViewDelegate, UITableViewDa
         return self.questions.count
     }
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        var cell = tableView.dequeueReusableCellWithIdentifier("faqCell", forIndexPath: indexPath) as! FAQTableViewCell
+        let cell = tableView.dequeueReusableCellWithIdentifier("faqCell", forIndexPath: indexPath) as! FAQTableViewCell
         cell.questionText.attributedText = ViewUtils.getAttrText(questions[indexPath.row], color: UIColor.blackColor(), size: 16.0)
         cell.answerText.attributedText = ViewUtils.getAttrText(answers[indexPath.row], color: UIColor.blackColor(), size: 16.0)
         cell.expendButton.tag = indexPath.row

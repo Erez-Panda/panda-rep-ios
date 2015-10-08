@@ -24,7 +24,7 @@ class RegisterViewController : UITableViewController, UITextFieldDelegate {
     
 
     func textFieldShouldReturn(textField: UITextField) -> Bool {
-        println(textField.text)
+        print(textField.text)
         textField.resignFirstResponder()
         if (textField == self.firstName){
             self.lastName.becomeFirstResponder()

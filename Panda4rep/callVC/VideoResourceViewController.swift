@@ -44,7 +44,7 @@ class VideoResourceViewController: UIViewController, UITableViewDataSource, UITa
         
     }
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("videoResCell") as! UITableViewCell
+        let cell = tableView.dequeueReusableCellWithIdentifier("videoResCell")!
         if let document = documents[indexPath.row] as? NSDictionary{
             cell.textLabel?.text = document["name"] as? String
         }

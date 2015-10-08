@@ -22,7 +22,7 @@ class ChatBoxView: UIView {
         self.init(frame:CGRectZero)
     }
     
-    required init(coder aDecoder: NSCoder) {
+    required init?(coder aDecoder: NSCoder) {
         fatalError("This class does not support NSCoding")
     }
     
@@ -30,7 +30,7 @@ class ChatBoxView: UIView {
         self.init(frame:CGRectZero)
         
         self.backgroundColor = UIColor.clearColor()
-        setTranslatesAutoresizingMaskIntoConstraints(false)
+        translatesAutoresizingMaskIntoConstraints = false
         
         textView.text = "\(message)"
         textView.textColor = UIColor.whiteColor()

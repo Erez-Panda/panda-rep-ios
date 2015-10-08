@@ -27,7 +27,7 @@ class SettingsViewController: UITableViewController {
     @IBAction func toggleSchedulingEmailNotification(sender: UISwitch) {
         settings?["notificationByEmail"] = sender.on
         StorageUtils.saveUserSettings(settings!)
-        var data = ["send_email_conformation":sender.on] as Dictionary<String,AnyObject>
+        let data = ["send_email_conformation":sender.on] as Dictionary<String,AnyObject>
         ServerAPI.setUserEmailNotifications(data) { (result) -> Void in
             //
         }
@@ -37,7 +37,7 @@ class SettingsViewController: UITableViewController {
     @IBAction func toggleNotificationByEmail(sender: UISwitch) {
         settings?["scheduleByEmail"] = sender.on
         StorageUtils.saveUserSettings(settings!)
-        var data = ["send_email_remainder":sender.on] as Dictionary<String,AnyObject>
+        let data = ["send_email_remainder":sender.on] as Dictionary<String,AnyObject>
         ServerAPI.setUserEmailNotifications(data) { (result) -> Void in
             //
         }

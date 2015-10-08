@@ -31,7 +31,7 @@ class PreCallViewController_old: UIViewController,UIPickerViewDelegate, UIPicker
         if let details = lastCall["details"] as? String{
             self.summaryTextView.text = details
             let date = TimeUtils.serverDateTimeStrToDate(lastCall["start"] as! String)
-            var readableTime = TimeUtils.dateToReadableStr(date)
+            let readableTime = TimeUtils.dateToReadableStr(date)
             self.detailsTextView.text = self.detailsTextView.text.stringByReplacingOccurrencesOfString("START_DATE", withString: readableTime)
             var callLength = lastCall["callLength"] as! NSNumber
             callLength = callLength.integerValue/(1000*60)
@@ -88,7 +88,7 @@ class PreCallViewController_old: UIViewController,UIPickerViewDelegate, UIPicker
                 }
             } else {
                 dispatch_async(dispatch_get_main_queue()){
-                    var noCallAlert = UIAlertView()
+                    let noCallAlert = UIAlertView()
                     noCallAlert.title = "You have no scheduled call"
                     noCallAlert.message = "We will assign you a call as soon as possible and let you know"
                     noCallAlert.addButtonWithTitle("Ok")
@@ -127,7 +127,7 @@ class PreCallViewController_old: UIViewController,UIPickerViewDelegate, UIPicker
     func pickerView(pickerView: UIPickerView, attributedTitleForRow row: Int, forComponent component: Int) -> NSAttributedString? {
         let resource = self.resources![row] as! NSDictionary
         let titleData = resource["name"] as! String
-        var myTitle = NSAttributedString(string: titleData, attributes:[NSFontAttributeName:UIFont(name: "Georgia", size: 15.0 )!, NSForegroundColorAttributeName: UIColor.blueColor()])
+        let myTitle = NSAttributedString(string: titleData, attributes:[NSFontAttributeName:UIFont(name: "Georgia", size: 15.0 )!, NSForegroundColorAttributeName: UIColor.blueColor()])
         return myTitle
     }
     
@@ -147,7 +147,7 @@ class PreCallViewController_old: UIViewController,UIPickerViewDelegate, UIPicker
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         if (segue.identifier == "showCallSegue"){
-            var svc = segue.destinationViewController as! CallViewController
+            let svc = segue.destinationViewController as! CallViewController
             svc.user = self.user
             svc.selectedResIndex = self.selectedResIndex
             svc.resources = self.resources

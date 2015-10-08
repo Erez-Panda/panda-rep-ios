@@ -11,17 +11,17 @@ import UIKit
 class TouchUIScrollView: UIScrollView {
     var parent: UIViewController?
     
-    override func touchesBegan(touches: Set<NSObject>, withEvent event: UIEvent) {
+    override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
         parent?.touchesBegan(touches, withEvent: event)
         super.touchesBegan(touches, withEvent: event)
     }
     
-    override func touchesMoved(touches: Set<NSObject>, withEvent event: UIEvent) {
+    override func touchesMoved(touches: Set<UITouch>, withEvent event: UIEvent?) {
         parent?.touchesMoved(touches, withEvent: event)
         super.touchesMoved(touches, withEvent: event)
     }
     
-    override func touchesEnded(touches: Set<NSObject>, withEvent event: UIEvent) {
+    override func touchesEnded(touches: Set<UITouch>, withEvent event: UIEvent?) {
         parent?.touchesEnded(touches, withEvent: event)
         super.touchesEnded(touches, withEvent: event)
     }
@@ -32,7 +32,7 @@ class TouchUIScrollView: UIScrollView {
     }
     */
     
-    required init(coder aDecoder: NSCoder) {
+    required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
     }
    

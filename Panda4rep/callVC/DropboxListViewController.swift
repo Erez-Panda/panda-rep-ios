@@ -52,7 +52,7 @@ class DropboxListViewController: UIViewController, UITableViewDataSource, UITabl
         
     }
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("dropboxCell") as! UITableViewCell
+        let cell = tableView.dequeueReusableCellWithIdentifier("dropboxCell")!
         if let document = documents[indexPath.row] as? DBMetadata{
             cell.textLabel?.text = document.filename
         }
@@ -88,15 +88,15 @@ class DropboxListViewController: UIViewController, UITableViewDataSource, UITabl
     }
     
     func restClient(client: DBRestClient!, loadMetadataFailedWithError error: NSError!) {
-        println("ERROR")
+        print("ERROR")
     }
     
     func restClient(restClient: DBRestClient!, loadedSharableLink link: String!, forFile path: String!) {
-        println(link)
+        print(link)
     }
     
     func restClient(restClient: DBRestClient!, loadSharableLinkFailedWithError error: NSError!) {
-        println("ERROR --> SharableLink")
+        print("ERROR --> SharableLink")
     }
     
     func restClient(restClient: DBRestClient!, loadedStreamableURL url: NSURL!, forFile path: String!) {

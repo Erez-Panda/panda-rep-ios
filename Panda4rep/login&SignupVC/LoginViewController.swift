@@ -23,9 +23,9 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     @IBAction func login(sender: UIButton) {
         self.activityIndicatorView.startAnimating()
         
-        NSUserDefaults.standardUserDefaults().setObject(["username": userEmail.text, "password": userPassword.text], forKey: "credentials")
+        NSUserDefaults.standardUserDefaults().setObject(["username": userEmail.text!, "password": userPassword.text!], forKey: "credentials")
         NSUserDefaults.standardUserDefaults().synchronize()
-        LoginUtils.login(userEmail.text, password: userPassword.text, sender: self, successSegue:"showHomeFromLogin", completion: {result -> Void in
+        LoginUtils.login(userEmail.text!, password: userPassword.text!, sender: self, successSegue:"showHomeFromLogin", completion: {result -> Void in
             dispatch_async(dispatch_get_main_queue()){
                 self.activityIndicatorView.stopAnimating()
             }
@@ -43,7 +43,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         return true
     }
     
-    required init(coder aDecoder: NSCoder) {
+    required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
     }
     
@@ -68,7 +68,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         loginView.layoutIfNeeded()
         ViewUtils.borderView(loginButton, borderWidth: 1.0, borderColor:  UIColor.clearColor(), borderRadius: 3.0)
         ViewUtils.borderView(loginView, borderWidth: 1.0, borderColor:  ColorUtils.uicolorFromHex(0xDFDFDF), borderRadius: 3.0)
-        var middleBorder = CALayer()
+        let middleBorder = CALayer()
         
         middleBorder.frame = CGRectMake(0.0, loginView.frame.size.height/2, loginView.frame.size.width, 1.0);
         middleBorder.backgroundColor = ColorUtils.uicolorFromHex(0xDFDFDF).CGColor
@@ -98,9 +98,9 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     }
     
     @IBAction func forgotPassword(sender: AnyObject) {
-        if (isValidEmail(userEmail.text)){
+        if (isValidEmail(userEmail.text!)){
             self.activityIndicatorView.startAnimating()
-            ServerAPI.resetUserPassword(["email": userEmail.text], completion: { (result) -> Void in
+            ServerAPI.resetUserPassword(["email": userEmail.text!], completion: { (result) -> Void in
                 
                 if let error = result["error"] as? String {
                     dispatch_async(dispatch_get_main_queue()){

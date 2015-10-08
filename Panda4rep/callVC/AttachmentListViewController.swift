@@ -96,7 +96,7 @@ class AttachmentListViewController: UIViewController, UITableViewDataSource, UIT
         
     }
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("resourceCell") as! UITableViewCell
+        let cell = tableView.dequeueReusableCellWithIdentifier("resourceCell")!
         var currntArr: NSArray
         switch AttachmentType(rawValue: indexPath.section)!{
             case .HowItWorks:

@@ -16,7 +16,7 @@ class TrainingViewController: UITableViewController {
     @IBOutlet var trainingTable: UITableView!
     
     required init(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder)
+        super.init(coder: aDecoder)!
     }
     
     override func numberOfSectionsInTableView(tableView: UITableView) -> Int{
@@ -26,7 +26,7 @@ class TrainingViewController: UITableViewController {
         return assignedTraining!.count
     }
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("trainingCell") as! UITableViewCell
+        let cell = tableView.dequeueReusableCellWithIdentifier("trainingCell")!
         let at = self.assignedTraining?[indexPath.row] as! NSDictionary
         let t = at["training"] as! NSDictionary
         let name = t["name"] as! String
@@ -47,7 +47,7 @@ class TrainingViewController: UITableViewController {
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         if (segue.identifier == "trainingDetailSegue"){
-            var svc = segue.destinationViewController as! TrainingDetailViewController
+            let svc = segue.destinationViewController as! TrainingDetailViewController
             svc.training = self.selectedTraining
             svc.resources = self.trainingResources
         }

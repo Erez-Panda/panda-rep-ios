@@ -211,7 +211,7 @@ class PreCallViewController: PandaViewController, UITableViewDataSource, UITable
             }
             vc.resources = activeRes
             vc.sessionNumber = self.sessionNumber
-            CallUtils.rootViewController  = self.navigationController?.viewControllers?[0] as? HomeViewController
+            CallUtils.rootViewController  = self.navigationController?.viewControllers[0] as? HomeViewController
             self.navigationController?.popToRootViewControllerAnimated(false)
             CallUtils.rootViewController?.presentViewController(vc, animated: true, completion: {
             })

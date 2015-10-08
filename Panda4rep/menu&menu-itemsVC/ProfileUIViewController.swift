@@ -110,7 +110,7 @@ class ProfileUIViewController: UIViewController, UITableViewDelegate, UITableVie
             }
             cell.valueLabel.attributedText = ViewUtils.getAttrText(val, color: UIColor.blackColor(), size: 16.0)
             
-        } else if var val = self.userProfile?[key] as? String {
+        } else if let val = self.userProfile?[key] as? String {
             cell.valueLabel.attributedText = ViewUtils.getAttrText(val, color: UIColor.blackColor(), size: 16.0)
         }
         if iOS8 {cell.layoutMargins = UIEdgeInsetsZero}

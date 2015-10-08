@@ -112,7 +112,7 @@ class EditProfileViewController: UIViewController ,UITableViewDelegate, UITableV
         let nameCell = profileTable.cellForRowAtIndexPath(NSIndexPath(forRow: 0, inSection: 0)) as! SplitTableViewCellWithTitle
 
         if imageChange {
-            ServerAPI.uploadFile(UIImageJPEGRepresentation(profileImage.image, 1.0), filename: "\(nameCell.lastNameTextField.text)_profile_image") { (result) -> Void in
+            ServerAPI.uploadFile(UIImageJPEGRepresentation(profileImage.image!, 1.0)!, filename: "\(nameCell.lastNameTextField.text)_profile_image") { (result) -> Void in
                 let file = result as! NSDictionary
                 ViewUtils.profileImage = nil
                 self.saveProfile(file["id"] as! NSNumber)
@@ -132,8 +132,8 @@ class EditProfileViewController: UIViewController ,UITableViewDelegate, UITableV
         
 
         
-        var user = ["first_name":nameCell.firstNameTextField.text,
-            "last_name": nameCell.lastNameTextField.text,
+        var user = ["first_name":nameCell.firstNameTextField.text!,
+            "last_name": nameCell.lastNameTextField.text!,
             "email": self.user["email"] as! String] as Dictionary<String,AnyObject>
         if (emailCell != nil) {
             user["email"] = emailCell!.textInput.text
@@ -172,7 +172,7 @@ class EditProfileViewController: UIViewController ,UITableViewDelegate, UITableV
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         if tableView == specialtyTable{
-            let cell = tableView.dequeueReusableCellWithIdentifier("specialtyCell") as! UITableViewCell
+            let cell = tableView.dequeueReusableCellWithIdentifier("specialtyCell")!
             if  indexPath.row < doctorSpecialties.count {
                 if let specilaty = self.doctorSpecialties[indexPath.row] as? NSDictionary{
                     cell.textLabel?.textColor = ColorUtils.uicolorFromHex(0x777777)

@@ -13,7 +13,7 @@ class WelcomeViewController: UIViewController, UIPageViewControllerDataSource{
     var pageTitles: NSArray!
     var pageImages: NSArray!
     
-    required init(coder aDecoder: NSCoder) {
+    required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         let defaultUser = NSUserDefaults.standardUserDefaults()
         if let credentials : AnyObject = defaultUser.objectForKey("credentials") {
@@ -38,13 +38,13 @@ class WelcomeViewController: UIViewController, UIPageViewControllerDataSource{
         self.view.addSubview(pageViewController.view)
         pageViewController.didMoveToParentViewController(self)
         
-        var loginButton   = UIButton.buttonWithType(UIButtonType.System) as! UIButton
+        var loginButton   = UIButton(type: UIButtonType.System)
         loginButton.frame = CGRectMake(20, self.view.frame.size.height-50, 130, 40)
         loginButton.setBackgroundImage(UIImage(named: "login.jpg"), forState: UIControlState.Normal)
         loginButton.addTarget(self, action: "openLoginForm", forControlEvents: UIControlEvents.TouchUpInside)
         self.view.addSubview(loginButton)
         
-        var signUpButton   = UIButton.buttonWithType(UIButtonType.System) as! UIButton
+        var signUpButton   = UIButton(type: UIButtonType.System)
         signUpButton.frame = CGRectMake(170, self.view.frame.size.height-50, 130, 40)
         signUpButton.setBackgroundImage(UIImage(named: "join_now.jpg"), forState: UIControlState.Normal)
         signUpButton.addTarget(self, action: "openRegisterForm", forControlEvents: UIControlEvents.TouchUpInside)

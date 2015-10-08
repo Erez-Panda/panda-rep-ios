@@ -154,17 +154,17 @@ class DoctorListViewController: UIViewController, MPGTextFieldDelegate, UITextFi
 
     @IBAction func saveNewContact(sender: UIButton) {
         var data: Dictionary<String, AnyObject> = [:]
-        if (!firstName.text.isEmpty && !lastName.text.isEmpty && !email.text.isEmpty) {
+        if (!firstName.text!.isEmpty && !lastName.text!.isEmpty && !email.text!.isEmpty) {
             data = ["first_name": firstName.text!,
                 "last_name":lastName.text!,
                 "email": email.text! ] as Dictionary<String, AnyObject>
             if let spec_id = selectedSpecialty?["id"] as? NSNumber{
                 data["specialty"] = spec_id
             }
-            if !phone.text.isEmpty {
+            if !phone.text!.isEmpty {
                 data["phone"] = phone.text!
             }
-            if !address.text.isEmpty {
+            if !address.text!.isEmpty {
                 data["address"] = address.text!
             }
             if editMode{
@@ -271,7 +271,7 @@ class DoctorListViewController: UIViewController, MPGTextFieldDelegate, UITextFi
         }
     }
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("doctorCell") as! UITableViewCell
+        let cell = tableView.dequeueReusableCellWithIdentifier("doctorCell")!
         let doctorsArray = (indexPath.section == 0) ? filteredDoctors : filteredDoctorUsers
         if var doctor = doctorsArray[indexPath.row] as? NSDictionary {
             if let user = doctor["user"] as? NSDictionary {

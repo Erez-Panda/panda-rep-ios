@@ -6,7 +6,7 @@
 //  Copyright (c) 2014 Erez. All rights reserved.
 //
 
-var SERVER_URL = "http://livemed.co"
+var SERVER_URL = "https://www.livemed.co"
 //var SERVER_URL = "http://127.0.0.1:8000"
 //var SERVER_URL = "http://10.0.0.6:8000"
 //var SERVER_URL = "http://172.22.22.117:8000"
@@ -49,7 +49,7 @@ struct ServerAPI {
     static func getStringResult(result: AnyObject) ->NSString {
         if let data = result as? NSData{
             if let res = NSString(data: data, encoding: NSUTF8StringEncoding){
-                return res.stringByReplacingOccurrencesOfString("\"", withString: "", options: nil, range: NSMakeRange(0,res.length))
+                return res.stringByReplacingOccurrencesOfString("\"", withString: "", options: [], range: NSMakeRange(0,res.length))
             } else {
                 return ""
             }
@@ -350,12 +350,15 @@ struct ServerAPI {
     static func getResourceById(resourceIds: NSArray, completion: (result: NSArray) -> Void) -> Void{
         let data = ["id_list": resourceIds] as Dictionary<String, AnyObject>
         var err: NSError?
-        if let json = NSJSONSerialization.dataWithJSONObject(data, options: nil, error: &err){
+        do {
+            let json = try NSJSONSerialization.dataWithJSONObject(data, options: [])
             let jsonStr = NSString(data: json, encoding: NSUTF8StringEncoding)!
             let url = "/resources/id/?data=\(jsonStr)"
             self.http(url.stringByAddingPercentEscapesUsingEncoding(NSUTF8StringEncoding)!, completion: {result -> Void in
                 completion(result: self.getArrayResult(result))
             })
+        } catch let error as NSError {
+            err = error
         }
     }
     
@@ -492,7 +495,7 @@ struct ServerAPI {
     static func getErrorHandler(completion: (result: AnyObject) -> Void) -> (operation: AFHTTPRequestOperation!,error: NSError!) -> Void{
         return {(operation: AFHTTPRequestOperation!,error: NSError!) in
             completion(result: false)
-            println("Error: " + error.localizedDescription)
+            print("Error: " + error.localizedDescription)
         }
     }
     
@@ -557,15 +560,23 @@ struct ServerAPI {
                 completion(result: [:])
                 return
             }
-            var strData = NSString(data: data, encoding: NSUTF8StringEncoding)
+            var strData = NSString(data: data!, encoding: NSUTF8StringEncoding)
             //println("Body: \(strData)")
             var err: NSError?
-            var json: AnyObject? = NSJSONSerialization.JSONObjectWithData(data, options: .MutableLeaves, error: &err)
+            var json: AnyObject?
+            do {
+                json = try NSJSONSerialization.JSONObjectWithData(data!, options: .MutableLeaves)
+            } catch var error as NSError {
+                err = error
+                json = nil
+            } catch {
+                fatalError()
+            }
             
             // Did the JSONObjectWithData constructor return an error? If so, log the error to the console
             if(err != nil) {
                 //println(err!.localizedDescription)
-                let jsonStr = NSString(data: data, encoding: NSUTF8StringEncoding)
+                let jsonStr = NSString(data: data!, encoding: NSUTF8StringEncoding)
                 //println("Error could not parse JSON: '\(jsonStr)'")
             }
             else {
@@ -579,7 +590,7 @@ struct ServerAPI {
                 }
                 else {
                     // Woa, okay the json object was nil, something went worng. Maybe the server isn't running?
-                    let jsonStr = NSString(data: data, encoding: NSUTF8StringEncoding)
+                    let jsonStr = NSString(data: data!, encoding: NSUTF8StringEncoding)
                     //println("Error could not parse JSON: \(jsonStr)")
                 }
             }
@@ -592,9 +603,12 @@ struct ServerAPI {
         var session = NSURLSession.sharedSession()
 
         var task = session.downloadTaskWithURL(NSURL(string: url)!, completionHandler: { (nsUrl, response, error) -> Void in
-            //println(response.suggestedFilename)
-            NSFileManager.defaultManager().moveItemAtPath(nsUrl.path!, toPath:response.suggestedFilename!, error:nil);
-            completion(result: NSURL(fileURLWithPath: response.suggestedFilename!)!)
+                do {
+                    //println(response.suggestedFilename)
+                    try NSFileManager.defaultManager().moveItemAtPath(nsUrl!.path!, toPath:response!.suggestedFilename!)
+                } catch _ {
+                };
+            completion(result: NSURL(fileURLWithPath: response!.suggestedFilename!))
             
         })
         task.resume()
@@ -609,7 +623,7 @@ extension NSMutableData {
     ///
     /// Rather than littering my code with calls to `dataUsingEncoding` to convert strings to NSData, and then add that data to the NSMutableData, this wraps it in a nice convenient little extension to NSMutableData. This converts using UTF-8.
     ///
-    /// :param: string       The string to be added to the `NSMutableData`.
+    /// - parameter string:       The string to be added to the `NSMutableData`.
     
     func appendString(string: String) {
         let data = string.dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: true)

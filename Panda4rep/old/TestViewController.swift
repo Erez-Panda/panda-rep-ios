@@ -22,7 +22,7 @@ class TestViewController: UIViewController, UITableViewDataSource, UITableViewDe
     @IBOutlet weak var answersTable: UITableView!
     @IBOutlet weak var answerButton: UIButton!
     
-    required init(coder aDecoder: NSCoder) {
+    required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
     }
     
@@ -82,7 +82,7 @@ class TestViewController: UIViewController, UITableViewDataSource, UITableViewDe
         return self.answers!.count
     }
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("answerCell") as! UITableViewCell
+        let cell = tableView.dequeueReusableCellWithIdentifier("answerCell")!
         let answer = self.answers?[indexPath.row] as! NSDictionary
         let answerTest = answer["answer"] as! String
         cell.textLabel?.text = answerTest

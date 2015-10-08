@@ -45,7 +45,7 @@ class InboxViewController: PandaViewController, UITableViewDataSource, UITableVi
         ServerAPI.getOpenLetterRequests({ (result) -> Void in
             
             self.messages = self.updateStartDate(result)
-            self.messages.sort({ (letter, nextLetter) -> Bool in
+            self.messages.sortInPlace({ (letter, nextLetter) -> Bool in
                 if let created = letter["created"] as? NSDate {
                     if let nextCreated = nextLetter["created"] as? NSDate {
                         if created.laterDate(nextCreated) == created{
@@ -107,7 +107,7 @@ class InboxViewController: PandaViewController, UITableViewDataSource, UITableVi
     // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         if segue.identifier == "showInquirySegue" {
-            var svc = segue.destinationViewController as! InquiryDisplayViewController
+            let svc = segue.destinationViewController as! InquiryDisplayViewController
             svc.inquiry = selectedInquiry
         }
     }

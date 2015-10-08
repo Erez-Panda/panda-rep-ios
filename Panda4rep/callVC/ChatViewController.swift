@@ -56,7 +56,7 @@ class ChatViewController: UIViewController, UITextFieldDelegate {
     
     func textFieldShouldReturn(textField: UITextField) -> Bool {
         textField.resignFirstResponder()
-        sendMessageToRemote(textField.text)
+        sendMessageToRemote(textField.text!)
         textField.text = ""
         return true
     }
@@ -65,13 +65,13 @@ class ChatViewController: UIViewController, UITextFieldDelegate {
         if message != "" {
             var maybeError : OTError?
             CallUtils.session?.signalWithType("chat_text", string: message, connection: nil, error: &maybeError)
-            addChatBox(chatText.text, isSelf: true)
+            addChatBox(chatText.text!, isSelf: true)
         }
     }
     
 
     @IBAction func sendMessage(sender: AnyObject) {
-        sendMessageToRemote(chatText.text)
+        sendMessageToRemote(chatText.text!)
         chatText.text = ""
     }
     

@@ -25,7 +25,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, LoginDelegate, UIAlertVie
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         
         
-        var navigationBarAppearace = UINavigationBar.appearance()
+        let navigationBarAppearace = UINavigationBar.appearance()
         navigationBarAppearace.tintColor = ColorUtils.uicolorFromHex(0xffffff)
         navigationBarAppearace.barTintColor = ColorUtils.mainColor()
         // change navigation item title color
@@ -35,7 +35,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, LoginDelegate, UIAlertVie
         UITabBarItem.appearance().setTitleTextAttributes([NSForegroundColorAttributeName: ColorUtils.buttonColor()], forState:.Selected)
         
         // Override point for customization after application launch.
-        var pageControl = UIPageControl.appearance()
+        let pageControl = UIPageControl.appearance()
         pageControl.pageIndicatorTintColor = UIColor.lightGrayColor()
         pageControl.currentPageIndicatorTintColor = UIColor.blackColor()
         pageControl.backgroundColor = UIColor.whiteColor()
@@ -43,7 +43,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, LoginDelegate, UIAlertVie
         // Register for Push Notitications, if running iOS 8
         if application.respondsToSelector("registerUserNotificationSettings:") {
             
-            let types:UIUserNotificationType = (.Alert | .Badge | .Sound)
+            let types:UIUserNotificationType = ([.Alert, .Badge, .Sound])
             let settings:UIUserNotificationSettings = UIUserNotificationSettings(forTypes: types, categories: nil)
             
             application.registerUserNotificationSettings(settings)
@@ -87,10 +87,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate, LoginDelegate, UIAlertVie
         return true
     }
     
-    func application(application: UIApplication, openURL url: NSURL, sourceApplication: String?, annotation: AnyObject?) -> Bool {
+    func application(application: UIApplication, openURL url: NSURL, sourceApplication: String?, annotation: AnyObject) -> Bool {
         if DBSession.sharedSession().handleOpenURL(url){
             if DBSession.sharedSession().isLinked(){
-                println("App linked successfully!")
+                print("App linked successfully!")
             }
             return true
         }
@@ -142,7 +142,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, LoginDelegate, UIAlertVie
     
     
     func application(application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: NSError) {
-        print(error)
+        print(error, terminator: "")
     }
     
     func loginComplete() {
@@ -177,12 +177,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate, LoginDelegate, UIAlertVie
         }
         
         if let callUpdate = userInfo["call_update"] as? NSNumber{
-            self.updateHomeScreen(updatedCall: userInfo)
+            self.updateHomeScreen(userInfo)
         }
         
         if let type = userInfo["type"] as? String{
+            /*
             if type == "new_training"{
-                var rootViewController = self.window!.rootViewController
+                let rootViewController = self.window!.rootViewController
                 let tvc = rootViewController?.storyboard?.instantiateViewControllerWithIdentifier("TrainingViewController") as! TrainingViewController
                 let a = rootViewController?.presentedViewController
                 if let nvc = a as? UINavigationController{
@@ -191,6 +192,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, LoginDelegate, UIAlertVie
                     }
                 }
             }
+            */
         }
     }
     
@@ -220,8 +222,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, LoginDelegate, UIAlertVie
         
 
         let date = TimeUtils.serverDateTimeStrToDate(start)
-        var readableTime = TimeUtils.dateToReadableStr(date)
-        var acceptCallAlert = UIAlertViewWithData()
+        let readableTime = TimeUtils.dateToReadableStr(date)
+        let acceptCallAlert = UIAlertViewWithData()
         acceptCallAlert.title = "New Call Offer"
         if let creator = userInfo["creator_name"] as? String{
             acceptCallAlert.message = "\(creator) has requested a call about \(product) on \(readableTime).\nWould you like to accept it?"
@@ -304,7 +306,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, LoginDelegate, UIAlertVie
                         }
                         if let creator = inquiry["creator_name"] as? String{
                             if var text = inquiry["inquiry_text"] as? String{
-                                text = text.stringByReplacingOccurrencesOfString("\n", withString: " ", options: nil, range: nil)
+                                text = text.stringByReplacingOccurrencesOfString("\n", withString: " ", options: [], range: nil)
                                 message = "Dr. \(creator):\n\"\(text)\"\n\n" + message
                             }
                         }

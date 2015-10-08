@@ -73,13 +73,13 @@ class PostCallNewViewController: PandaViewController, FloatRatingViewDelegate, U
                                 self.floatRatingView.rating = Float(rating)
                             }
                             if let summary = result["details"] as? String{
-                                if count(summary) > 0 {
+                                if summary.characters.count > 0 {
                                     self.summaryTextView.text = summary
                                     self.summaryTextView.textColor = UIColor.blackColor()
                                 }
                             }
                             if let next = result["next_call_text"] as? String{
-                                if count(next) > 0 {
+                                if next.characters.count > 0 {
                                     self.nextTimeTextView.text = next
                                     self.nextTimeTextView.textColor = UIColor.blackColor()
                                 }
@@ -101,17 +101,17 @@ class PostCallNewViewController: PandaViewController, FloatRatingViewDelegate, U
                 lastName = callee["last_name"] as! String
             }
             callerNameLabel.text =  callerNameLabel.text! + "\(firstName) \(lastName)"
-            self.followupTextView.text = self.followupTextView.text.stringByReplacingOccurrencesOfString("DOCTOR_NAME", withString: "\(lastName)", options: nil, range: nil)
+            self.followupTextView.text = self.followupTextView.text.stringByReplacingOccurrencesOfString("DOCTOR_NAME", withString: "\(lastName)", options: [], range: nil)
         } else {
-            self.followupTextView.text = self.followupTextView.text.stringByReplacingOccurrencesOfString("DOCTOR_NAME", withString: "", options: nil, range: nil)
+            self.followupTextView.text = self.followupTextView.text.stringByReplacingOccurrencesOfString("DOCTOR_NAME", withString: "", options: [], range: nil)
         }
         let user = StorageUtils.getUserData(StorageUtils.DataType.User)
         let firstName = user["first_name"] as! String
         let lastName = user["last_name"] as! String
-        self.followupTextView.text = self.followupTextView.text.stringByReplacingOccurrencesOfString("REP_NAME", withString: "\(firstName) \(lastName)", options: nil, range: nil)
+        self.followupTextView.text = self.followupTextView.text.stringByReplacingOccurrencesOfString("REP_NAME", withString: "\(firstName) \(lastName)", options: [], range: nil)
         if let product = call?["product"] as? NSDictionary{
             if let name = product["name"] as? String{
-                self.followupTextView.text = self.followupTextView.text.stringByReplacingOccurrencesOfString("PRODUCT_NAME", withString: "\(name)", options: nil, range: nil)
+                self.followupTextView.text = self.followupTextView.text.stringByReplacingOccurrencesOfString("PRODUCT_NAME", withString: "\(name)", options: [], range: nil)
             }
         }
         
@@ -210,7 +210,7 @@ class PostCallNewViewController: PandaViewController, FloatRatingViewDelegate, U
     // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         if (segue.identifier == "presentAttachmentList"){
-            var svc = segue.destinationViewController as! AttachmentListViewController
+            let svc = segue.destinationViewController as! AttachmentListViewController
             svc.postCallVC = self
             if let product = call?["product"] as? NSDictionary{
                 if let id = product["id"] as? NSNumber{

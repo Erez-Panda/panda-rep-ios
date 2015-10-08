@@ -51,10 +51,10 @@ class TrainingDetailViewController: UITableViewController {
 
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         if (segue.identifier == "showResSegue"){
-            var svc = segue.destinationViewController as! WebResourceViewController
+            let svc = segue.destinationViewController as! WebResourceViewController
             svc.resourceFile = self.resourceFile
         } else if (segue.identifier == "showTestSegue"){
-            var svc = segue.destinationViewController as! TestViewController
+            let svc = segue.destinationViewController as! TestViewController
             svc.resourceId = self.resourceId
         }
     }

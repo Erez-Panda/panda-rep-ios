@@ -8,14 +8,14 @@
 
 import UIKit
 
-class CallOfferViewController: UITableViewController, UITableViewDelegate, UITableViewDataSource, UIAlertViewDelegate{
+class CallOfferViewController: UITableViewController, UIAlertViewDelegate{
 
     @IBOutlet var offersTable: UITableView!
     
     var callOffers: NSArray!
     
     required init(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder)
+        super.init(coder: aDecoder)!
     }
     
     override func numberOfSectionsInTableView(tableView: UITableView) -> Int{
@@ -31,7 +31,7 @@ class CallOfferViewController: UITableViewController, UITableViewDelegate, UITab
         
     }
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("callOfferCell") as! UITableViewCell
+        let cell = tableView.dequeueReusableCellWithIdentifier("callOfferCell")!
         let callOffer = self.callOffers[indexPath.row] as! NSDictionary
         let request = callOffer["call_request"] as! NSDictionary
         let startTime = request["start"] as! NSString
@@ -68,7 +68,7 @@ class CallOfferViewController: UITableViewController, UITableViewDelegate, UITab
 
     
     func alertView(alertView: UIAlertView, didDismissWithButtonIndex buttonIndex: Int) {
-        println(buttonIndex)
+        print(buttonIndex)
         if (buttonIndex == 0){ //Accept
             if let offerId: AnyObject = (alertView as! UIAlertViewWithData).data?["offer_id"] {
                 ServerAPI.acceptCallOffer(offerId as! NSNumber, completion: {result -> Void in
@@ -86,8 +86,8 @@ class CallOfferViewController: UITableViewController, UITableViewDelegate, UITab
         
         
         let date = TimeUtils.serverDateTimeStrToDate(start)
-        var readableTime = TimeUtils.dateToReadableStr(date)
-        var acceptCallAlert = UIAlertViewWithData()
+        let readableTime = TimeUtils.dateToReadableStr(date)
+        let acceptCallAlert = UIAlertViewWithData()
         
         acceptCallAlert.title = "New Call Offer"
         acceptCallAlert.message = "Call about \(product) will take place on \(readableTime), Would you like to accept it?"

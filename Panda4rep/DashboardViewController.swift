@@ -95,7 +95,7 @@ class DashboardViewController: PandaViewController {
     }
     
     func workDays(postCalls: NSArray) -> Int{
-        var activeDays : NSMutableDictionary = [:]
+        let activeDays : NSMutableDictionary = [:]
         for i in 0..<postCalls.count {
             if let postCall = postCalls[i] as? NSDictionary{
                 if let dateStr = postCall["start"] as? String{

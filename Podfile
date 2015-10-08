@@ -5,7 +5,6 @@ use_frameworks!
 
 pod 'OpenTok','~> 2.6'
 pod 'HorizontalDatePicker', :head
-pod 'GoogleAnalytics', '~> 3.13'
 pod 'FontAwesomeIconFactory','~> 2.1'
 pod 'AFNetworking','~> 2.6'
 pod 'PNChart'

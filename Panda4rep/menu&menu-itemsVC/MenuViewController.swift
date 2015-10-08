@@ -107,7 +107,7 @@ class MenuViewController: UIViewController, UITableViewDelegate, UITableViewData
     
     func loadCollapseTable(tableView: UITableView, index: Int)-> UITableViewCell{
         let cell = tableView.dequeueReusableCellWithIdentifier("menuCell") as! MenuTableViewCell
-        var iconName = self.menuIcons[index]
+        let iconName = self.menuIcons[index]
         cell.leftIconView.image = UIImage(named: iconName)
         cell.leftIconView.hidden = false
         cell.label.text = self.menuItems[index]
@@ -154,7 +154,7 @@ class MenuViewController: UIViewController, UITableViewDelegate, UITableViewData
     }
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        var index = indexPath.row
+        let index = indexPath.row
             openMenuItem(index)
     }
     
@@ -175,7 +175,7 @@ class MenuViewController: UIViewController, UITableViewDelegate, UITableViewData
         } else if (index == 1){
             let nsObject: AnyObject? = NSBundle.mainBundle().infoDictionary!["CFBundleShortVersionString"]
             let version = nsObject as! String
-            var alert = UIAlertView()
+            let alert = UIAlertView()
             alert.title = "LiveMed"
             alert.message = "Version: \(version)"
             alert.addButtonWithTitle("Ok")
@@ -218,18 +218,17 @@ class MenuViewController: UIViewController, UITableViewDelegate, UITableViewData
     
     func closeMenuAndShowViewController(identifier: String){
         close(false)
-        let vc = self.storyboard?.instantiateViewControllerWithIdentifier(identifier) as! UIViewController
-        self.previousViewController.navigationController?.pushViewController(vc, animated: true)
+        let vc = self.storyboard?.instantiateViewControllerWithIdentifier(identifier)
+        self.previousViewController.navigationController?.pushViewController(vc!, animated: true)
     }
     
-    override func touchesBegan(touches: Set<NSObject>, withEvent event: UIEvent) {
+    override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
         if (closing){
             return
         }
         super.touchesBegan(touches, withEvent: event)
-        if let touch: UITouch = touches.first as? UITouch{
+        if let touch: UITouch = touches.first!{
             startPoint = touch.locationInView(self.view) as CGPoint
-            ((touch.gestureRecognizers as NSArray)[0] as! UIGestureRecognizer).cancelsTouchesInView = false
             let touchLocation = touch.locationInView(self.view) as CGPoint
             
             
@@ -247,7 +246,7 @@ class MenuViewController: UIViewController, UITableViewDelegate, UITableViewData
         
     }
     
-    override func touchesEnded(touches: Set<NSObject>, withEvent event: UIEvent) {
+    override func touchesEnded(touches: Set<UITouch>, withEvent event: UIEvent?) {
         if (closing){
             return
         }
@@ -256,19 +255,19 @@ class MenuViewController: UIViewController, UITableViewDelegate, UITableViewData
             close(true)
         }
     }
-    override func touchesCancelled(touches: Set<NSObject>, withEvent event: UIEvent!) {
-        println("CANCEL")
+    override func touchesCancelled(touches: Set<UITouch>?, withEvent event: UIEvent?) {
+        print("CANCEL")
     }
-    override func touchesMoved(touches: Set<NSObject>, withEvent event: UIEvent) {
+    override func touchesMoved(touches: Set<UITouch>, withEvent event: UIEvent?) {
         if (closing){
             return
         }
-        if let touch: UITouch = touches.first as? UITouch{
+        if let touch: UITouch = touches.first{
             let touchLocation = touch.locationInView(self.view) as CGPoint
             if (self.isDragging){
                 UIView.animateWithDuration(0.0,
                     delay: 0.0,
-                    options: (UIViewAnimationOptions.BeginFromCurrentState|UIViewAnimationOptions.CurveEaseInOut),
+                    options: ([UIViewAnimationOptions.BeginFromCurrentState, UIViewAnimationOptions.CurveEaseInOut]),
                     animations:  {
                         self.view.frame.origin.x += (touchLocation.x-self.startPoint!.x)
                         self.view.alpha = 0.92 + (self.view.frame.origin.x/self.view.frame.size.width)

@@ -259,7 +259,7 @@ class CreateCallViewController: UIViewController, UITableViewDelegate, UITableVi
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         if (segue.identifier == "showDoctorList"){
-            var svc = segue.destinationViewController as! DoctorListViewController
+            let svc = segue.destinationViewController as! DoctorListViewController
             svc.parentVC = self
         }
     }

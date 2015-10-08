@@ -22,7 +22,7 @@ class LinearInterpView: UIView {
         // Drawing code
     }
 
-    required init(coder aDecoder: NSCoder) {
+    required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         self.multipleTouchEnabled = false
         self.backgroundColor = UIColor.clearColor()
@@ -30,10 +30,10 @@ class LinearInterpView: UIView {
         path?.lineWidth = 2.0
     }
     
-    override func touchesBegan(touches: Set<NSObject>, withEvent event: UIEvent) {
+    override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
         super.touchesBegan(touches, withEvent: event)
         if (enabled){
-            if let touch: UITouch = touches.first as? UITouch{
+            if let touch: UITouch = touches.first{
                 //((touch.gestureRecognizers as NSArray)[0] as! UIGestureRecognizer).cancelsTouchesInView = false
                 let touchLocation = touch.locationInView(self) as CGPoint
                 path?.moveToPoint(touchLocation)
@@ -41,17 +41,17 @@ class LinearInterpView: UIView {
         }
     }
     
-    override func touchesEnded(touches: Set<NSObject>, withEvent event: UIEvent) {
+    override func touchesEnded(touches: Set<UITouch>, withEvent event: UIEvent?) {
         super.touchesEnded(touches, withEvent: event)
     }
-    override func touchesCancelled(touches: Set<NSObject>, withEvent event: UIEvent!) {
+    override func touchesCancelled(touches: Set<UITouch>?, withEvent event: UIEvent?) {
         super.touchesCancelled(touches, withEvent: event)
-        println("CANCEL")
+        print("CANCEL")
     }
-    override func touchesMoved(touches: Set<NSObject>, withEvent event: UIEvent) {
+    override func touchesMoved(touches: Set<UITouch>, withEvent event: UIEvent?) {
         super.touchesMoved(touches, withEvent: event)
         if (enabled){
-            if let touch: UITouch = touches.first as? UITouch{
+            if let touch: UITouch = touches.first{
                 let touchLocation = touch.locationInView(self) as CGPoint
                 path?.addLineToPoint(touchLocation)
                 self.setNeedsDisplay()

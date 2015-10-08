@@ -94,16 +94,16 @@ class CallNewViewController: UIViewController, UIGestureRecognizerDelegate, OTSe
     override func viewDidLayoutSubviews() {
         if firstTime{
             buttomView.layoutIfNeeded()
-            ViewUtils.cornerRadius(toggleControllPanelButton, corners: (UIRectCorner.TopLeft|UIRectCorner.TopRight), cornerRadius: 20.0)
-            ViewUtils.cornerRadius(toggleToolsButton, corners: (UIRectCorner.BottomRight|UIRectCorner.TopRight), cornerRadius: 10.0)
+            ViewUtils.cornerRadius(toggleControllPanelButton, corners: [.TopLeft, .TopRight], cornerRadius: 20.0)
+            ViewUtils.cornerRadius(toggleToolsButton, corners: [.TopLeft, .TopRight], cornerRadius: 10.0)
             //ViewUtils.addGradientLayer(buttomView, topColor: UIColor(red:0.1/255, green:0.1/255, blue:0.1/255, alpha:0.0), bottomColor: UIColor(red:0.1/255, green:0.1/255, blue:0.1/255, alpha:0.9))
             ViewUtils.roundView(chatBadge, borderWidth: 1.0, borderColor: UIColor.whiteColor())
             if ((currentImage) != nil){
                 presentaionImage?.image = currentImage
             }
             
-            sideView.setTranslatesAutoresizingMaskIntoConstraints(false)
-            buttomView.setTranslatesAutoresizingMaskIntoConstraints(false)
+            sideView.translatesAutoresizingMaskIntoConstraints = false
+            buttomView.translatesAutoresizingMaskIntoConstraints = false
             
             //controlPanelTimer = NSTimer.scheduledTimerWithTimeInterval(NSTimeInterval(3), target: self, selector: Selector("hideControls"), userInfo: AnyObject?(), repeats: false)
         } else {
@@ -305,7 +305,7 @@ class CallNewViewController: UIViewController, UIGestureRecognizerDelegate, OTSe
     }
     
     
-    func scrollViewDidEndZooming(scrollView: UIScrollView, withView view: UIView!, atScale scale: CGFloat) {
+    func scrollViewDidEndZooming(scrollView: UIScrollView, withView view: UIView?, atScale scale: CGFloat) {
         let screenBounds = UIScreen.mainScreen().bounds
         var maybeError : OTError?
         var paramStr = ""
@@ -443,7 +443,7 @@ class CallNewViewController: UIViewController, UIGestureRecognizerDelegate, OTSe
             drawingView.userInteractionEnabled = false
             sender.color = UIColor.whiteColor()
             //self.view.sendSubviewToBack(drawingView)
-            if (self.view.subviews[3] as! NSObject == drawingView){
+            if (self.view.subviews[3] as NSObject == drawingView){
                 self.view.exchangeSubviewAtIndex(2, withSubviewAtIndex: 3)
             }
             
@@ -452,7 +452,7 @@ class CallNewViewController: UIViewController, UIGestureRecognizerDelegate, OTSe
             drawingView.enabled = true
             drawingView.userInteractionEnabled = true
             sender.color = UIColor.blueColor()
-            if (self.view.subviews[2] as! NSObject == drawingView){
+            if (self.view.subviews[2] as NSObject == drawingView){
                 self.view.exchangeSubviewAtIndex(2, withSubviewAtIndex: 3)
             }
             //self.view.bringSubviewToFront(drawingView)
@@ -477,7 +477,7 @@ class CallNewViewController: UIViewController, UIGestureRecognizerDelegate, OTSe
     
     func showDropboxItem(url: NSURL!){
         if let data = NSData(contentsOfURL: url){
-            self.presentationWebView!.loadData(data, MIMEType: "application/pdf", textEncodingName: "ISO-8859-1", baseURL: nil)
+            self.presentationWebView!.loadData(data, MIMEType: "application/pdf", textEncodingName: "ISO-8859-1", baseURL: url)
             self.presentationWebView!.hidden = false
             CallUtils.doScreenPublish(presentationWebView!)
         }
@@ -504,9 +504,9 @@ class CallNewViewController: UIViewController, UIGestureRecognizerDelegate, OTSe
 
 
     
-    override func touchesBegan(touches: Set<NSObject>, withEvent event: UIEvent) {
+    override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
         super.touchesBegan(touches, withEvent: event)
-        if let touch: UITouch = touches.first as? UITouch{
+        if let touch: UITouch = touches.first{
             //((touch.gestureRecognizers as NSArray)[0] as! UIGestureRecognizer).cancelsTouchesInView = false
             let touchLocation = touch.locationInView(self.view) as CGPoint
             
@@ -554,7 +554,7 @@ class CallNewViewController: UIViewController, UIGestureRecognizerDelegate, OTSe
         }
     }
     
-    override func touchesEnded(touches: Set<NSObject>, withEvent event: UIEvent) {
+    override func touchesEnded(touches: Set<UITouch>, withEvent event: UIEvent?) {
         super.touchesEnded(touches, withEvent: event)
         self.isDragging = false
         if isPointing {
@@ -564,13 +564,13 @@ class CallNewViewController: UIViewController, UIGestureRecognizerDelegate, OTSe
             CallUtils.session?.signalWithType("pointer_hide", string: "", connection: nil, error: &maybeError)
         }
     }
-    override func touchesCancelled(touches: Set<NSObject>, withEvent event: UIEvent!) {
+    override func touchesCancelled(touches: Set<UITouch>?, withEvent event: UIEvent?) {
         super.touchesCancelled(touches, withEvent: event)
-        println("CANCEL")
+        print("CANCEL")
     }
-    override func touchesMoved(touches: Set<NSObject>, withEvent event: UIEvent) {
+    override func touchesMoved(touches: Set<UITouch>, withEvent event: UIEvent?) {
         super.touchesMoved(touches, withEvent: event)
-        if let touch: UITouch = touches.first as? UITouch{
+        if let touch: UITouch = touches.first{
             let touchLocation = touch.locationInView(self.view) as CGPoint
             if drawingMode {
                 var maybeError : OTError?
@@ -588,7 +588,7 @@ class CallNewViewController: UIViewController, UIGestureRecognizerDelegate, OTSe
                 if let subscriber = CallUtils.subscriber?.view {
                     UIView.animateWithDuration(0.0,
                         delay: 0.0,
-                        options: (UIViewAnimationOptions.BeginFromCurrentState|UIViewAnimationOptions.CurveEaseInOut),
+                        options: ([UIViewAnimationOptions.BeginFromCurrentState, UIViewAnimationOptions.CurveEaseInOut]),
                         animations:  {subscriber.center = touchLocation},
                         completion: nil)
                 }
@@ -596,7 +596,7 @@ class CallNewViewController: UIViewController, UIGestureRecognizerDelegate, OTSe
                     if let subscriber = CallUtils.publisher?.view {
                         UIView.animateWithDuration(0.0,
                             delay: 0.0,
-                            options: (UIViewAnimationOptions.BeginFromCurrentState|UIViewAnimationOptions.CurveEaseInOut),
+                            options: ([UIViewAnimationOptions.BeginFromCurrentState, UIViewAnimationOptions.CurveEaseInOut]),
                             animations:  {subscriber.center = touchLocation},
                             completion: nil)
                     }
@@ -656,15 +656,15 @@ class CallNewViewController: UIViewController, UIGestureRecognizerDelegate, OTSe
     // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         if (segue.identifier == "showPostCall"){
-            var svc = segue.destinationViewController as! PostCallNewViewController
+            let svc = segue.destinationViewController as! PostCallNewViewController
             svc.startTime = self.callStartTime
             svc.endTime = NSDate()
             svc.sessionNumber = self.sessionNumber
         } else if (segue.identifier == "presentDropboxList"){
-            var svc = segue.destinationViewController as! DropboxListViewController
+            let svc = segue.destinationViewController as! DropboxListViewController
             svc.parentVC = self
         } else if (segue.identifier == "presentVideoResources"){
-            var svc = segue.destinationViewController as! VideoResourceViewController
+            let svc = segue.destinationViewController as! VideoResourceViewController
             svc.parentVC = self
             svc.videoDocuments = videoResources
         }
@@ -677,8 +677,8 @@ class CallNewViewController: UIViewController, UIGestureRecognizerDelegate, OTSe
         return true
     }
     
-    override func supportedInterfaceOrientations() -> Int {
-        return Int(UIInterfaceOrientationMask.LandscapeLeft.rawValue)
+    override func supportedInterfaceOrientations() -> UIInterfaceOrientationMask {
+        return UIInterfaceOrientationMask.LandscapeLeft
     }
     
     override func preferredInterfaceOrientationForPresentation() -> UIInterfaceOrientation {
@@ -780,39 +780,57 @@ class CallNewViewController: UIViewController, UIGestureRecognizerDelegate, OTSe
             } else if type == "signature_points"{
                 let data = getKeyVals(string)
                 let screen =  UIScreen.mainScreen().bounds
+                let document = presentaionImage!.image!
                 let zoom = CGFloat((data!["zoom"] as NSString?)!.floatValue)
-                let x = CGFloat((data!["originX"] as NSString?)!.floatValue) * screen.width
-                let y = CGFloat((data!["originY"] as NSString?)!.floatValue) * screen.height
+
+                let screenWidth = CGFloat((data!["screenWidth"] as NSString?)!.floatValue)
+                let screenHeight = CGFloat((data!["screenHeight"] as NSString?)!.floatValue)
                 let width = CGFloat((data!["width"] as NSString?)!.floatValue) / zoom
                 let height = CGFloat((data!["height"] as NSString?)!.floatValue) / zoom
-                remoteSignatureView = PassiveLinearInterpView(frame: CGRectMake(x,y,width,height))
-                var points : Array<CGPoint> = []
-                var pointsStr = split(string){$0 == "-"}
-                for i in 0..<pointsStr.count {
-                    if let p = getPointFromPointStr(pointsStr[i], zoom: zoom){
-                        if i == 0{
-                            remoteSignatureView!.moveToPoint(p)
-                        } else {
-                            remoteSignatureView!.addPoint(p)
+                //Image is aspect fit, scale factor will be the biggest change on image
+                let scaleRatio = max(screen.width/screenWidth, screen.height/screenHeight)
+                //One of these have to be 0
+                let documentScaleRatio = max(document.size.width/screen.width, document.size.height/screen.height)
+                let heightDiff = ((screen.height*documentScaleRatio) - document.size.height)
+                let widthDiff = ((screen.width*documentScaleRatio) - document.size.width)
+                let x = CGFloat((data!["originX"] as NSString?)!.floatValue) * (screen.width-widthDiff)
+                let y = CGFloat((data!["originY"] as NSString?)!.floatValue) * (screen.height-heightDiff)
+                remoteSignatureView = PassiveLinearInterpView(frame: CGRectMake(x+widthDiff/2,y+heightDiff/2,width*scaleRatio,height*scaleRatio))
+                remoteSignatureView!.path?.lineWidth *= scaleRatio/zoom
+                let linesStr = data!["points"]!.componentsSeparatedByString("***")
+                for line in linesStr {
+                    var pointsStr = line.componentsSeparatedByString("-")
+                    for i in 0..<pointsStr.count {
+                        if let p = getPointFromPointStr(pointsStr[i], scaleRatio: scaleRatio,zoom: zoom){
+                            if i == 0{
+                                remoteSignatureView!.moveToPoint(p)
+                            } else {
+                                remoteSignatureView!.addPoint(p)
+                            }
                         }
                     }
                 }
+                
                 presentaionImage?.addSubview(remoteSignatureView!)
             }
             
         }
     }
         
-    func getPointFromPointStr(pointStr: String, zoom: CGFloat)-> CGPoint?{
-        var coordsStr = split(pointStr){$0 == ","}
-        let x = (coordsStr[0] as NSString).floatValue
-        let y = (coordsStr[1] as NSString).floatValue
-        return CGPoint(x: CGFloat(x)/zoom ,y: CGFloat(y)/zoom)
+    func getPointFromPointStr(pointStr: String, scaleRatio: CGFloat, zoom: CGFloat)-> CGPoint?{
+        if pointStr.containsString(","){
+            var coordsStr = pointStr.characters.split{$0 == ","}.map { String($0) }
+            let x = (coordsStr[0] as NSString).floatValue
+            let y = (coordsStr[1] as NSString).floatValue
+            return CGPoint(x: CGFloat(x)/zoom  * scaleRatio,y: CGFloat(y)/zoom * scaleRatio)
+        } else {
+            return nil
+        }
     }
     
     func getKeyVals(string: String) -> Dictionary<String, String>? {
         var results = [String:String]()
-        var keyValues = string.componentsSeparatedByString("&")
+        let keyValues = string.componentsSeparatedByString("&")
         if keyValues.count > 0 {
             for pair in keyValues {
                 let kv = pair.componentsSeparatedByString("=")

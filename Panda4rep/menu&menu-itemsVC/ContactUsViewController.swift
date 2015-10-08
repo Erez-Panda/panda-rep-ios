@@ -20,7 +20,7 @@ class ContactUsViewController: PandaViewController, UITextViewDelegate, UITextFi
     }
     
     func addDoneToolBarToKeyboard(textView: UITextView){
-        var doneToolbar = UIToolbar(frame: CGRect(x: 0, y: 0, width: 320, height: 50))
+        let doneToolbar = UIToolbar(frame: CGRect(x: 0, y: 0, width: 320, height: 50))
         doneToolbar.barStyle = UIBarStyle.Default
         doneToolbar.items = [UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.FlexibleSpace, target: nil, action: nil),
             UIBarButtonItem(title: "Done", style: UIBarButtonItemStyle.Done, target: self, action: "doneButtonClickedDismissKeyboard")]
@@ -66,7 +66,7 @@ class ContactUsViewController: PandaViewController, UITextViewDelegate, UITextFi
     @IBAction func sendInquiry(sender: AnyObject) {
         if self.inquiryTextView.text != "" && self.inquiryTextView.text != placeholder{
             //send inquiry...
-            ServerAPI.sendSupportEmail(["title": subjectText.text,"text": inquiryTextView.text], completion: { (result) -> Void in
+            ServerAPI.sendSupportEmail(["title": subjectText.text!,"text": inquiryTextView.text!], completion: { (result) -> Void in
                 //
             })
             confirmView.hidden = false

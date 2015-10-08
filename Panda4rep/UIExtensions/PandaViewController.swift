@@ -10,7 +10,7 @@ import UIKit
 
 class PandaViewController: UIViewController {
     func back(){
-        if ( self == (self.navigationController?.viewControllers  as! [UIViewController])[0]){
+        if self == (self.navigationController?.viewControllers[0]){
             self.dismissViewControllerAnimated(true, completion: nil)
         }
         self.navigationController?.popViewControllerAnimated(true)
