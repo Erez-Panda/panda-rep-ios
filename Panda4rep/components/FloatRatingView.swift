@@ -239,7 +239,7 @@ public class FloatRatingView: UIView {
         }
         
         // Add new image views
-        for i in 0..<self.maxRating {
+        for _ in 0..<self.maxRating {
             let emptyImageView = UIImageView()
             emptyImageView.contentMode = self.imageContentMode
             emptyImageView.image = self.emptyImage

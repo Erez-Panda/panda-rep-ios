@@ -306,7 +306,6 @@ class CallNewViewController: UIViewController, UIGestureRecognizerDelegate, OTSe
     
     
     func scrollViewDidEndZooming(scrollView: UIScrollView, withView view: UIView?, atScale scale: CGFloat) {
-        let screenBounds = UIScreen.mainScreen().bounds
         var maybeError : OTError?
         var paramStr = ""
         paramStr += "\(scale)_"

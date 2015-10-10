@@ -68,7 +68,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, LoginDelegate, UIAlertVie
                         self.openInquiryScreen(inquiry)
                     }
                 }
-                if let canceled = notificationPayload["canceled_call_id"] as? NSNumber{
+                if nil != notificationPayload["canceled_call_id"] as? NSNumber{
                     self.updateHomeScreen()
                 }
                 
@@ -165,7 +165,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, LoginDelegate, UIAlertVie
             self.openInquiryScreen(inquiry)
         }
         
-        if let canceled = userInfo["canceled_call_id"] as? NSNumber{
+        if nil != userInfo["canceled_call_id"] as? NSNumber{
             if let topvc = ViewUtils.getTopViewController(){
                 if let pName = userInfo["product_name"] as? String{
                     let alert = UIAlertController(title: "Call Cancelled", message: "A call about \(pName) was cancelled", preferredStyle: UIAlertControllerStyle.Alert)
@@ -176,12 +176,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate, LoginDelegate, UIAlertVie
             self.updateHomeScreen()
         }
         
-        if let callUpdate = userInfo["call_update"] as? NSNumber{
+        if nil != userInfo["call_update"] as? NSNumber{
             self.updateHomeScreen(userInfo)
         }
-        
+        /*
         if let type = userInfo["type"] as? String{
-            /*
             if type == "new_training"{
                 let rootViewController = self.window!.rootViewController
                 let tvc = rootViewController?.storyboard?.instantiateViewControllerWithIdentifier("TrainingViewController") as! TrainingViewController
@@ -192,8 +191,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, LoginDelegate, UIAlertVie
                     }
                 }
             }
-            */
         }
+*/
     }
     
     func alertView(alertView: UIAlertView, didDismissWithButtonIndex buttonIndex: Int) {
@@ -277,7 +276,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, LoginDelegate, UIAlertVie
     }
     
     func openPreCallScreen(id: NSNumber){
-        if let vc = self.homeVC {
+        if nil != self.homeVC {
             showIncomingCallAlert(id)
         } else {
             preCallId = id
@@ -295,7 +294,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, LoginDelegate, UIAlertVie
     }
     
     func openInquiryScreen(id: NSNumber){
-        if let vc = self.homeVC {
+        if nil != self.homeVC {
             if (CallUtils.session?.sessionConnectionStatus == OTSessionConnectionStatus.NotConnected || CallUtils.session == nil){
                 if let topvc = ViewUtils.getTopViewController(){
                     var title = "New Medical Inquiry"

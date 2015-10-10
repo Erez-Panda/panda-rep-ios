@@ -285,7 +285,7 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         var cell : ZoneCallTableViewCell = ZoneCallTableViewCell()
         let call = filteredCalls[indexPath.row]
-        if let isOffer = call["offer"] as? Bool{
+        if nil != call["offer"] as? Bool{
             cell = tableView.dequeueReusableCellWithIdentifier("acceptCallCell") as! AcceptCallTableViewCell
             (cell as! AcceptCallTableViewCell).acceptButton.addTarget(self, action: "acceptCall:", forControlEvents: UIControlEvents.TouchUpInside)
             (cell as! AcceptCallTableViewCell).acceptButton.tag = indexPath.row
@@ -298,13 +298,13 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
 
         cell.time.text = TimeUtils.dateToReadableTimeStr(call["start"] as! NSDate)
         if let callee = call["callee"] as? NSDictionary{
-            var firstName = ""
+            //var firstName = ""
             var lastName = ""
             if let user = callee["user"] as? NSDictionary{
-                firstName = user["first_name"] as! String
+                //firstName = user["first_name"] as! String
                 lastName = user["last_name"] as! String
             } else { // no user == guest
-                firstName = callee["first_name"] as! String
+                //firstName = callee["first_name"] as! String
                 lastName = callee["last_name"] as! String
             }
             cell.rep.text = "Dr. \(lastName)"
@@ -337,7 +337,7 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         let call = filteredCalls[indexPath.row]
-        if let isOffer = call["offer"] as? Bool{
+        if nil != call["offer"] as? Bool{
             return
         }
         selectedCall = call

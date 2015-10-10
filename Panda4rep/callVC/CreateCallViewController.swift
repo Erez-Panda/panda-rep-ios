@@ -225,7 +225,7 @@ class CreateCallViewController: UIViewController, UITableViewDelegate, UITableVi
                         "product": prod["id"] as! NSNumber
                         ] as Dictionary<String,AnyObject>
                     var newCall = ServerAPI.newGuestCall
-                    if let user = doc["user"] as? NSDictionary { //Real user
+                    if nil != doc["user"] as? NSDictionary { //Real user
                         callData["callee"] = doc["id"] as! NSNumber
                         newCall = ServerAPI.newCall
                     } else { // Guest user

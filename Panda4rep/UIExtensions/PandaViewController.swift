@@ -29,7 +29,7 @@ class PandaViewController: UIViewController {
     }
     
     override func viewWillAppear(animated: Bool) {
-        if let t  = self.title {
+        if let _  = self.title {
             //GAIUtils.sendScreenUsage(t)
         }
     }

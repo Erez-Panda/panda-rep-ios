@@ -95,7 +95,6 @@ struct StorageUtils {
     }
     
     static func getBookmark(type: DataType, id: NSNumber) -> NSDictionary{
-        var bookmarks: NSArray = []
         let defaultUser = NSUserDefaults.standardUserDefaults()
         if let existingBookmarks = defaultUser.objectForKey(type.rawValue) as? NSArray{
             for bookmark in existingBookmarks{
@@ -146,7 +145,6 @@ struct StorageUtils {
     }
     
     static func isArticleRecent(type: DataType, id: NSNumber) -> Bool{
-        var recents: NSArray = []
         let defaultUser = NSUserDefaults.standardUserDefaults()
         if let existingRecents = defaultUser.objectForKey(type.rawValue) as? NSArray{
             for recent in existingRecents{
@@ -160,7 +158,6 @@ struct StorageUtils {
     }
     
     static func saveUserSettings(settings: NSDictionary){
-        let defaultUser = NSUserDefaults.standardUserDefaults()
         NSUserDefaults.standardUserDefaults().setObject(cleanDictionaryNil(settings), forKey: "userSettings")
         NSUserDefaults.standardUserDefaults().synchronize()
     }
@@ -174,10 +171,9 @@ struct StorageUtils {
     }
     
     static func saveAllDrugs(drugs: NSArray){
-        let defaultUser = NSUserDefaults.standardUserDefaults()
         let validDrugs : NSMutableArray = []
         for drug in drugs{
-            if let d = drug as? NSDictionary{
+            if nil != drug as? NSDictionary{
                 validDrugs.addObject(self.cleanDictionaryNil(drug as! NSDictionary))
             }
         }
@@ -208,7 +204,6 @@ struct StorageUtils {
     }
     
     static func setItems(type: DataType, items: NSArray){
-        let defaultUser = NSUserDefaults.standardUserDefaults()
         let cleanItems : NSMutableArray = []
         for item in items{
             cleanItems.addObject(cleanDictionaryNil(item as! NSDictionary))

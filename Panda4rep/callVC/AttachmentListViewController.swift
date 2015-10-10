@@ -90,8 +90,6 @@ class AttachmentListViewController: UIViewController, UITableViewDataSource, UIT
                 return self.videos.count
             case .Articles:
                 return self.articles.count
-            default:
-                return 0
         }
         
     }
@@ -107,8 +105,6 @@ class AttachmentListViewController: UIViewController, UITableViewDataSource, UIT
                 currntArr = self.videos
             case .Articles:
                 currntArr = self.articles
-            default:
-                currntArr = []
         }
         if let attachment = currntArr[indexPath.row] as? NSDictionary{
             cell.textLabel?.text = attachment["name"] as? String
@@ -130,8 +126,6 @@ class AttachmentListViewController: UIViewController, UITableViewDataSource, UIT
                 currntArr = self.videos
             case .Articles:
                 currntArr = self.articles
-            default:
-                currntArr = []
         }
         postCallVC?.addAttachment(currntArr[indexPath.row] as! NSDictionary)
         self.dismissViewControllerAnimated(true, completion: { () -> Void in
@@ -154,8 +148,6 @@ class AttachmentListViewController: UIViewController, UITableViewDataSource, UIT
             return " Videos"
         case .Articles:
             return " Articles"
-        default:
-            return ""
         }
     }
     func tableView(tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {

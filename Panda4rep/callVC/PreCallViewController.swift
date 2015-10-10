@@ -73,7 +73,7 @@ class PreCallViewController: PandaViewController, UITableViewDataSource, UITable
                     }
                 }
             }
-            if let guest = c["guest_callee"] as? NSDictionary {
+            if nil != c["guest_callee"] as? NSDictionary {
                 disableReminderButton("Reminder N/A")
             }
             

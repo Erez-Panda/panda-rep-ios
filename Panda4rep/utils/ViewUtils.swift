@@ -83,14 +83,6 @@ struct ViewUtils {
         layer.frame.size = view.frame.size
         layer.frame.origin = CGPointMake(0.0,0.0)
         
-        let color0 = UIColor(red:250.0/255, green:250.0/255, blue:250.0/255, alpha:0.5).CGColor
-        let color1 = UIColor(red:200.0/255, green:200.0/255, blue: 200.0/255, alpha:0.1).CGColor
-        let color2 = UIColor(red:150.0/255, green:150.0/255, blue: 150.0/255, alpha:0.1).CGColor
-        let color3 = UIColor(red:100.0/255, green:100.0/255, blue: 100.0/255, alpha:0.1).CGColor
-        let color4 = UIColor(red:50.0/255, green:50.0/255, blue:50.0/255, alpha:0.1).CGColor
-        let color5 = UIColor(red:0.0/255, green:0.0/255, blue:0.0/255, alpha:0.1).CGColor
-        let color6 = UIColor(red:150.0/255, green:150.0/255, blue:150.0/255, alpha:0.1).CGColor
-        
         layer.colors = [topColor.CGColor,bottomColor.CGColor]
         view.layer.insertSublayer(layer, atIndex: 0)
     }
@@ -201,18 +193,18 @@ struct ViewUtils {
 
     
     static func getBlurEffect(view:UIView) -> UIImage{
-        var snapshotView:UIView = view.snapshotViewAfterScreenUpdates(true)
+        let snapshotView:UIView = view.snapshotViewAfterScreenUpdates(true)
         UIGraphicsBeginImageContextWithOptions(view.bounds.size, true, 0.0)
         snapshotView.drawViewHierarchyInRect(view.bounds, afterScreenUpdates: true)
-        var imgaa :UIImage = UIGraphicsGetImageFromCurrentImageContext();
+        let imgaa :UIImage = UIGraphicsGetImageFromCurrentImageContext();
  
-        var ciimage :CIImage = CIImage(image: imgaa)!
-        var filter : CIFilter = CIFilter(name:"CIGaussianBlur")!
+        let ciimage :CIImage = CIImage(image: imgaa)!
+        let filter : CIFilter = CIFilter(name:"CIGaussianBlur")!
         filter.setDefaults()
         filter.setValue(ciimage, forKey: kCIInputImageKey)
         filter.setValue(5, forKey: kCIInputRadiusKey)
-        var outputImage : CIImage = filter.outputImage!;
-        var finalImage :UIImage = UIImage(CIImage: outputImage)
+        let outputImage : CIImage = filter.outputImage!;
+        let finalImage :UIImage = UIImage(CIImage: outputImage)
         return finalImage
         
     }

@@ -111,7 +111,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
                 } else {
                     dispatch_async(dispatch_get_main_queue()){
                         self.activityIndicatorView.stopAnimating()
-                        var alert = UIAlertView()
+                        let alert = UIAlertView()
                         alert.title = "Reset password email has been sent"
                         alert.message = "Please follow email instructions to reset your password"
                         alert.addButtonWithTitle("Ok")

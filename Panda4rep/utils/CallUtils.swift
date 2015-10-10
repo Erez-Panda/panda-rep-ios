@@ -287,7 +287,7 @@ struct CallUtils{
     static func showAlert(message: String) {
         // show alertview on main UI
         dispatch_async(dispatch_get_main_queue()) {
-            let al = UIAlertView(title: "OTError", message: message, delegate: nil, cancelButtonTitle: "OK")
+            _ = UIAlertView(title: "OTError", message: message, delegate: nil, cancelButtonTitle: "OK")
         }
     }
     

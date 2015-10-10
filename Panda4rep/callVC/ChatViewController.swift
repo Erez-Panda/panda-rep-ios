@@ -121,9 +121,6 @@ class ChatViewController: UIViewController, UITextFieldDelegate {
     }
     
     func keyboardWillHide(sender: NSNotification){
-        let info: NSDictionary = sender.userInfo!
-        let value: NSValue = info.valueForKey(UIKeyboardFrameEndUserInfoKey) as! NSValue
-        let keyboardSize: CGSize = value.CGRectValue().size
         UIView.animateWithDuration(0.1, animations: { () -> Void in
             self.view.frame.origin.y  = 0.0
         })

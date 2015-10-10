@@ -349,16 +349,17 @@ struct ServerAPI {
     
     static func getResourceById(resourceIds: NSArray, completion: (result: NSArray) -> Void) -> Void{
         let data = ["id_list": resourceIds] as Dictionary<String, AnyObject>
-        var err: NSError?
+        //var err: NSError?
         do {
             let json = try NSJSONSerialization.dataWithJSONObject(data, options: [])
             let jsonStr = NSString(data: json, encoding: NSUTF8StringEncoding)!
             let url = "/resources/id/?data=\(jsonStr)"
-            self.http(url.stringByAddingPercentEscapesUsingEncoding(NSUTF8StringEncoding)!, completion: {result -> Void in
+            
+            self.http(url.stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.URLQueryAllowedCharacterSet())!, completion: {result -> Void in
                 completion(result: self.getArrayResult(result))
             })
-        } catch let error as NSError {
-            err = error
+        } catch _ as NSError {
+            //err = error
         }
     }
     
@@ -370,9 +371,9 @@ struct ServerAPI {
     
     static func getUserCallsInTimeFrame(start: NSDate, end: NSDate, completion: (result: NSArray) -> Void) -> Void{
         var startStr = TimeUtils.dateToServerString(start)
-        startStr = startStr.stringByAddingPercentEscapesUsingEncoding(NSStringEncoding())!
+        startStr = startStr.stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.URLQueryAllowedCharacterSet())!
         var endStr = TimeUtils.dateToServerString(end)
-        endStr = endStr.stringByAddingPercentEscapesUsingEncoding(NSStringEncoding())!
+        endStr = endStr.stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.URLQueryAllowedCharacterSet())!
         self.http("/calls/user/in_time_frame/?start=\(startStr)&end=\(endStr)", completion: {result -> Void in
             completion(result: self.getArrayResult(result))
         })
@@ -380,9 +381,9 @@ struct ServerAPI {
     
     static func getUserPostCallsInTimeFrame(start: NSDate, end: NSDate, completion: (result: NSArray) -> Void) -> Void{
         var startStr = TimeUtils.dateToServerString(start)
-        startStr = startStr.stringByAddingPercentEscapesUsingEncoding(NSStringEncoding())!
+        startStr = startStr.stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.URLQueryAllowedCharacterSet())!
         var endStr = TimeUtils.dateToServerString(end)
-        endStr = endStr.stringByAddingPercentEscapesUsingEncoding(NSStringEncoding())!
+        endStr = endStr.stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.URLQueryAllowedCharacterSet())!
         self.http("/calls/user/post_calls/in_time_frame/?start=\(startStr)&end=\(endStr)", completion: {result -> Void in
             completion(result: self.getArrayResult(result))
         })
@@ -522,8 +523,6 @@ struct ServerAPI {
         case .DELETE:
             manager.DELETE(SERVER_URL + url, parameters: message, success: getResponseHandler(completion),failure: getErrorHandler(completion))
             break
-        default:
-            break
         }
     }
 
@@ -536,13 +535,12 @@ struct ServerAPI {
             completion(result: false)
             return
         }
-        var request = NSMutableURLRequest(URL: NSURL(string: SERVER_URL + "/resources/upload/")!)
-        var session = NSURLSession.sharedSession()
+        let request = NSMutableURLRequest(URL: NSURL(string: SERVER_URL + "/resources/upload/")!)
+        let session = NSURLSession.sharedSession()
         
         request.HTTPMethod = "PUT"
         let boundary = generateBoundaryString()
-        var err: NSError?
-                request.addValue("multipart/form-data; boundary=\(boundary)", forHTTPHeaderField: "Content-Type")
+        request.addValue("multipart/form-data; boundary=\(boundary)", forHTTPHeaderField: "Content-Type")
         let body = NSMutableData()
         let mimetype = "image/jpeg"
         body.appendString("--\(boundary)\r\n")
@@ -554,19 +552,19 @@ struct ServerAPI {
         request.HTTPBody = body
 
 
-        var task = session.dataTaskWithRequest(request, completionHandler: {data, response, error -> Void in
+        let task = session.dataTaskWithRequest(request, completionHandler: {data, response, error -> Void in
             //println("Response: \(response)")
             if (response == nil || (response as! NSHTTPURLResponse).statusCode > 299){
                 completion(result: [:])
                 return
             }
-            var strData = NSString(data: data!, encoding: NSUTF8StringEncoding)
+            //var strData = NSString(data: data!, encoding: NSUTF8StringEncoding)
             //println("Body: \(strData)")
             var err: NSError?
             var json: AnyObject?
             do {
                 json = try NSJSONSerialization.JSONObjectWithData(data!, options: .MutableLeaves)
-            } catch var error as NSError {
+            } catch let error as NSError {
                 err = error
                 json = nil
             } catch {
@@ -576,13 +574,13 @@ struct ServerAPI {
             // Did the JSONObjectWithData constructor return an error? If so, log the error to the console
             if(err != nil) {
                 //println(err!.localizedDescription)
-                let jsonStr = NSString(data: data!, encoding: NSUTF8StringEncoding)
+                //let jsonStr = NSString(data: data!, encoding: NSUTF8StringEncoding)
                 //println("Error could not parse JSON: '\(jsonStr)'")
             }
             else {
                 // The JSONObjectWithData constructor didn't return an error. But, we should still
                 // check and make sure that json has a value using optional binding.
-                if let parseJSON: AnyObject = json {
+                if nil != json {
                     // Okay, the parsedJSON is here, let's get the value for 'success' out of it
                     //                    var success = parseJSON["firstName"] as? String
                     //                    println("Succes: \(success)")
@@ -590,7 +588,7 @@ struct ServerAPI {
                 }
                 else {
                     // Woa, okay the json object was nil, something went worng. Maybe the server isn't running?
-                    let jsonStr = NSString(data: data!, encoding: NSUTF8StringEncoding)
+                    //let jsonStr = NSString(data: data!, encoding: NSUTF8StringEncoding)
                     //println("Error could not parse JSON: \(jsonStr)")
                 }
             }
@@ -600,9 +598,9 @@ struct ServerAPI {
     }
     
     static func downloadFile(url: String, completion: (result: AnyObject) -> Void) -> Void{
-        var session = NSURLSession.sharedSession()
+        let session = NSURLSession.sharedSession()
 
-        var task = session.downloadTaskWithURL(NSURL(string: url)!, completionHandler: { (nsUrl, response, error) -> Void in
+        let task = session.downloadTaskWithURL(NSURL(string: url)!, completionHandler: { (nsUrl, response, error) -> Void in
                 do {
                     //println(response.suggestedFilename)
                     try NSFileManager.defaultManager().moveItemAtPath(nsUrl!.path!, toPath:response!.suggestedFilename!)

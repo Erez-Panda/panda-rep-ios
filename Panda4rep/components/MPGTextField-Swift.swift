@@ -88,7 +88,7 @@ class MPGTextField_Swift: UITextField, UITextFieldDelegate, UITableViewDelegate,
     }
     
     func provideSuggestions(){
-        if let tvc = self.tableViewController {
+        if nil != self.tableViewController {
             tableViewController!.tableView.reloadData()
         }
         else if self.applyFilterWithSearchQuery(self.text!).count > 0{
@@ -143,7 +143,7 @@ class MPGTextField_Swift: UITextField, UITextFieldDelegate, UITableViewDelegate,
     }
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int{
-        var count = self.applyFilterWithSearchQuery(self.text!).count
+        let count = self.applyFilterWithSearchQuery(self.text!).count
         if count == 0{
             UIView.animateWithDuration(0.3,
                 animations: ({
@@ -178,7 +178,7 @@ class MPGTextField_Swift: UITextField, UITextFieldDelegate, UITableViewDelegate,
     }
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath){
-        self.text = self.applyFilterWithSearchQuery(self.text!)[indexPath.row]["DisplayText"] as! String
+        self.text = self.applyFilterWithSearchQuery(self.text!)[indexPath.row]["DisplayText"] as? String
         self.resignFirstResponder()
     }
     
@@ -188,7 +188,7 @@ class MPGTextField_Swift: UITextField, UITextFieldDelegate, UITableViewDelegate,
     func applyFilterWithSearchQuery(filter : String) -> [Dictionary<String, AnyObject>]
     {
         //let predicate = NSPredicate(format: "DisplayText BEGINSWITH[cd] \(filter)")
-        var lower = (filter as NSString).lowercaseString
+        //var lower = (filter as NSString).lowercaseString
         let filteredData = data.filter({
                 if let match : AnyObject  = $0["DisplayText"]{
                     //println("LCS = \(filter.lowercaseString)")
@@ -209,7 +209,7 @@ class MPGTextField_Swift: UITextField, UITextFieldDelegate, UITableViewDelegate,
             if self.applyFilterWithSearchQuery(self.text!).count > 0 {
                 let selectedData = self.applyFilterWithSearchQuery(self.text!)[0]
                 let displayText : AnyObject? = selectedData["DisplayText"]
-                self.text = displayText as! String
+                self.text = displayText as? String
                 mDelegate?.textFieldDidEndEditing?(self, withSelection: selectedData)
             }
             else{

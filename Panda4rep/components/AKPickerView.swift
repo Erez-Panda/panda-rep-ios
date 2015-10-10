@@ -146,7 +146,7 @@ private class AKCollectionViewLayout: UICollectionViewFlowLayout {
 		return true
 	}
 
-	private override func layoutAttributesForItemAtIndexPath(indexPath: NSIndexPath) -> UICollectionViewLayoutAttributes! {
+	private override func layoutAttributesForItemAtIndexPath(indexPath: NSIndexPath) -> UICollectionViewLayoutAttributes? {
 		let attributes = super.layoutAttributesForItemAtIndexPath(indexPath)
 		switch self.delegate.pickerViewStyleForCollectionViewLayout(self) {
 		case .Flat:
@@ -172,7 +172,7 @@ private class AKCollectionViewLayout: UICollectionViewFlowLayout {
 			var attributes = [UICollectionViewLayoutAttributes]()
 			for i in 0 ..< self.collectionView!.numberOfItemsInSection(0) {
 				let indexPath = NSIndexPath(forItem: i, inSection: 0)
-				attributes.append(self.layoutAttributesForItemAtIndexPath(indexPath))
+				attributes.append(self.layoutAttributesForItemAtIndexPath(indexPath)!)
 			}
 			return attributes
 		}

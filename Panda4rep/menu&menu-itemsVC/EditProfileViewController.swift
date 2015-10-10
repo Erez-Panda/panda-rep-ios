@@ -52,8 +52,8 @@ class EditProfileViewController: UIViewController ,UITableViewDelegate, UITableV
         ViewUtils.borderView(galleryButton, borderWidth: 1.0, borderColor: UIColor.whiteColor(), borderRadius: 3)
         ViewUtils.borderView(photoButton, borderWidth: 1.0, borderColor: UIColor.whiteColor(), borderRadius: 3)
         
-        let firstName = user["first_name"] as! String
-        let lastName = user["last_name"] as! String
+        //let firstName = user["first_name"] as! String
+        //let lastName = user["last_name"] as! String
         registerForKeyboardNotifications()
         
         // Do any additional setup after loading the view.
@@ -94,7 +94,6 @@ class EditProfileViewController: UIViewController ,UITableViewDelegate, UITableV
         if (!specialtyTable.hidden){
             if let indexPath = specialtyTable.indexPathForRowAtPoint(tap.locationInView(specialtyTable)){
                 if let specilaty = self.doctorSpecialties[indexPath.row] as? NSDictionary{
-                    let specialtyButtonCell = profileTable.cellForRowAtIndexPath(NSIndexPath(forRow: 1, inSection: 0)) as! TableViewCellWithButtonAndTitle
                     newProfile?["specialty"] = specilaty["id"] as? NSNumber
                     profileTable.reloadRowsAtIndexPaths([NSIndexPath(forRow: 1, inSection: 0)], withRowAnimation: UITableViewRowAnimation.None)
                     
@@ -185,8 +184,8 @@ class EditProfileViewController: UIViewController ,UITableViewDelegate, UITableV
         } else {
             if (indexPath.row == 0){
                 let cell = tableView.dequeueReusableCellWithIdentifier("firstLastNameCell") as! SplitTableViewCellWithTitle
-                cell.firstNameTextField.text = user["first_name"] as! String
-                cell.lastNameTextField.text = user["last_name"] as! String
+                cell.firstNameTextField.text = user["first_name"] as? String
+                cell.lastNameTextField.text = user["last_name"] as? String
                 if iOS8 {cell.layoutMargins = UIEdgeInsetsZero}
                 return cell
                 
@@ -278,9 +277,6 @@ class EditProfileViewController: UIViewController ,UITableViewDelegate, UITableV
         })
     }
     func keyboardWillBeHidden(sender: NSNotification){
-        let info: NSDictionary = sender.userInfo!
-        let value: NSValue = info.valueForKey(UIKeyboardFrameBeginUserInfoKey) as! NSValue
-        let keyboardSize: CGSize = value.CGRectValue().size
         UIView.animateWithDuration(0.1, animations: { () -> Void in
             self.view.frame.origin.y  = 0.0
         })

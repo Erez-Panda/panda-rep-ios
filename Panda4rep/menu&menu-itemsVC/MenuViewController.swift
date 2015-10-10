@@ -235,8 +235,8 @@ class MenuViewController: UIViewController, UITableViewDelegate, UITableViewData
             
             self.isDragging = true
             
-            if let closeButtonFrame = self.closeButton?.frame {
-                var f = CGRectMake(self.view.frame.size.width-50, 0, 100, self.view.frame.height)
+            if nil != self.closeButton?.frame {
+                let f = CGRectMake(self.view.frame.size.width-50, 0, 100, self.view.frame.height)
                 if (CGRectContainsPoint(f, touchLocation)){
                     close(true)
                 }
@@ -295,7 +295,7 @@ class MenuViewController: UIViewController, UITableViewDelegate, UITableViewData
     // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         if (segue.identifier == "showFeatureFromMenu"){
-            let nav = segue.destinationViewController as! UINavigationController
+            //let nav = segue.destinationViewController as! UINavigationController
             //var svc = nav.viewControllers[0] as! FeatureViewController
             //svc.startIndex = self.selectedIndex
         }

@@ -176,9 +176,6 @@ class PostCallNewViewController: PandaViewController, FloatRatingViewDelegate, U
     }
     
     func keyboardWillShown(sender: NSNotification){
-        let info: NSDictionary = sender.userInfo!
-        let value: NSValue = info.valueForKey(UIKeyboardFrameEndUserInfoKey) as! NSValue
-        let keyboardSize: CGSize = value.CGRectValue().size
         UIView.animateWithDuration(0.1, animations: { () -> Void in
             if self.nextTimeTextView.isFirstResponder(){
                 self.scrollView.contentOffset.y  = 200
@@ -189,9 +186,6 @@ class PostCallNewViewController: PandaViewController, FloatRatingViewDelegate, U
     }
     
     func keyboardWillHide(sender: NSNotification){
-        let info: NSDictionary = sender.userInfo!
-        let value: NSValue = info.valueForKey(UIKeyboardFrameEndUserInfoKey) as! NSValue
-        let keyboardSize: CGSize = value.CGRectValue().size
         UIView.animateWithDuration(0.1, animations: { () -> Void in
             self.view.frame.origin.y  = 0.0
             self.scrollView.contentOffset.y = 0
