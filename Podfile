@@ -3,10 +3,10 @@ platform :ios, '8.0'
 use_frameworks!
 
 
-pod 'OpenTok','~> 2.6'
+pod 'OpenTok'
 pod 'HorizontalDatePicker', :head
-pod 'FontAwesomeIconFactory','~> 2.1'
-pod 'AFNetworking','~> 2.6'
+pod 'FontAwesomeIconFactory'
+pod 'AFNetworking'
 pod 'PNChart'
 pod 'YLProgressBar'
 pod 'Dropbox-iOS-SDK'

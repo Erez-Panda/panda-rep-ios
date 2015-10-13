@@ -192,10 +192,10 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
             var callee : NSDictionary = [:]
 
             
-            let product = arr[index]["product"] as! NSDictionary
+            
             let resources = arr[index]["resources"] as! NSArray
             let id = arr[index]["id"] as! NSNumber
-            var item = ["start": time, "product": product, "end": endTime, "id": id, "resources": resources] as Dictionary<String,AnyObject>
+            var item = ["start": time, "end": endTime, "id": id, "resources": resources] as Dictionary<String,AnyObject>
             if let user = arr[index]["callee"] as? NSDictionary {
                 callee = user
             } else if let guest = arr[index]["guest_callee"] as? NSDictionary {
@@ -210,6 +210,9 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
             }
             if let type = arr[index]["type"] as? String{
                 item["type"] = type
+            }
+            if let product = arr[index]["product"] as? NSDictionary {
+                item["product"] = product
             }
             timedCalls.append(item)
         }

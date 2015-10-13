@@ -203,7 +203,7 @@ class PreCallViewController: PandaViewController, UITableViewDataSource, UITable
     
     @IBAction func openCallScreen(sender: AnyObject) {
         if let vc = CallUtils.getCallViewController() {
-            var activeRes : NSMutableArray = []
+            let activeRes : NSMutableArray = []
             for i in 0..<self.selectedresources.count{
                 if self.selectedresources[i].count > 0{
                     activeRes.addObject(self.selectedresources[i])

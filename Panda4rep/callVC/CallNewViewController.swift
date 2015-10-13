@@ -786,12 +786,13 @@ class CallNewViewController: UIViewController, UIGestureRecognizerDelegate, OTSe
                 let screenHeight = CGFloat((data!["screenHeight"] as NSString?)!.floatValue)
                 let width = CGFloat((data!["width"] as NSString?)!.floatValue) / zoom
                 let height = CGFloat((data!["height"] as NSString?)!.floatValue) / zoom
-                //Image is aspect fit, scale factor will be the biggest change on image
-                let scaleRatio = max(screen.width/screenWidth, screen.height/screenHeight)
+
                 //One of these have to be 0
                 let documentScaleRatio = max(document.size.width/screen.width, document.size.height/screen.height)
-                let heightDiff = ((screen.height*documentScaleRatio) - document.size.height)
-                let widthDiff = ((screen.width*documentScaleRatio) - document.size.width)
+                let heightDiff = ((screen.height*documentScaleRatio) - document.size.height)/documentScaleRatio
+                let widthDiff = ((screen.width*documentScaleRatio) - document.size.width)/documentScaleRatio
+                //Image is aspect fit, scale factor will be the biggest change on image
+                let scaleRatio = max((screen.width-widthDiff)/screenWidth, (screen.height-heightDiff)/screenHeight)
                 let x = CGFloat((data!["originX"] as NSString?)!.floatValue) * (screen.width-widthDiff)
                 let y = CGFloat((data!["originY"] as NSString?)!.floatValue) * (screen.height-heightDiff)
                 remoteSignatureView = PassiveLinearInterpView(frame: CGRectMake(x+widthDiff/2,y+heightDiff/2,width*scaleRatio,height*scaleRatio))
