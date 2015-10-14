@@ -58,11 +58,13 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
         
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "callOfferOffered:", name: "CallOfferOffered", object: nil)
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "callOfferOffered:", name: "CallCreated", object: nil)
-        NSNotificationCenter.defaultCenter().postNotification(NSNotification(name: "HomeScreenReady", object: self))
+        
     }
     
     override func viewDidAppear(animated: Bool) {
-        updateCallsAndOffers()
+        updateCallsAndOffers { (result) -> Void in
+            NSNotificationCenter.defaultCenter().postNotification(NSNotification(name: "HomeScreenReady", object: self))
+        }
     }
     
     func callOfferOffered(notification: NSNotification){
@@ -74,13 +76,14 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
         updateCallsAndOffers(true)
     }
     
-    func updateCallsAndOffers(scrollToLast: Bool = false){
+    func updateCallsAndOffers(scrollToLast: Bool = false, complition: ((result: Bool) -> Void)? = nil){
         ServerAPI.getUserCallOffers { (result) -> Void in
             self.offers = self.generateCallOffersArray(result)
             self.updateBadges()
             ServerAPI.getUserCalls({ (result) -> Void in
                 self.calls = self.updateStartDate(result)
                 self.filteredCalls = self.calls
+                complition?(result: true)
                 dispatch_async(dispatch_get_main_queue()){
                     self.filterResults(self.selectedDate)
                     ViewUtils.stopGlobalLoader()

@@ -19,6 +19,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, LoginDelegate, UIAlertVie
     var preCallId: NSNumber?
     var inquiryId: NSNumber?
     var inquiry: NSDictionary?
+    var showPreCallAlert: Bool = true
 
 
 
@@ -88,6 +89,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate, LoginDelegate, UIAlertVie
     }
     
     func application(application: UIApplication, openURL url: NSURL, sourceApplication: String?, annotation: AnyObject) -> Bool {
+        
+        let urlParams = url.getKeyVals()
+        if let callId = urlParams?["call_id"]{
+            let f = NSNumberFormatter()
+            f.numberStyle = NSNumberFormatterStyle.DecimalStyle
+            if let id = f.numberFromString(callId){
+                openPreCallScreen(id, showAlert: false)
+            }
+            
+        }
+        
         if DBSession.sharedSession().handleOpenURL(url){
             if DBSession.sharedSession().isLinked(){
                 print("App linked successfully!")
@@ -247,18 +259,27 @@ class AppDelegate: UIResponder, UIApplicationDelegate, LoginDelegate, UIAlertVie
         //        rootViewController?.presentViewController(alert, animated: true, completion: nil)
     }
     
-    func showIncomingCallAlert(callId: NSNumber){
+    func showIncomingCallAlert(callId: NSNumber, showAlert: Bool = true){
         if (CallUtils.session?.sessionConnectionStatus == OTSessionConnectionStatus.NotConnected || CallUtils.session == nil){
             if let topvc = ViewUtils.getTopViewController(){
-                let alert = UIAlertController(title: "Call Time", message: "You have a scheduled call starting now", preferredStyle: UIAlertControllerStyle.Alert)
-                alert.addAction(UIAlertAction(title: "Call Screen", style: UIAlertActionStyle.Default, handler: { (action) -> Void in
+                if showAlert{
+                    let alert = UIAlertController(title: "Call Time", message: "You have a scheduled call starting now", preferredStyle: UIAlertControllerStyle.Alert)
+                    alert.addAction(UIAlertAction(title: "Call Screen", style: UIAlertActionStyle.Default, handler: { (action) -> Void in
+                        if let vc = self.homeVC {
+                            vc.navigationController?.popToRootViewControllerAnimated(false)
+                            vc.openPreCallById(callId)
+                        }
+                    }))
+                    alert.addAction(UIAlertAction(title: "Ignore", style: UIAlertActionStyle.Default, handler: nil))
+                    topvc.presentViewController(alert, animated: true, completion: nil)
+                } else {
                     if let vc = self.homeVC {
-                        vc.navigationController?.popToRootViewControllerAnimated(false)
-                        vc.openPreCallById(callId)
+                        vc.updateCallsAndOffers(false, complition: { (result) -> Void in
+                            vc.navigationController?.popToRootViewControllerAnimated(false)
+                            vc.openPreCallById(callId)
+                        })
                     }
-                }))
-                alert.addAction(UIAlertAction(title: "Ignore", style: UIAlertActionStyle.Default, handler: nil))
-                topvc.presentViewController(alert, animated: true, completion: nil)
+                }
             }
         }
     }
@@ -267,7 +288,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, LoginDelegate, UIAlertVie
         if let vc = notification.object as? HomeViewController{
             homeVC = vc
             if let id = preCallId{
-                openPreCallScreen(id)
+                openPreCallScreen(id, showAlert: showPreCallAlert)
             }
             if let id = inquiryId{
                 openInquiryScreen(id)
@@ -275,10 +296,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate, LoginDelegate, UIAlertVie
         }
     }
     
-    func openPreCallScreen(id: NSNumber){
+    func openPreCallScreen(id: NSNumber, showAlert: Bool = true){
         if nil != self.homeVC {
-            showIncomingCallAlert(id)
+            showIncomingCallAlert(id, showAlert: showAlert)
         } else {
+            showPreCallAlert = showAlert
             preCallId = id
         }
     }

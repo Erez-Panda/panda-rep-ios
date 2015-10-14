@@ -25,14 +25,17 @@
 		<dict>
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
+			<key>CFBundleURLName</key>
+			<string>com.LiveMed.LiveMedRep</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
+				<string>LiveMedRep</string>
 				<string>db-l6c99wtstnvvhuq</string>
 			</array>
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>8</string>
+	<string>9</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSAppTransportSecurity</key>
