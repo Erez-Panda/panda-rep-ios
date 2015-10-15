@@ -37,7 +37,7 @@ class PassiveLinearInterpView: UIView {
         self.multipleTouchEnabled = false
         self.backgroundColor = UIColor.clearColor()
         path = UIBezierPath()
-        path?.lineWidth = 2.0
+        path?.lineWidth = 1.0
     }
     
     func moveToPoint(point: CGPoint){

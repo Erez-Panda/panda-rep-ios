@@ -796,7 +796,7 @@ class CallNewViewController: UIViewController, UIGestureRecognizerDelegate, OTSe
                 let x = CGFloat((data!["originX"] as NSString?)!.floatValue) * (screen.width-widthDiff)
                 let y = CGFloat((data!["originY"] as NSString?)!.floatValue) * (screen.height-heightDiff)
                 remoteSignatureView = PassiveLinearInterpView(frame: CGRectMake(x+widthDiff/2,y+heightDiff/2,width*scaleRatio,height*scaleRatio))
-                remoteSignatureView!.path?.lineWidth *= scaleRatio/zoom
+                //remoteSignatureView!.path?.lineWidth *= scaleRatio/zoom
                 let linesStr = data!["points"]!.componentsSeparatedByString("***")
                 for line in linesStr {
                     var pointsStr = line.componentsSeparatedByString("-")

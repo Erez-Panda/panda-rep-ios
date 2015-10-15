@@ -274,7 +274,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate, LoginDelegate, UIAlertVie
                     topvc.presentViewController(alert, animated: true, completion: nil)
                 } else {
                     if let vc = self.homeVC {
+                        ViewUtils.startGlobalLoader()
                         vc.updateCallsAndOffers(false, complition: { (result) -> Void in
+                            ViewUtils.stopGlobalLoader()
                             vc.navigationController?.popToRootViewControllerAnimated(false)
                             vc.openPreCallById(callId)
                         })
